@@ -4,7 +4,7 @@ import yaml
 from webapp import app
 import os
 
-with open('../default_profile.yaml') as f:
+with open('default_profile.yaml') as f:
     config = yaml.load(f)
 
 config = {
