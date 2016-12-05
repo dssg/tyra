@@ -44,22 +44,22 @@ var BarChart = React.createClass({
   }
 ],
     getInitialState: function() {
-      return { data: this.data, sortflag: false};
+      return { data: this.data, sortflag: false, button_value: 'Sort by Importance'};
     },
     handleSort: function() {
       var newdata = this.state.data;
       if (!this.state.sortflag) {
         newdata[0].values.sort(function(x,y){return d3.descending(x.value, y.value)});
-        this.setState( {data: newdata, sortflag: true} );
+        this.setState( {data: newdata, sortflag: true, button_value: 'Sort by Name'} );
       } else {
         newdata[0].values.sort(function(x,y){return d3.ascending(x.label, y.label)});
-        this.setState( {data: newdata, sortflag: false} );
+        this.setState( {data: newdata, sortflag: false, button_value: 'Sort by Importance'} );
       }
     },
     render: function() {
       return (
         <div>
-          <button onClick={this.handleSort}>Sort</button>
+        <div className="row"><button onClick={this.handleSort}>{this.state.button_value}</button></div>
           {
             React.createElement(NVD3Chart, {
                               type:"multiBarHorizontalChart",

@@ -9,7 +9,7 @@ var FeatureDistChart = React.createClass({
     render: function() {
       return (
         <div>
-        <button onClick={this.handleGenerate}>Generate</button>
+        <div className="row"><button onClick={this.handleGenerate}>Generate</button></div>
           {
             React.createElement(NVD3Chart, {
                               type:"lineChart",

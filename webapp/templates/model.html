@@ -76,7 +76,7 @@
             </script>
         </div>
         <div id="within" class="tab-pane fade">
-          <h3>Metrics Over Time </h3>
+          <div class="row"><h3>Metrics Over Time </h3></div>
             <style>#metrictimechart svg {height: 400px; width:800px; svg {margin-left:0;}}</style>
             <div id="metrictimechart">
               <svg></svg>
@@ -84,7 +84,7 @@
             <script type="text/jsx">
                 ReactDOM.render(<MetricTimeChart />, document.getElementById('metrictimechart'));
             </script>
-          <h3>Feature Importance</h3>
+          <div class="row"><h3>Feature Importance</h3></div>
             <style>#barchart svg {height:400px; width:800px}</style>
             <div id="barchart">
               <svg></svg>

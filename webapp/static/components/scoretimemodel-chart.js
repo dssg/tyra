@@ -15,7 +15,7 @@ var ScoreTimeModelChart = React.createClass({
     ],
     getRandomScoreTime: function(groups) {
       var data=[],
-      rand_mean = d3.random.normal(0.35, 0.2),
+      rand_mean = d3.random.normal(0.5, 0.15),
       rand_std = d3.random.normal(0.05, 0.02);
       for (var i = 0; i < groups; i++) {
         data.push({
@@ -23,7 +23,7 @@ var ScoreTimeModelChart = React.createClass({
           values: []
         });
         var random = d3.random.normal(rand_mean(),rand_std());
-        for (var j=0; j < 7; j+=1) {
+        for (var j=0; j < 7; j++) {
           data[i].values.push([j+2010, random()]);
         }
       }
@@ -31,7 +31,7 @@ var ScoreTimeModelChart = React.createClass({
     },
     getRandomScoreModel: function(groups) {
       var data = [],
-      rand_mean = d3.random.normal(0.55,0.2),
+      rand_mean = d3.random.normal(0.55,0.15),
       rand_std = d3.random.normal(0.05, 0.03);
       for (var i = 0; i < groups; i++) {
         data.push({
@@ -39,7 +39,7 @@ var ScoreTimeModelChart = React.createClass({
         values: []
       });
         var random = d3.random.normal(rand_mean(),rand_std());
-        for (var j = 0; j < 50; j+=1) {
+        for (var j = 1; j < 51; j++) {
           data[i].values.push([j, random()]);
         }
       }
@@ -70,7 +70,7 @@ var ScoreTimeModelChart = React.createClass({
                                         useInteractiveGuideline: true,
                                         yDomain: [0, 1],
                                         xAxis: { axisLabel: 'Year' },
-                                        yAxis: { axisLabel: 'Risk Score' },
+                                        yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'Risk Score' },
                                         color: d3.scale.category10().range() }
                                             })
           }
@@ -89,7 +89,7 @@ var ScoreTimeModelChart = React.createClass({
                                         useInteractiveGuideline: true,
                                         yDomain: [0, 1],
                                         xAxis: { axisLabel: 'Model ID' },
-                                        yAxis: { axisLabel: 'Risk Score' },
+                                        yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'Risk Score' },
                                         color: d3.scale.category10().range() }
                                             })
           }
