@@ -4,7 +4,7 @@
 <script type="text/jsx" src="{{ url_for('static', filename='components/bar-chart.js') }}"></script>
 <script type="text/jsx" src="{{ url_for('static', filename='components/featuredist-chart.js') }}"></script>
 <script type="text/jsx" src="{{ url_for('static', filename='components/metrictime-chart.js') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='components/scoretime-chart.js') }}"></script>
+<script type="text/jsx" src="{{ url_for('static', filename='components/scoretimemodel-chart.js') }}"></script>
 
 
 <div class="container center-container">
@@ -58,7 +58,7 @@
           </div>
         </div>
         <div id="individual" class="tab-pane fade">
-          <h3> Feature Distribution</h3>
+          <div class="row"><h3> Feature Distribution</h3></div>
             <style>#fdistchart svg {height:400px; width:800px;}</style>
             <div id="fdistchart">
               <svg></svg>
@@ -66,13 +66,13 @@
             <script type="text/jsx">
                 ReactDOM.render(<FeatureDistChart />, document.getElementById('fdistchart'));
             </script>
-          <h3> Risk Score Cross Time</h3>
-            <style>#scoretimechart svg {height:400px; width:800px;}</style>
-            <div id="scoretimechart">
+          <div class="row"><h3> Risk Score Cross Time & Models</h3></div>
+            <style>#scoretimemodelchart svg {height:400px; width:600px;}</style>
+            <div id="scoretimemodelchart">
               <svg></svg>
             </div>
             <script type="text/jsx">
-              ReactDOM.render(<ScoreTimeChart />, document.getElementById('scoretimechart'));
+              ReactDOM.render(<ScoreTimeModelChart />, document.getElementById('scoretimemodelchart'));
             </script>
         </div>
         <div id="within" class="tab-pane fade">
