@@ -3,18 +3,16 @@ from sqlalchemy import create_engine
 import yaml
 from webapp import app
 import os
+from config import config
 
-with open('default_profile.yaml') as f:
-    config = yaml.load(f)
-
-config = {
+dbconfig = {
     'host':config['PGHOST'],
     'user':config['PGUSER'],
     'database':config['PGDATABASE'],
     'password':config['PGPASSWORD'],
     'port':config['PGPORT'],
 }
-dbengine = create_engine('postgres://', connect_args=config)
+dbengine = create_engine('postgres://', connect_args=dbconfig)
 
 
 def get_best_models(timestamp, metric, parameter=None, number=25):
