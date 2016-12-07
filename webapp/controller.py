@@ -1,13 +1,21 @@
-import json
-from flask import Flask, render_template, request, redirect, jsonify, url_for
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import pandas as pd
+from flask import render_template, request, jsonify
 from webapp import app
 from webapp import query
 import time
-#DBSession = sessionmaker(bind=engine)
-#session = DBSession()
+from collections import defaultdict
+
+# filter user-passed metrics through this list
+METRIC_WHITELIST = set([
+    "precision",
+    "recall",
+    "auc",
+    "f1",
+    "true positives",
+    "true negatives",
+    "false positives",
+    "false negatives"
+])
+
 
 @app.route('/')
 @app.route('/evaluations')
@@ -19,29 +27,24 @@ def index():
 def search_models():
     f = request.form
     query_arg = {}
-    metric =[]
-    parameter=[]
+    flattened_query = defaultdict(dict)
     for key in f.keys():
         if 'parameter' in key:
-            parameter.append(key)
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                float(f[key])
         elif 'metric' in key:
-            metric.append(key)
-    mp = [f[m]+'@'+str(float(f[p])) for m, p in zip(sorted(metric),sorted(parameter))]
-    #query_arg['number'] = f['number']
+            if f[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = f[key]
     query_arg['timestamp'] = f['timestamp']
-    query_arg['metric'] = mp
+    query_arg['metrics'] = flattened_query
 
     output = query.get_models(query_arg)
-    #print(output)
-    try :
+    try:
         output = output.to_dict('records')
-        #print(output)
         return jsonify(results=(output))
-        #return render_template('index.html',tables=[output.to_html(classes='bestmodels')])
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
-    #dict(f).keys()
 
 
 @app.route('/evaluations/search_best_models', methods=['POST'])
@@ -61,9 +64,12 @@ def search_best_models():
         else:
             number = request.form['number']
         timestamp = request.form['timestamp']
-    output = query.get_best_models(timestamp=timestamp, metric=metric, parameter=parameter, number=number)
-    #print(output)
-    #return render_template('index.html',tables=[output.to_html(classes='bestmodels')], number=number, parameter=parameter)
+    output = query.get_best_models(
+        timestamp=timestamp,
+        metric=metric,
+        parameter=parameter,
+        number=number
+    )
     try:
         output = output.to_dict('records')
         return jsonify(results=(output))
@@ -71,19 +77,20 @@ def search_best_models():
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-@app.route('/evaluations/<int:model_id>/model',methods=['GET','POST'])
+
+@app.route('/evaluations/<int:model_id>/model', methods=['GET', 'POST'])
 def get_model_prediction(model_id):
     tic = time.time()
     output = query.get_model_prediction(id=model_id)
     print("get_model_prediction")
     print("Query Time: ", time.time() - tic)
-    return render_template('model.html',tables=[output.to_html(classes='bestmodels')])
+    return render_template(
+        'model.html',
+        tables=[output.to_html(classes='bestmodels')]
+    )
 
-    #output.to_dict('records')
-    #return jsonify(results=(output))
-    #return render_template('individual.html')
 
-@app.route('/evaluations/<int:model_id>/model_result',methods=['GET','POST'])
+@app.route('/evaluations/<int:model_id>/model_result', methods=['GET', 'POST'])
 def get_model_result(model_id):
     output = query.get_model_prediction(id=model_id)
     try:
@@ -93,12 +100,12 @@ def get_model_result(model_id):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-@app.route('/evaluations/within_model',methods=['GET','POST'])
+
+@app.route('/evaluations/within_model', methods=['GET', 'POST'])
 def within_model():
     return render_template('within_model.html')
 
-@app.route('/evaluations/between_models',methods=['GET','POST'])
+
+@app.route('/evaluations/between_models', methods=['GET', 'POST'])
 def between_models():
     return render_template('between_models.html')
-
-
