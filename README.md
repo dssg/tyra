@@ -16,21 +16,21 @@
 Tyra is designed to work on different data science projects, but to accomplish this it expects a standard model storage interface; a Postgres database with a `results` schema containing three tables, `models`, `evaluations`, and `predictions`.
 
 ### models
-model_id - integer
-run_time - timestamp
-model_type - string
+- model_id - integer
+- run_time - timestamp
+- model_type - string
 
 ### evaluations
-model_id - integer
-metric - string (each value should be one of the Available Metrics below)
-parameter - string (most data represents floats, though)
-value - numeric
+- model_id - integer
+- metric - string (each value should be one of the Available Metrics below)
+- parameter - string (most data represents floats, though)
+- value - numeric
 
 ### predictions
-model_id - integer
-unit_id - bigint
-unit_score - numeric
-label_value - int
+- model_id - integer
+- unit_id - bigint
+- unit_score - numeric
+- label_value - int
 
 Whether or not the `model_id` columns in `predictions` and `evaluations` is defined as a foreign key, it should act as one as the tables are joined using it.
 
