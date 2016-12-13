@@ -127,3 +127,14 @@ def get_models(query_arg):
     )
     output.reset_index(level=0, inplace=True)
     return output
+
+def get_feature_importance(id, num):
+    query = """
+    select feature as label, feature_importance as value  from results.feature_importances
+    where model_id = {}
+    order by value DESC
+    limit {};
+    """.format(id, num)
+    df_fimportance = pd.read_sql(query, con=dbengine)
+    output = df_fimportance
+    return output
