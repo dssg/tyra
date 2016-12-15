@@ -32,6 +32,11 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - unit_score - numeric
 - label_value - int
 
+### feature_importances
+- model_id - integer
+- feature - string
+- feature_importance - numeric
+
 Whether or not the `model_id` columns in `predictions` and `evaluations` is defined as a foreign key, it should act as one as the tables are joined using it.
 
 No assertions are made on other tables in the `results` schema or other schemas, or on other columns in these tables.
