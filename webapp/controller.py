@@ -100,12 +100,12 @@ def get_model_result(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route('/evaluations/feature_importance', methods=['GET','POST'])
-def feature_importance():
-    output = query.get_feature_importance(id=69, num=10)
+def feature_importance(model_id=63):
+    output = query.get_feature_importance(id=model_id, num=10)
     print(output)
     try:
         output = output.to_dict('records')
-        return jsonify(key="Model 69", color="#d67777",values=(output))
+        return jsonify(key="Model "+str(model_id), color="#d67777",values=(output))
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
