@@ -77,7 +77,6 @@ def search_best_models():
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-
 @app.route('/evaluations/<int:model_id>/model', methods=['GET', 'POST'])
 def get_model_prediction(model_id):
     tic = time.time()
@@ -101,6 +100,19 @@ def get_model_result(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
+@app.route('/evaluations/feature_importance', methods=['GET','POST'])
+def feature_importance(model_id=63, num=10):
+    query_arg = {'model_id':model_id, 'num':num}
+    output = query.get_feature_importance(query_arg)
+    print(output)
+    try:
+        output = output.to_dict('records')
+        return jsonify(key="Model "+str(model_id), color="#d67777",values=(output))
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
 @app.route('/evaluations/within_model', methods=['GET', 'POST'])
 def within_model():
     return render_template('within_model.html')
@@ -109,3 +121,4 @@ def within_model():
 @app.route('/evaluations/between_models', methods=['GET', 'POST'])
 def between_models():
     return render_template('between_models.html')
+
