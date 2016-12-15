@@ -128,6 +128,7 @@ def get_models(query_arg):
     output.reset_index(level=0, inplace=True)
     return output
 
+
 def get_feature_importance(query_arg):
     query = """
     select feature as label, feature_importance as value  from results.feature_importances
@@ -140,3 +141,4 @@ def get_feature_importance(query_arg):
                                 con=dbengine)
     output = df_fimportance
     return output
+

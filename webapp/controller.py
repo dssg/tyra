@@ -99,6 +99,7 @@ def get_model_result(model_id):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+
 @app.route('/evaluations/feature_importance', methods=['GET','POST'])
 def feature_importance(model_id=63, num=10):
     query_arg = {'model_id':model_id, 'num':num}
