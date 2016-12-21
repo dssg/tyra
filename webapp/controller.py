@@ -49,13 +49,9 @@ def search_models():
 
 @app.route('/evaluations/<int:model_id>/model', methods=['GET', 'POST'])
 def get_model_prediction(model_id):
-    tic = time.time()
-    output = query.get_model_prediction(id=model_id)
-    print("get_model_prediction")
-    print("Query Time: ", time.time() - tic)
     return render_template(
         'model.html',
-        tables=[output.to_html(classes='bestmodels')]
+        model_id=model_id
     )
 
 
