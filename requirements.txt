@@ -3,3 +3,6 @@ SQLAlchemy==1.0.14
 pandas==0.18.0
 PyYAML==3.11
 psycopg2==2.4.5
+testing.postgresql
+pytest==2.9.2
+flask_sqlalchemy
