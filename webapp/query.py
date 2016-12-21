@@ -1,6 +1,7 @@
 import pandas as pd
 from webapp import db
 
+
 def get_best_models(timestamp, metric, parameter=None, number=25):
 
     """
@@ -89,7 +90,11 @@ def get_models(query_arg):
     print("metrics: ", query_arg['metrics'])
 
     metric_string = ' union '.join([
-        "select '{metric}@'::varchar metric, '{parameter}'::varchar parameter".format(**args)
+        """
+        select
+            '{metric}@'::varchar metric,
+            '{parameter}'::varchar parameter
+        """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
 
@@ -120,14 +125,16 @@ def get_models(query_arg):
 
 def get_feature_importance(query_arg):
     query = """
-    select feature as label, feature_importance as value  from results.feature_importances
+    select feature as label, feature_importance as value
+    from results.feature_importances
     where model_id = %(model_id)s
     order by value DESC
     limit %(num)s;
     """
-    df_fimportance = pd.read_sql(query,
-                                params={'model_id': query_arg['model_id'], 'num': query_arg['num']},
-                                con=db.engine)
+    df_fimportance = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id'], 'num': query_arg['num']},
+        con=db.engine
+    )
     output = df_fimportance
     return output
-
