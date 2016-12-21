@@ -1,7 +1,5 @@
-import testing.postgresql
-from sqlalchemy import create_engine
-from webapp import app
 from datetime import datetime, timedelta
+from tests.utils import load_json_example, rig_test_client
 import json
 
 CUTOFF = datetime(2016, 5, 2)
@@ -17,48 +15,14 @@ evaluations_data = [
     (2, 'recall@', '5.0', 55)
 ]
 
-
-def load_json_example(route):
-    filepath = 'sample_json' + route + '.json'
-    with open(filepath) as f:
-        return json.load(f)
-
-
-def setup_data(engine):
-    engine.execute('create schema results')
-    engine.execute("""
-    create table results.models (
-        model_id int,
-        run_time timestamp,
-        model_type varchar
-    )""")
-    for model in models_data:
-        engine.execute(
-            'insert into results.models values (%s, %s, %s)',
-            model
-        )
-
-    engine.execute("""
-    create table results.evaluations (
-        model_id int,
-        metric character varying,
-        parameter character varying,
-        value numeric
-    )""")
-    for row in evaluations_data:
-        engine.execute(
-            'insert into results.evaluations values (%s, %s, %s, %s)',
-            row
-        )
+data = {
+    'models': models_data,
+    'evaluations': evaluations_data
+}
 
 
 def test_search_models():
-    with testing.postgresql.Postgresql() as postgresql:
-        dburl = postgresql.url()
-        engine = create_engine(dburl)
-        setup_data(engine)
-        app.config['SQLALCHEMY_DATABASE_URI'] = dburl
-        test_app = app.test_client()
+    with rig_test_client(data) as test_app:
         route = '/evaluations/search_models'
         response = test_app.post(
             route,
