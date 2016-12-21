@@ -1,0 +1,6 @@
+{
+	"results": [
+		{ "model_id": 1, "precision@10.0": 48.0, "recall@5.0": 45.0 },
+		{ "model_id": 3, "precision@10.0": 50.0, "recall@5.0": 60.0 }
+	]
+}
