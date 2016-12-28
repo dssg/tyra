@@ -47,36 +47,6 @@ def search_models():
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/search_best_models', methods=['POST'])
-def search_best_models():
-    if request.method == 'POST':
-        f = request.form
-        metric = f['metric']
-        timestamp = f['timestamp']
-
-        if len(f['parameter']) == 0:
-            parameter = None
-        else:
-            parameter = f['parameter']
-
-        if len(f['number']) == 0:
-            number = 15
-        else:
-            number = request.form['number']
-        timestamp = request.form['timestamp']
-    output = query.get_best_models(
-        timestamp=timestamp,
-        metric=metric,
-        parameter=parameter,
-        number=number
-    )
-    try:
-        output = output.to_dict('records')
-        return jsonify(results=(output))
-    except:
-        print('there are some problems')
-        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
-
 @app.route('/evaluations/<int:model_id>/model', methods=['GET', 'POST'])
 def get_model_prediction(model_id):
     tic = time.time()
