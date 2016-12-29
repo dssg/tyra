@@ -7,19 +7,19 @@ export default React.createClass({
             data: [],
         };
     },
-	componentDidMount: function() {
-		var self = this;
+    componentDidMount: function() {
+        var self = this;
         $.ajax({
             type: "GET",
-			url: "/evaluations/" + this.props.modelId + "/model_result",
+            url: "/evaluations/" + this.props.modelId + "/model_result",
             success: function(result) {
                 self.setState({
                     data: result.results,
-                });
+                })
             }
         })
 
-	},
+    },
     render: function() {
         return (
             <Reactable.Table
@@ -27,6 +27,6 @@ export default React.createClass({
                 data={this.state.data}
                 pageButtonLimit={5}
                 itemsPerPage={15} />
-        );
+        )
     }
 });

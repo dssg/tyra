@@ -15,7 +15,7 @@ export default React.createClass({
       return { data: [bind_controller()], sortflag: true, button_value: 'Sort by Name'};
     },
     handleSort: function() {
-      var newdata = this.state.data;
+      const newdata = this.state.data;
       console.log(newdata);
       if (!this.state.sortflag) {
         newdata[0].values.sort(function(x,y){return d3.descending(x.value, y.value)});

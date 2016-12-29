@@ -1,6 +1,6 @@
-import React from 'react'
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
+import React from 'react'
 
 export default React.createClass({
     getInitialState: function() {

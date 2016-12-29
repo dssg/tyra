@@ -95,4 +95,4 @@ default_profile.yaml
 node_modules/
 
 # Webpack bundle
-webapp/static/output.json
+webapp/static/output.js
