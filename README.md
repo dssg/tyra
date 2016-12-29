@@ -62,7 +62,7 @@ Since Tyra is built to look at different project databases, being able to run mu
 
 ## Front-end setup
 
-Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies. For ease of use, we are including a version of the minified output javascript with the repository, so setting up the frontend development environment is not necessary for simply using Tyra. But if you want to participate in development, you'll need to follow these instructions.
+Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies.
 
 ### Initial setup
 1. Install NodeJS (https://nodejs.org/en/)
@@ -71,6 +71,7 @@ Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies. For e
 
 3. `npm install` to install dependencies (the initial install will take a few minutes, go have a snack!)
 
+4. `npm run build` to initially create the bundled javascript file
 
 ### During development
 `npm run start` will start a webpack '--watch' command that watches your javascript and compiles it to webapp/static/output.js. The initial startup will probably take 10-15 seconds, but every time you save a javascript file the recompilation will be much quicker.
