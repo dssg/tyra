@@ -70,10 +70,6 @@
       2,
       "always"
     ],
-    "object-shorthand": [
-      2,
-      "always"
-    ],
     "semi": [2, "never"],
     "sort-imports": 2,
     "space-before-function-paren": [
