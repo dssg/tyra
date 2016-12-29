@@ -71,7 +71,9 @@
       "always"
     ],
     "semi": [2, "never"],
-    "sort-imports": 2,
+    "sort-imports": [2, {
+      "ignoreCase": true
+    }],
     "space-before-function-paren": [
       2,
       "never"
