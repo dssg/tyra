@@ -70,12 +70,10 @@
       2,
       "always"
     ],
-    "object-shorthand": [
-      2,
-      "always"
-    ],
     "semi": [2, "never"],
-    "sort-imports": 2,
+    "sort-imports": [2, {
+      "ignoreCase": true
+    }],
     "space-before-function-paren": [
       2,
       "never"
@@ -119,11 +117,9 @@
     "react/no-string-refs": 1,
     "react/no-unknown-property": 1,
     "react/prefer-es6-class": 0,
-    "react/prefer-stateless-function": 1,
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 1,
     "react/require-extension": 1,
-    "react/self-closing-comp": 1,
     "react/sort-comp": 1,
     "react/sort-prop-types": [1, {
       "callbacksLast": true,

@@ -51,7 +51,10 @@
     "script-loader": "^0.6.1",
     "style-loader": "^0.12.3",
     "webpack": "^1.9.10",
-    "webpack-uglify-js-plugin": "~1.1.9"
+    "webpack-uglify-js-plugin": "~1.1.9",
+    "eslint": "~3.12.2",
+    "babel-eslint": "~7.1.1",
+    "eslint-plugin-react": "~6.8.0"
   },
   "babel": {
     "presets": [
