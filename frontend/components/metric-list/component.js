@@ -1,5 +1,5 @@
-import React from 'react'
 import MetricSelector from 'components/metric-selector/component'
+import React from 'react'
 
 export default React.createClass({
     getInitialState: function() {

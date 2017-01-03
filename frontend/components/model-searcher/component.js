@@ -1,8 +1,8 @@
-import React from 'react'
-import moment from 'moment'
+import DatePicker from 'react-datepicker'
 import MetricList from 'components/metric-list/component'
 import ModelTable from 'components/model-table/component'
-import DatePicker from 'react-datepicker'
+import React from 'react'
+import moment from 'moment'
 
 export default React.createClass({
     getInitialState: function() {
