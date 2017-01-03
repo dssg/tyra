@@ -73,6 +73,22 @@ Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies.
 
 4. `npm run build` to initially create the bundled javascript file
 
+### Troubleshooting
+
+Sometimes node and npm versions from package managers are ancient and need to be upgraded before installation will work.
+
+To upgrade node to the latest stable version:
+
+1. `sudo npm cache clean -f`
+
+2. `sudo npm install -g n`
+
+3. `sudo n stable`
+
+To upgrade npm:
+
+1. `sudo npm install npm@latest -g`
+
 ### During development
 `npm run start` will start a webpack '--watch' command that watches your javascript and compiles it to webapp/static/output.js. The initial startup will probably take 10-15 seconds, but every time you save a javascript file the recompilation will be much quicker.
 
