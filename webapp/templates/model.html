@@ -1,10 +1,5 @@
 {% extends "_base.html" %}
 {% block content %}
-<script type="text/jsx" src="{{ url_for('static', filename='components/scatter-chart.js') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='components/bar-chart.js') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='components/featuredist-chart.js') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='components/metrictime-chart.js') }}"></script>
-<script type="text/jsx" src="{{ url_for('static', filename='components/scoretimemodel-chart.js') }}"></script>
 
 
 <div class="container center-container">
@@ -12,97 +7,12 @@
 <button onclick="window.location.href='{{url_for('index')}}'" id="GoBack" class="btn btn-primary">Back to Search</button>
 </div>
 
-<div class="row>">
-<div id="tabs">
-    <ul class="nav nav-tabs row" id="prodTabs">
-        <li class="active" id="tab_model"><a href="#model" data-toggle="tab">Model Summary</a></li>
-        <li id="tab_individual"><a href="#individual" data-toggle="tab">Individual Prediction</a></li>
-        <li id="tab_within"><a href="#within" data-toggle="tab">Within-Model Comparison</a></li>
-        <li id="tab_between"><a href="#between" data-toggle="tab">Between-Models Comparison</a></li>
-    </ul>
-
-
-    <div class="tab-content">
-        <div id="model" class="tab-pane fade in active" align="left">
-            <div class="col-lg-8">
-              <style>#scatter svg {height:500px;} svg {margin-left:0;}</style>
-              <div id="scatter" class="with-3d-shadow with-transitions" >
-                <svg preserveAspectRatio="xMaxYMin"></svg>
-              </div>
-              <script type="text/jsx">
-                ReactDOM.render(<ScatterChart />, document.getElementById('scatter'));
-              </script>
-            </div>
-            <div class="col-lg-4">
-              <div class="row">
-                {% for table in tables %}
-                {{ table|safe }}
-                {% endfor %}
-              </div>
-            <div class="row pager">
-              <form id="pagerp_model">
-                <ul class="pagination pagination-sm">
-                  <li class="prev"><a href="#">&laquo;</a></li>
-                  <li><span class="pagedisplay"></span></li><!-- this can be any element, including an input -->
-                  <li class="next"><a href="#">&raquo;</a></li>
-                  <li><select class="pagesize">
-                    <option selected="selected" value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <!--<option value="all">All Rows</option>-->
-                  </select></li>
-                </ul>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div id="individual" class="tab-pane fade">
-          <div class="row"><h3> Feature Distribution</h3></div>
-            <style>#fdistchart svg {height:400px; width:800px;}</style>
-            <div id="fdistchart">
-              <svg></svg>
-            </div>
-            <script type="text/jsx">
-                ReactDOM.render(<FeatureDistChart />, document.getElementById('fdistchart'));
-            </script>
-          <div class="row"><h3> Risk Score Cross Time & Models</h3></div>
-            <style>#scoretimemodelchart svg {height:400px; width:600px;}</style>
-            <div id="scoretimemodelchart">
-              <svg></svg>
-            </div>
-            <script type="text/jsx">
-              ReactDOM.render(<ScoreTimeModelChart />, document.getElementById('scoretimemodelchart'));
-            </script>
-        </div>
-        <div id="within" class="tab-pane fade">
-          <div class="row"><h3>Metrics Over Time </h3></div>
-            <style>#metrictimechart svg {height: 400px; width:800px; svg {margin-left:0;}}</style>
-            <div id="metrictimechart">
-              <svg></svg>
-            </div>
-            <script type="text/jsx">
-                ReactDOM.render(<MetricTimeChart />, document.getElementById('metrictimechart'));
-            </script>
-          <div class="row"><h3>Feature Importance</h3></div>
-            <style>#barchart svg {height:400px; width:800px;}</style>
-            <div id="barchart">
-              <svg></svg>
-            </div>
-            <script type="text/jsx">
-                ReactDOM.render(<BarChart />, document.getElementById('barchart'));
-            </script>
-        </div>
-        <div id="between" class="tab-pane fade">
-          <p> content of between-model comparison </p>
-        </div>
+<div class="row">
+<div id="model-dashboard"></div>
+<script type='text/javascript'>
+	ReactDOM.render(React.createElement(ModelDashboard, { modelId: {{ model_id }}}), document.getElementById('model-dashboard'));
+</script>
 </div>
-    </div>
-    </div>
-    </div>
-
-
-
-
+</div>
 
 {% endblock %}

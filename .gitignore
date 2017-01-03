@@ -90,3 +90,9 @@ ENV/
 
 # Database config
 default_profile.yaml
+
+# node install directory
+node_modules/
+
+# Webpack bundle
+webapp/static/output.js
