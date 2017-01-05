@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "d3": "~3.4.4",
+    "d3": "3.5.4",
     "jquery": "1.11.3",
     "moment": "^2.17.1",
-    "nvd3": "^1.8.5",
+    "nvd3": "1.8.2",
     "react": "^15.4.1",
     "react-datepicker": "~0.39.0",
     "react-dom": "^15.4.1",
