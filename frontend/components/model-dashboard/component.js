@@ -6,6 +6,8 @@ import PredictionsTable from 'components/predictions-table/component'
 import React from 'react'
 import ScatterChart from 'components/scatter-chart/component'
 import ScoreTimeModelChart from 'components/scoretimemodel-chart/component'
+import RankCorrChart from 'components/rankcorr-chart/component'
+
 
 export default React.createClass({
   render: function() {
@@ -52,6 +54,8 @@ export default React.createClass({
         </TabPanel>
         <TabPanel>
           <p>content of between-model comparison</p>
+          <RankCorrChart>
+          </RankCorrChart>
         </TabPanel>
       </Tabs>
     )
