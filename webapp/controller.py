@@ -47,14 +47,6 @@ def search_models():
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/model', methods=['GET', 'POST'])
-def get_model_prediction(model_id):
-    return render_template(
-        'model.html',
-        model_id=model_id
-    )
-
-
 @app.route('/evaluations/<int:model_id>/model_result', methods=['GET', 'POST'])
 def get_model_result(model_id):
     output = query.get_model_prediction(id=model_id)
