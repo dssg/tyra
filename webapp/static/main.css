@@ -120,4 +120,25 @@ table.focus-highlight td:before {
 	padding-right: 10px;
 }
 
+/*rect.selection {
+  stroke          : #333;
+  stroke-dasharray: 4px;
+  stroke-opacity  : 0.5;
+  fill            : transparent;
+   }
 
+rect.cell-border {
+  stroke: #eee;
+  stroke-width:0px;
+      }
+
+rect.cell-selected {
+  stroke: rgb(51,102,153);
+  stroke-width:0.5px;
+      }*/
+
+.cell:hover{
+  stroke: #F00;
+  stroke-width:2.5px;
+  cursor: pointer;
+}

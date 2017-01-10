@@ -13,7 +13,7 @@ export default React.createClass({
     render: function() {
       return (
         <div>
-        <div className="row"><button onClick={this.handleGenerate}>Generate</button></div>
+        <button onClick={this.handleGenerate}>Generate</button>
           {
             React.createElement(NVD3Chart, {
                               type:"lineChart",

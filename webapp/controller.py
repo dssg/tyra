@@ -30,8 +30,7 @@ def search_models():
     flattened_query = defaultdict(dict)
     for key in f.keys():
         if 'parameter' in key:
-            flattened_query[key.strip('parameter')]['parameter'] = \
-                float(f[key])
+            flattened_query[key.strip('parameter')]['parameter'] = float(f[key])
         elif 'metric' in key:
             if f[key] in METRIC_WHITELIST:
                 flattened_query[key.strip('metric')]['metric'] = f[key]
