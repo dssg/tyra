@@ -120,13 +120,6 @@ table.focus-highlight td:before {
 	padding-right: 10px;
 }
 
-
-
-.cell:hover{
-  stroke: #F00;
-  stroke-width:2.5px;
-  cursor: pointer;
-
 /* Model Table */
 .ReactTable .-pagination{
 	width:100%;
@@ -261,4 +254,10 @@ table.focus-highlight td:before {
 .ReactTable .-pagination .-pageJump input{
 	width:70px;
 	text-align:center
+}
+
+.cell:hover{
+  stroke: #F00;
+  stroke-width:2.5px;
+  cursor: pointer;
 }
