@@ -1,8 +1,5 @@
 import d3 from 'd3'
 import React from 'react'
-/*import Chart from 'components/chart/component'*/
-/*import DataSeries from 'components/dataseries/component'*/
-/*import HeatMap from 'components/heatmap-chart/component'*/
 import _ from 'underscore'
 import ReactFauxDOM from 'react-faux-dom'
 
@@ -39,8 +36,8 @@ export default React.createClass({
     .data(self.state.data)
     .enter()
     .append('rect')
-    .attr('x', function(d,i) {return d[0]*cellSize + 50 })
-    .attr('y', function(d,i) {return d[1]*cellSize + 50})
+    .attr('x', function(d, i) {return d[0]*cellSize + 50 })
+    .attr('y', function(d, i) {return d[1]*cellSize + 50 })
     .attr("class", function(d) { if (self.state.mouseOver) {
       return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
     } else {
@@ -88,45 +85,40 @@ export default React.createClass({
       .attr("x", 650 + 20)
       .attr("y", 25)
       .attr("dy", "1.0em")
-      .text("Jaccard Similarity");
+      .text("Jaccard Similarity")
 
-    var rowLabels = svg.append("g")
+    const rowLabels = svg.append("g")
       .selectAll(".rowLabelg")
       .data(rowLabel)
       .enter()
       .append("text")
-      .text(function (d) { return d; })
+      .text(function(d) { return d; })
       .attr("x", 0)
-      .attr("y", function (d, i) { return (i+1) * cellSize + 50 })
+      .attr("y", function(d, i) { return (i+1) * cellSize + 50 })
       .style("text-anchor", "end")
       .attr("transform", "translate(80," + cellSize / 1.5 + ")")
-      .attr("class", function (d,i) { return "rowLabel mono r"+i;} )
-      .on("mouseover", function(d) {d3.select(this).classed("text-hover",true)})
-      .on("mouseout" , function(d) {d3.select(this).classed("text-hover",false)})
+      .attr("class", function(d, i) { return "rowLabel mono r" + i })
 
-    var colLabels = svg.append("g")
+    const colLabels = svg.append("g")
       .selectAll(".colLabelg")
       .data(rowLabel)
       .enter()
       .append("text")
-      .text(function (d) { return d; })
+      .text(function(d) { return d })
       .attr("x", 0)
-      .attr("y", function (d, i) { return (i+1) * cellSize +50 })
+      .attr("y", function(d, i) { return (i+1) * cellSize +50 })
       .style("text-anchor", "left")
       .attr("transform", "translate("+cellSize/2 + ",80) rotate (-90)")
-      .attr("class",  function (d, i) { return "colLabel mono c"+i;} )
-      .on("mouseover", function(d) {d3.select(this).classed("text-hover", true)})
-      .on("mouseout" , function(d) {d3.select(this).classed("text-hover", false)})
-
+      .attr("class",  function(d, i) { return "colLabel mono c" + i })
 
     return svg.node().toReact()
   }
-});
+})
 
 function generate_fake_corr_matrix(n) {
   const corr_matrix = []
   const random = Math.random
-  for (let i = 1; i <= n; i++ ) {
+  for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= n; j++) {
       corr_matrix.push([i, j, random()])
     }
