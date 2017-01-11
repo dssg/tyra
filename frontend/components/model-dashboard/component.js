@@ -3,10 +3,11 @@ import FeatureImportanceChart from 'components/fimportance-chart/component'
 import FeatureDistChart from 'components/featuredist-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
+import RankCorrChart from 'components/rankcorr-chart/component'
 import React from 'react'
 import ScatterChart from 'components/scatter-chart/component'
 import ScoreTimeModelChart from 'components/scoretimemodel-chart/component'
-import RankCorrChart from 'components/rankcorr-chart/component'
+
 
 
 export default React.createClass({

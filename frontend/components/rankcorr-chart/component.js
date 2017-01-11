@@ -1,15 +1,14 @@
 import d3 from 'd3'
 import React from 'react'
-import _ from 'underscore'
 import ReactFauxDOM from 'react-faux-dom'
 
 export default React.createClass({
   getDefaultProps: function() {
-          return {
-            width: 1000,
-            height: 1000
-          }
-        },
+    return {
+      width: 1000,
+      height: 1000
+    }
+  },
   getInitialState: function() {
     return {
       data: generate_fake_corr_matrix(10),
@@ -19,7 +18,7 @@ export default React.createClass({
   render: function() {
     const self = this
     const cellSize = 50
-    const margin = {top: 1, right: 1, bottom: 1, left: 1}
+    const margin = { top: 1, right: 1, bottom: 1, left: 1 }
     const colors_scale = d3.scale.linear().range(["white","steelblue"])
     const rowLabel = ['model1', 'model2', 'model3', 'model4', 'model5', 'model6', 'model7', 'model8', 'model9', 'model10' ]
 
@@ -36,26 +35,25 @@ export default React.createClass({
     .data(self.state.data)
     .enter()
     .append('rect')
-    .attr('x', function(d, i) {return d[0]*cellSize + 50 })
-    .attr('y', function(d, i) {return d[1]*cellSize + 50 })
+    .attr('x', function(d) {return d[0]*cellSize + 50 })
+    .attr('y', function(d) {return d[1]*cellSize + 50 })
     .attr("class", function(d) { if (self.state.mouseOver) {
       return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
     } else {
       return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
-    }}
-    )
+    }})
     .attr({
-          width: cellSize - margin.left - margin.right,
-          height: cellSize - margin.top - margin.bottom
+      width: cellSize - margin.left - margin.right,
+      height: cellSize - margin.top - margin.bottom
           })
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
     .style('fill', function(d) {return colors_scale(d[2])})
-    .on('mouseover', function(d) {
+    .on('mouseover', function() {
       self.setState({
         mouseOver: true
       })
     })
-    .on('mouseout', function(d) {
+    .on('mouseout', function() {
       self.setState({
         mouseOver: false
       })
