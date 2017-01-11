@@ -19,7 +19,7 @@ export default React.createClass({
     const self = this
     const cellSize = 50
     const margin = { top: 1, right: 1, bottom: 1, left: 1 }
-    const colors_scale = d3.scale.linear().range(["white","steelblue"])
+    const colors_scale = d3.scale.linear().range(["white", "steelblue"])
     const rowLabel = ['model1', 'model2', 'model3', 'model4', 'model5', 'model6', 'model7', 'model8', 'model9', 'model10' ]
 
     let svg = d3.select(ReactFauxDOM.createElement('svg'))
@@ -35,8 +35,12 @@ export default React.createClass({
     .data(self.state.data)
     .enter()
     .append('rect')
-    .attr('x', function(d) {return d[0]*cellSize + 50 })
-    .attr('y', function(d) {return d[1]*cellSize + 50 })
+    .attr('x', function(d) {
+      return d[0]*cellSize + 50
+    })
+    .attr('y', function(d) {
+      return d[1]*cellSize + 50
+    })
     .attr("class", function(d) { if (self.state.mouseOver) {
       return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
     } else {
@@ -45,9 +49,11 @@ export default React.createClass({
     .attr({
       width: cellSize - margin.left - margin.right,
       height: cellSize - margin.top - margin.bottom
-          })
+    })
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
-    .style('fill', function(d) {return colors_scale(d[2])})
+    .style('fill', function(d) {
+      return colors_scale(d[2])
+    })
     .on('mouseover', function() {
       self.setState({
         mouseOver: true
@@ -65,7 +71,9 @@ export default React.createClass({
       .enter()
       .append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(" + (650 + 20) + ", " + (50 + i * 20) + ")" })
+      .attr("transform", function(d, i) {
+        return "translate(" + (650 + 20) + ", " + (50 + i * 20) + ")"
+      })
 
     legend.append("rect")
       .attr("width", 20)
@@ -85,29 +93,41 @@ export default React.createClass({
       .attr("dy", "1.0em")
       .text("Jaccard Similarity")
 
-    let rowLabels = svg.append("g")
+    const rowLabels = svg.append("g")
       .selectAll(".rowLabelg")
       .data(rowLabel)
       .enter()
       .append("text")
-      .text(function(d) { return d })
+      .text(function(d) {
+        return d
+      })
       .attr("x", 0)
-      .attr("y", function(d, i) { return (i+1) * cellSize + 50 })
+      .attr("y", function(d, i) {
+        return (i+1) * cellSize + 50
+      })
       .style("text-anchor", "end")
       .attr("transform", "translate(80," + cellSize / 1.5 + ")")
-      .attr("class", function(d, i) { return "rowLabel mono r" + i })
+      .attr("class", function(d, i) {
+        return "rowLabel mono r" + i
+      })
 
-    let colLabels = svg.append("g")
+    const colLabels = svg.append("g")
       .selectAll(".colLabelg")
       .data(rowLabel)
       .enter()
       .append("text")
-      .text(function(d) { return d })
+      .text(function(d) {
+        return d
+      })
       .attr("x", 0)
-      .attr("y", function(d, i) { return (i+1) * cellSize +50 })
+      .attr("y", function(d, i) {
+        return (i+1) * cellSize +50
+      })
       .style("text-anchor", "left")
       .attr("transform", "translate("+cellSize/2 + ", 80) rotate (-90)")
-      .attr("class", function(d, i) { return "colLabel mono c" + i })
+      .attr("class", function(d, i) {
+        return "colLabel mono c" + i
+      })
 
     return svg.node().toReact()
   }
@@ -121,6 +141,5 @@ function generate_fake_corr_matrix(n) {
       corr_matrix.push([i, j, random()])
     }
   }
-
   return corr_matrix
 }
