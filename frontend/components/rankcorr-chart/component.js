@@ -41,11 +41,13 @@ export default React.createClass({
     .attr('y', function(d) {
       return d[1]*cellSize + 50
     })
-    .attr("class", function(d) { if (self.state.mouseOver) {
-      return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
-    } else {
-      return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
-    }})
+    .attr("class", function(d) {
+      if (self.state.mouseOver) {
+        return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
+      } else {
+        return "cell cell-border cr" + (d[0]-1) +" cc" + (d[1]-1)
+      }
+    })
     .attr({
       width: cellSize - margin.left - margin.right,
       height: cellSize - margin.top - margin.bottom

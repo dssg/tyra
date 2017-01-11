@@ -13,8 +13,8 @@ export default React.createClass({
     render: function() {
       return (
         <div>
-        <button onClick={this.handleGenerate}>Generate</button>
-        {
+          <button onClick={this.handleGenerate}>Generate</button>
+          {
           React.createElement(NVD3Chart, {
             type:"lineChart",
             datum: this.state.data,
@@ -33,7 +33,7 @@ export default React.createClass({
           })
         }
         </div>
-        );
+      )
     }
 });
 
