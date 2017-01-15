@@ -1,67 +1,94 @@
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import FeatureImportanceChart from 'components/fimportance-chart/component'
-import FeatureDistChart from 'components/featuredist-chart/component'
-import MetricTimeChart from 'components/metrictime-chart/component'
-import PRThresholdCurve from 'components/prthreshold-chart/component'
-import PredictionsTable from 'components/predictions-table/component'
-import RankCorrChart from 'components/rankcorr-chart/component'
+import { clone, isEmpty } from 'ramda'
+import ModelSearcher from 'components/model-searcher/component'
+import ModelTable from 'components/model-table/component'
+import moment from 'moment'
 import React from 'react'
-import ScatterChart from 'components/scatter-chart/component'
-import ScoreTimeModelChart from 'components/scoretimemodel-chart/component'
+import uniqueId from 'utils/unique-id'
+
+const defaultMetric = { 'metric': 'precision', 'parameter': '' }
+const defaultStartDate = moment('2016-08-03')
 
 
 export default React.createClass({
-  render: function() {
-    return (
-      <Tabs>
-        <TabList>
-          <Tab>Model Summary</Tab>
-          <Tab>Individual Prediction</Tab>
-          <Tab>Within-Model Comparison</Tab>
-          <Tab>Between-Models Comparison</Tab>
-        </TabList>
+  getInitialState: function() {
+    let metrics = {}
+    metrics[uniqueId()] = clone(defaultMetric)
+    return {
+      modelId: null,
+      metrics: metrics,
+      startDate: defaultStartDate,
+      searchId: ''
+    }
+  },
 
-        <TabPanel>
-          <PRThresholdCurve modelId={this.props.modelId}>
-            <svg style={{ height:'700px', width: '500px' }}></svg>
-          </PRThresholdCurve>
-          <div className="col-lg-8">
-            <ScatterChart className="with-3d-shadow with-transitions">
-              <svg style={{ height: '500px', 'margin-left': 0 }} preserveAspectRatio="xMaxYMin"></svg>
-            </ScatterChart>
+  handleSearch: function(newSearchId) {
+    this.setState({ searchId: newSearchId })
+  },
+
+  setMetrics: function(newMetrics) {
+    this.setState({ metrics: newMetrics })
+  },
+
+  setStartDate: function(newDate) {
+    this.setState({ startDate: newDate })
+  },
+
+  removeModelId: function() {
+    this.setState({ modelId: null })
+  },
+
+  setModelId: function(newId) {
+    this.setState({ modelId: newId })
+  },
+
+  renderModelTable: function() {
+    return (
+      <ModelTable
+        modelSearchParameters={this.state.modelSearchParameters}
+        setModelId={this.setModelId}
+        searchId={this.state.searchId}
+        metrics={this.state.metrics}
+        startDate={this.state.startDate} />
+    )
+  },
+
+  renderModelCharts: function() {
+    return React.createElement(
+      this.props.chartsClass,
+      { modelId: this.state.modelId, setModelId: this.setModelId }
+    )
+  },
+
+  render: function() {
+    if(this.state.modelId) {
+      return (
+        <div className="container center-container">
+          <div className="row">
+            <button onClick={this.removeModelId} id="GoBack" className="btn btn-primary">Back to Search</button>
           </div>
-          <div className="col-lg-4">
+          { this.renderModelCharts() }
+        </div>
+      )
+    } else {
+      return (
+        <div className="container center-container">
+          <div className="col-lg-3">
+            <ModelSearcher
+              metrics={this.state.metrics}
+              startDate={this.state.startDate}
+              handleSearch={this.handleSearch}
+              setMetrics={this.setMetrics}
+              setStartDate={this.setStartDate} />
+          </div>
+          <div className="col-lg-9">
             <div className="row">
-              <PredictionsTable modelId={this.props.modelId} />
+              <div className="col-lg-12">
+                { !isEmpty(this.state.searchId) ? this.renderModelTable() : null }
+              </div>
             </div>
           </div>
-        </TabPanel>
-        <TabPanel>
-          <h3>Feature Distribution</h3>
-          <FeatureDistChart>
-            <svg style={{ height: '400px', width: '800px' }}></svg>
-          </FeatureDistChart>
-          <h3>Risk Score Cross Time and Models</h3>
-          <ScoreTimeModelChart>
-            <svg style={{ height: '400px', width: '600px' }}></svg>
-          </ScoreTimeModelChart>
-        </TabPanel>
-        <TabPanel>
-          <h3>Metrics Over Time</h3>
-          <MetricTimeChart>
-            <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
-          </MetricTimeChart>
-          <h3>Feature Importance</h3>
-          <FeatureImportanceChart>
-            <svg style={{ height: '600px', width: '1000px' }}></svg>
-          </FeatureImportanceChart>
-        </TabPanel>
-        <TabPanel>
-          <h3>Rank Correlation</h3>
-          <RankCorrChart>
-          </RankCorrChart>
-        </TabPanel>
-      </Tabs>
-    )
+        </div>
+      )
+    }
   }
 })
