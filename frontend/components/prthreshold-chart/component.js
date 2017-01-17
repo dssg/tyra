@@ -31,8 +31,8 @@ export default React.createClass({
           React.createElement(NVD3Chart, {
             type:"lineChart",
             datum: this.state.data,
-            x: function(d) { return d[1] },
-            y: function(d) { return d[0] },
+            x: function(d) { return d[0] },
+            y: function(d) { return d[1] },
             containerStyle:{ width: "700px", height: "500px" },
             options:{
               showValues: true,
