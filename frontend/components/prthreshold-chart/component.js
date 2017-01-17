@@ -4,15 +4,6 @@ import React from 'react'
 
 export default React.createClass({
   getInitialState: function(){
-    /*function bind_controller(){
-      return $.ajax({
-        url: "/evaluations/215/metric",
-        dataType: 'json',
-        async:false
-      }).responseJSON
-
-    console.log(bind_controller()['results'])
-    return { data: bind_controller()['results']}*/
     return {
       data: [],
     }
