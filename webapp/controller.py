@@ -81,7 +81,7 @@ def get_metric(model_id):
         recall = recall.to_dict('records')
         precision = [[p['parameter'], p['value']] for p in precision]
         recall = [[r['parameter'], r['value']] for r in recall]
-        output = [{'key': 'Precision', 'values': precision}, \
+        output = [{'key': 'Precision', 'values': precision}, /
                   {'key': 'Recall', 'values': recall}]
         return jsonify(results=output)
     except:
