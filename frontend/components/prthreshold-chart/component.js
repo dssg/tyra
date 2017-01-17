@@ -26,7 +26,7 @@ export default React.createClass({
     return (
       <div>
         <h3>Model {this.props.modelId}</h3>
-        <h3>Top K Threshold Curve</h3>
+        <h3>Top-K Percent Precision and Recall Curve by Threshold</h3>
         {
           React.createElement(NVD3Chart, {
             type:"lineChart",
