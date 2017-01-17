@@ -1,6 +1,7 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, Response
 from webapp import app
 from webapp import query
+import json
 import time
 from collections import defaultdict
 
@@ -70,6 +71,26 @@ def feature_importance(model_id=63, num=10):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+@app.route('/evaluations/<int:model_id>/metric', methods=['GET','POST'])
+def get_metric(model_id):
+    query_arg = {'model_id':model_id}
+    precision = query.get_precision(query_arg)
+    recall = query.get_recall(query_arg)
+    #print(output)
+    try:
+        precision = precision.to_dict('records')
+        recall = recall.to_dict('records')
+        precision = [list(x.values()) for x in precision]
+        recall = [list(x.values()) for x in recall]
+        output = [{'key':'Precision', 'values':precision}, {'key':'Recall', 'values':recall}]
+        #print(json.dumps(test))
+        #output = precision
+        #return Response(json.dumps(test), mimetype='application/json')
+        return jsonify(results=output)
+        #return jsonify(key="Precision "+str(model_id), values=(output))
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route('/evaluations/within_model', methods=['GET', 'POST'])
 def within_model():
