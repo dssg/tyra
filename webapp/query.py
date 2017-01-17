@@ -30,7 +30,6 @@ def get_models(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
-
     query = """
     select
         e.model_id,

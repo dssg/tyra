@@ -255,3 +255,9 @@ table.focus-highlight td:before {
 	width:70px;
 	text-align:center
 }
+
+.cell:hover{
+  stroke: #F00;
+  stroke-width:2.5px;
+  cursor: pointer;
+}

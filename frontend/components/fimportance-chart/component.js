@@ -26,14 +26,14 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <div className="row"><button onClick={this.handleSort}>{this.state.button_value}</button></div>
+        <button onClick={this.handleSort}>{this.state.button_value}</button>
         {
           React.createElement(NVD3Chart, {
             type:"multiBarHorizontalChart",
             datum: this.state.data,
             x: 'label',
             y: 'value',
-            containerStyle: { width: "1000px", height: "900px" },
+            containerStyle: { width: "800px", height: "500px" },
             options:{
               showValues: true,
               showControls: true,

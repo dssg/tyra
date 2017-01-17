@@ -1,11 +1,14 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import BarChart from 'components/bar-chart/component'
+import FeatureImportanceChart from 'components/fimportance-chart/component'
 import FeatureDistChart from 'components/featuredist-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
+import RankCorrChart from 'components/rankcorr-chart/component'
 import React from 'react'
 import ScatterChart from 'components/scatter-chart/component'
 import ScoreTimeModelChart from 'components/scoretimemodel-chart/component'
+
+
 
 export default React.createClass({
   render: function() {
@@ -31,27 +34,29 @@ export default React.createClass({
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="row"><h3>Feature Distribution</h3></div>
+          <h3>Feature Distribution</h3>
           <FeatureDistChart>
             <svg style={{ height: '400px', width: '800px' }}></svg>
           </FeatureDistChart>
-          <div className="row"><h3>Risk Score Cross Time and Models</h3></div>
+          <h3>Risk Score Cross Time and Models</h3>
           <ScoreTimeModelChart>
             <svg style={{ height: '400px', width: '600px' }}></svg>
           </ScoreTimeModelChart>
         </TabPanel>
         <TabPanel>
-          <div className="row"><h3>Metrics Over Time</h3></div>
+          <h3>Metrics Over Time</h3>
           <MetricTimeChart>
             <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
           </MetricTimeChart>
-          <div className="row"><h3>Feature Importance</h3></div>
-          <BarChart>
-            <svg style={{ height: '400px', width: '800px' }}></svg>
-          </BarChart>
+          <h3>Feature Importance</h3>
+          <FeatureImportanceChart>
+            <svg style={{ height: '600px', width: '1000px' }}></svg>
+          </FeatureImportanceChart>
         </TabPanel>
         <TabPanel>
-          <p>content of between-model comparison</p>
+          <h3>Rank Correlation</h3>
+          <RankCorrChart>
+          </RankCorrChart>
         </TabPanel>
       </Tabs>
     )

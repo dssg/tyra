@@ -13,25 +13,27 @@ export default React.createClass({
     render: function() {
       return (
         <div>
-        <div className="row"><button onClick={this.handleGenerate}>Generate</button></div>
+          <button onClick={this.handleGenerate}>Generate</button>
           {
-            React.createElement(NVD3Chart, {
-                              type:"lineChart",
-                              datum: this.state.data,
-                              containerStyle:{ width: "700px", height: "500px" },
-                              x: function(d) { return d[0] },
-                              y: function(d) { return d[1] },
-                              options:{ showDistX: true,
-                                        showDistY: true,
-                                        useInteractiveGuideline: true,
-                                        duration: 500,
-                                        xAxis: { tickFormat: d3.format('.01f'), axisLabel: 'Feature Value' },
-                                        yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'P(X|Y=Label)' },
-                                        color: d3.scale.category10().range() }
-                                            })
-          }
+          React.createElement(NVD3Chart, {
+            type:"lineChart",
+            datum: this.state.data,
+            containerStyle:{ width: "700px", height: "500px" },
+            x: function(d) { return d[0] },
+            y: function(d) { return d[1] },
+            options:{
+              showDistX: true,
+              showDistY: true,
+              useInteractiveGuideline: true,
+              duration: 500,
+              xAxis: { tickFormat: d3.format('.01f'), axisLabel: 'Feature Value' },
+              yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'P(X|Y=Label)' },
+              color: d3.scale.category10().range()
+            }
+          })
+        }
         </div>
-              );
+      )
     }
 });
 
