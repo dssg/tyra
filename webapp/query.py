@@ -71,11 +71,14 @@ def get_feature_importance(query_arg):
     output = df_fimportance
     return output
 
+
 def get_precision(query_arg):
     query= """
     select parameter :: NUMERIC, value
     from results.evaluations
-    where metric= 'precision@' and model_id = %(model_id)s and parameter != 'default'
+    where metric= 'precision@'
+    and model_id = %(model_id)s
+    and parameter != 'default'
     order by parameter;
     """
     df_precision = pd.read_sql(
@@ -86,11 +89,14 @@ def get_precision(query_arg):
     output = df_precision
     return output
 
+
 def get_recall(query_arg):
-    query= """
+    query = """
     select parameter :: NUMERIC, value
     from results.evaluations
-    where metric= 'recall@' and model_id = %(model_id)s and parameter != 'default'
+    where metric= 'recall@'
+    and model_id = %(model_id)s
+    and parameter != 'default'
     order by parameter;
     """
     df_precision = pd.read_sql(

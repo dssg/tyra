@@ -22,7 +22,7 @@ export default React.createClass({
     })
 
   },
-  render: function(){
+  render: function() {
     return (
       <div>
         <h3>Model {this.props.modelId}</h3>
