@@ -71,8 +71,8 @@ def feature_importance(model_id=63, num=10):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/metric', methods=['GET', 'POST'])
-def get_metric(model_id):
+@app.route('/evaluations/<int:model_id>/precision_recall_threshold', methods=['GET', 'POST'])
+def get_precision_and_recall_threshold(model_id):
     query_arg = {'model_id': model_id}
     precision = query.get_precision(query_arg)
     recall = query.get_recall(query_arg)

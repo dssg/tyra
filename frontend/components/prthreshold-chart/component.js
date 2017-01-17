@@ -13,7 +13,7 @@ export default React.createClass({
     const self = this
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/metric",
+      url: "/evaluations/" + this.props.modelId + "/precision_recall_threshold",
       success: function(result) {
         self.setState({
           data: result.results
