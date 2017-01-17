@@ -73,7 +73,7 @@ def get_feature_importance(query_arg):
 
 
 def get_precision(query_arg):
-    query= """
+    query = """
     select parameter :: NUMERIC, value
     from results.evaluations
     where metric= 'precision@'

@@ -3,7 +3,7 @@ import NVD3Chart from 'react-nvd3'
 import React from 'react'
 
 export default React.createClass({
-  getInitialState: function(){
+  getInitialState: function() {
     return {
       data: [],
     }
