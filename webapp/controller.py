@@ -71,6 +71,23 @@ def feature_importance(model_id=63, num=10):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
+@app.route('/evaluations/<int:model_id>/precision_recall_threshold', methods=['GET', 'POST'])
+def get_precision_and_recall_threshold(model_id):
+    query_arg = {'model_id': model_id}
+    precision = query.get_precision(query_arg)
+    recall = query.get_recall(query_arg)
+    try:
+        precision = precision.to_dict('records')
+        recall = recall.to_dict('records')
+        precision = [[p['parameter'], p['value']] for p in precision]
+        recall = [[r['parameter'], r['value']] for r in recall]
+        output = [{'key': 'Precision', 'values': precision},
+                  {'key': 'Recall', 'values': recall}]
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
 @app.route('/evaluations/within_model', methods=['GET', 'POST'])
 def within_model():
     return render_template('within_model.html')
