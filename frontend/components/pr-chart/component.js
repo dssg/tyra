@@ -37,6 +37,8 @@ export default React.createClass({
             options:{
               showValues: true,
               showControls: true,
+              yDomain: [0, 1.05],
+              xDomain: [0, 1.05],
               duration: 500,
               xAxis: { axisLabel: 'Recall' },
               yAxis: { axisLabel: 'Precision' },

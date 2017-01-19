@@ -94,7 +94,6 @@ def get_precision_and_recall_threshold(model_id):
 
 @app.route('/evaluations/<int:model_id>/p_r', methods=['GET', 'POST'])
 def get_precision_recall(model_id):
-    #return jsonify({'keys': 'precision'})
     query_arg = {'model_id': model_id}
     y = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(list(y['label_value']), list(y['unit_score']))
