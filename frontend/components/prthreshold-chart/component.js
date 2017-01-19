@@ -26,14 +26,14 @@ export default React.createClass({
     return (
       <div>
         <h3>Model {this.props.modelId}</h3>
-        <h3>Top-K Percent Precision and Recall Curve by Threshold</h3>
+        <h4>Top-K Percent Precision and Recall by Threshold</h4>
         {
           React.createElement(NVD3Chart, {
             type:"lineChart",
             datum: this.state.data,
             x: function(d) { return d[0] },
             y: function(d) { return d[1] },
-            containerStyle:{ width: "700px", height: "500px" },
+            containerStyle:{ height: "600px", width: "800px" },
             options:{
               showValues: true,
               showControls: true,

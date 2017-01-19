@@ -2,18 +2,21 @@ import pandas as pd
 from webapp import db
 
 
-def get_model_prediction(id):
+def get_model_prediction(query_arg):
     query = """
     SELECT
         unit_id,
         unit_score,
         label_value
     FROM results.predictions
-    WHERE model_id = '{}'
+    WHERE model_id = %(model_id)s
     ORDER BY unit_score DESC
-    """.format(id)
-
-    df_models = pd.read_sql(query, con=db.engine)
+    """
+    df_models = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine
+        )
     output = df_models
     return output
 
