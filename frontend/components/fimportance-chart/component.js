@@ -4,14 +4,23 @@ import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
-    function bind_controller() {
-      return $.ajax({
-        url: "/evaluations/feature_importance",
-        dataType: 'json',
-        async:false
-      }).responseJSON
+    return {
+      data: [],
+      sortflag: true,
+      button_value: 'Sort by Name'
     }
-    return { data: [bind_controller()], sortflag: true, button_value: 'Sort by Name' }
+  },
+  componentDidMount: function() {
+    const self = this
+    $.ajax({
+      type: "GET",
+      url: "/evaluations/" + this.props.modelId + "/feature_importance",
+      success: function(result) {
+        self.setState({
+          data: result.results,
+        })
+      }
+    })
   },
   handleSort: function() {
     const newdata = this.state.data

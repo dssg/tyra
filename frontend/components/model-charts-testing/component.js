@@ -3,6 +3,7 @@ import FeatureDistChart from 'components/featuredist-chart/component'
 import FeatureImportanceChart from 'components/fimportance-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
+import RocCurve from 'components/roc-chart/component'
 import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
 import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/component'
 import RankCorrChart from 'components/rankcorr-chart/component'
@@ -32,6 +33,11 @@ export default React.createClass({
               <svg style={{ height:'700px', width: '500px' }}></svg>
             </SimplePrecisionRecallCurve>
           </div>
+          <div>
+            <RocCurve modelId={this.props.modelId}>
+              <svg></svg>
+            </RocCurve>
+          </div>
           <div className="col-md-8">
             <ScatterChart className="with-3d-shadow with-transitions">
               <svg style={{ height: '500px', 'margin-left': 0 }} preserveAspectRatio="xMaxYMin"></svg>
@@ -59,7 +65,7 @@ export default React.createClass({
             <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
           </MetricTimeChart>
           <div className="row"><h3>Feature Importance</h3></div>
-          <FeatureImportanceChart>
+          <FeatureImportanceChart modelId={this.props.modelId}>
             <svg style={{ height: '400px', width: '800px' }}></svg>
           </FeatureImportanceChart>
         </TabPanel>

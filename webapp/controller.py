@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify
 from webapp import app
 from webapp import query
 from collections import defaultdict
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_recall_curve, roc_curve
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -64,14 +64,17 @@ def get_model_result(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/feature_importance', methods=['GET','POST'])
-def feature_importance(model_id=63, num=10):
+@app.route('/evaluations/<int:model_id>/feature_importance', methods=['GET','POST'])
+def feature_importance(model_id, num=10):
     query_arg = {'model_id':model_id, 'num':num}
-    output = query.get_feature_importance(query_arg)
-    print(output)
+    f_importance = query.get_feature_importance(query_arg)
+    print(f_importance)
     try:
-        output = output.to_dict('records')
-        return jsonify(key="Model "+str(model_id), color="#d67777",values=(output))
+        f_importance = f_importance.to_dict('records')
+        output = [{'key': 'Model'+str(model_id),
+                   'color': '#d67777',
+                   'values': f_importance}]
+        return jsonify(results=output)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
@@ -99,9 +102,9 @@ def get_threshold_precision_recall(model_id):
 @app.route('/evaluations/<int:model_id>/simple_precision_recall', methods=['GET', 'POST'])
 def get_simple_precision_recall(model_id):
     query_arg = {'model_id': model_id}
-    y = query.get_model_prediction(query_arg)
-    precision, recall, threshold = precision_recall_curve(y['label_value'],
-                                                          y['unit_score'])
+    pred = query.get_model_prediction(query_arg)
+    precision, recall, threshold = precision_recall_curve(pred['label_value'],
+                                                          pred['unit_score'])
     output = [{'key': 'precision_recall',
                'values': list(zip(precision, recall))}]
     try:
@@ -109,6 +112,21 @@ def get_simple_precision_recall(model_id):
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route('/evaluations/<int:model_id>/roc', methods=['GET', 'POST'])
+def get_roc(model_id):
+    query_arg = {'model_id': model_id}
+    pred = query.get_model_prediction(query_arg)
+    fpr, tpr, threshold = roc_curve(pred['label_value'], pred['unit_score'])
+    output = [{'key': 'roc', 'values': list(zip(fpr, tpr))},
+              {'key': 'random', 'values': [[0, 0], [1, 1]]}]
+    try:
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
 
 @app.route('/evaluations/within_model', methods=['GET', 'POST'])
 def within_model():

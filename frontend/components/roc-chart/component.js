@@ -15,7 +15,7 @@ export default React.createClass({
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/threshold_precision_recall",
+      url: "/evaluations/" + this.props.modelId + "/roc",
       success: function(result) {
         self.setState({
           data: result.results,
@@ -29,16 +29,16 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h3><strong>Model {this.props.modelId}</strong></h3>
-          <h4>Top-K Percent Precision and Recall by Threshold</h4>
+          <h3>&nbsp;</h3>
+          <h4>Receiver Operating Characteristic Curve</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
     } else {
       return (
         <div>
-          <h3><strong>Model {this.props.modelId}</strong></h3>
-          <h4>Top-K Percent Precision and Recall by Threshold</h4>
+          <h3>&nbsp;</h3>
+          <h4>Receiver Operating Characteristic Curve</h4>
           {
             React.createElement(NVD3Chart, {
               type:"lineChart",
@@ -49,12 +49,12 @@ export default React.createClass({
               options:{
                 showValues: true,
                 showControls: true,
-                duration: 500,
-                useInteractiveGuideline: true,
-                xDomain: [0, 105],
+                showLegend: true,
                 yDomain: [0, 1.05],
-                xAxis: { axisLabel: 'Top K(%)' },
-                yAxis: { axisLabel: 'Metric' },
+                xDomain: [0, 1.05],
+                duration: 500,
+                xAxis: { axisLabel: 'False Positive Rate' },
+                yAxis: { axisLabel: 'True Positive Rate' },
                 color: d3.scale.category10().range()
               }
             })
