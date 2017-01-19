@@ -1,7 +1,6 @@
 from flask import render_template, request, jsonify
 from webapp import app
 from webapp import query
-import time
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve
 
@@ -22,6 +21,11 @@ METRIC_WHITELIST = set([
 @app.route('/evaluations')
 def index():
     return render_template('index.html')
+
+
+@app.route('/testing')
+def testing():
+    return render_template('testing.html')
 
 
 @app.route('/evaluations/search_models', methods=['POST'])

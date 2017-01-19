@@ -77,11 +77,20 @@ export default React.createClass({
       if(columnName === 'model_id') {
         return {
           header: columnName,
+          id: columnName,
+          accessor: function(d) { return d[columnName] },
           render: curry(self.modelIdColumnRenderer)(columnName)
+        }
+      } else if(columnName === '') {
+        // when the table is loading, some kind of placeholder column needs to exist
+        return {
+          header: columnName
         }
       } else {
         return {
           header: columnName,
+          id: columnName,
+          accessor: function(d) { return d[columnName] },
           render: curry(self.standardColumnRenderer)(columnName)
         }
       }
