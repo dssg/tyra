@@ -3,6 +3,7 @@ import FeatureDistChart from 'components/featuredist-chart/component'
 import FeatureImportanceChart from 'components/fimportance-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
+import PrecisionRecallCurve from 'components/pr-chart/component'
 import PRThresholdCurve from 'components/prthreshold-chart/component'
 import RankCorrChart from 'components/rankcorr-chart/component'
 import React from 'react'
@@ -21,10 +22,13 @@ export default React.createClass({
         </TabList>
 
         <TabPanel>
+          <PRThresholdCurve modelId={this.props.modelId}>
+            <svg style={{ height:'700px', width: '500px' }}></svg>
+          </PRThresholdCurve>
+          <PrecisionRecallCurve modelId={this.props.modelId}>
+            <svg style={{ height:'700px', width: '500px' }}></svg>
+          </PrecisionRecallCurve>
           <div className="col-lg-8">
-            <PRThresholdCurve modelId={this.props.modelId}>
-              <svg style={{ height:'700px', width: '500px' }}></svg>
-            </PRThresholdCurve>
             <ScatterChart className="with-3d-shadow with-transitions">
               <svg style={{ height: '500px', 'margin-left': 0 }} preserveAspectRatio="xMaxYMin"></svg>
             </ScatterChart>
