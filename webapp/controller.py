@@ -103,7 +103,6 @@ def get_precision_recall(model_id):
     precision, recall, threshold = precision_recall_curve(list(y['label_value']), list(y['unit_score']))
     output = [{'key': 'precision_recall', 'values': list(zip(list(precision), list(recall)))}]
     try:
-        print(output)
         return jsonify(results=output)
     except:
         print('there are some problems')

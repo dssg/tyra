@@ -33,7 +33,7 @@ export default React.createClass({
             datum: this.state.data,
             x: function(d) { return d[1] },
             y: function(d) { return d[0] },
-            containerStyle:{ height: "600px", width: "800px" },
+            containerStyle:{ height: "400px", width: "600px" },
             options:{
               showValues: true,
               showControls: true,

@@ -20,14 +20,18 @@ export default React.createClass({
           <Tab>Within-Model Comparison</Tab>
           <Tab>Between-Models Comparison</Tab>
         </TabList>
-
         <TabPanel>
+          <div className="col-lg-5">
           <PRThresholdCurve modelId={this.props.modelId}>
             <svg style={{ height:'700px', width: '500px' }}></svg>
           </PRThresholdCurve>
+          </div>
+          <div className="col-lg-2"></div>
+          <div className="col-lg-5">
           <PrecisionRecallCurve modelId={this.props.modelId}>
             <svg style={{ height:'700px', width: '500px' }}></svg>
           </PrecisionRecallCurve>
+          </div>
           <div className="col-lg-8">
             <ScatterChart className="with-3d-shadow with-transitions">
               <svg style={{ height: '500px', 'margin-left': 0 }} preserveAspectRatio="xMaxYMin"></svg>
