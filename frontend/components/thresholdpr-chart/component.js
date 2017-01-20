@@ -13,7 +13,7 @@ export default React.createClass({
     const self = this
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/p_r",
+      url: "/evaluations/" + this.props.modelId + "/threshold_precision_recall",
       success: function(result) {
         self.setState({
           data: result.results
@@ -25,23 +25,22 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <h3>&nbsp;</h3>
-        <h4>Precision Recall Curve</h4>
+        <h3>Model {this.props.modelId}</h3>
+        <h4>Top-K Percent Precision and Recall by Threshold</h4>
         {
           React.createElement(NVD3Chart, {
             type:"lineChart",
             datum: this.state.data,
-            x: function(d) { return d[1] },
-            y: function(d) { return d[0] },
+            x: function(d) { return d[0] },
+            y: function(d) { return d[1] },
             containerStyle:{ height: "400px", width: "600px" },
             options:{
               showValues: true,
               showControls: true,
-              yDomain: [0, 1.05],
-              xDomain: [0, 1.05],
               duration: 500,
-              xAxis: { axisLabel: 'Recall' },
-              yAxis: { axisLabel: 'Precision' },
+              useInteractiveGuideline: true,
+              xAxis: { axisLabel: 'Top K(%)' },
+              yAxis: { axisLabel: 'Metric' },
               color: d3.scale.category10().range()
             }
           })

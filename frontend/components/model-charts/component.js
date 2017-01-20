@@ -2,8 +2,8 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import FeatureImportanceChart from 'components/fimportance-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
-import PRThresholdCurve from 'components/prthreshold-chart/component'
-import PrecisionRecallCurve from 'components/pr-chart/component'
+import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
+import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/component'
 import React from 'react'
 
 export default React.createClass({
@@ -16,15 +16,15 @@ export default React.createClass({
         </TabList>
         <TabPanel>
           <div className="col-lg-5">
-            <PRThresholdCurve modelId={this.props.modelId}>
+            <ThresholdPrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
-            </PRThresholdCurve>
+            </ThresholdPrecisionRecallCurve>
           </div>
           <div className="col-lg-2"></div>
           <div className="col-lg-5">
-            <PrecisionRecallCurve modelId={this.props.modelId}>
+            <SimplePrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
-            </PrecisionRecallCurve>
+            </SimplePrecisionRecallCurve>
           </div>
           <div className="col-lg-12">
           <h3>&nbsp;</h3>
