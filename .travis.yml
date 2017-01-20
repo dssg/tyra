@@ -2,5 +2,7 @@ language: python
 python: 3.4
 env:
 - TOXENV=py34
+before_install:
+- sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
 script: tox -e ${TOXENV}
 after_success: codecov
