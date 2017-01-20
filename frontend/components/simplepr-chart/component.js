@@ -33,10 +33,11 @@ export default React.createClass({
             datum: this.state.data,
             x: function(d) { return d[1] },
             y: function(d) { return d[0] },
-            containerStyle:{ height: "400px", width: "600px" },
+            containerStyle:{ height: "400px", width: "500px" },
             options:{
               showValues: true,
               showControls: true,
+              showLegend: false,
               yDomain: [0, 1.05],
               xDomain: [0, 1.05],
               duration: 500,

@@ -15,21 +15,21 @@ export default React.createClass({
           <Tab>Within-Model Comparison</Tab>
         </TabList>
         <TabPanel>
-          <div className="col-lg-5">
+          <div className="col-md-5">
             <ThresholdPrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
             </ThresholdPrecisionRecallCurve>
           </div>
-          <div className="col-lg-2"></div>
-          <div className="col-lg-5">
+          <div className="col-md-2"></div>
+          <div className="col-md-5">
             <SimplePrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
             </SimplePrecisionRecallCurve>
           </div>
-          <div className="col-lg-12">
+          <div className="col-md-12">
           <h3>&nbsp;</h3>
           </div>
-          <div className="col-lg-7">
+          <div className="col-md-7">
             <PredictionsTable modelId={this.props.modelId} />
           </div>
         </TabPanel>

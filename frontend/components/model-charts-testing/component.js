@@ -21,23 +21,23 @@ export default React.createClass({
           <Tab>Between-Models Comparison</Tab>
         </TabList>
         <TabPanel>
-          <div className="col-lg-5">
+          <div className="col-md-5">
           <ThresholdPrecisionRecallCurve modelId={this.props.modelId}>
             <svg style={{ height:'700px', width: '500px' }}></svg>
           </ThresholdPrecisionRecallCurve>
           </div>
-          <div className="col-lg-2"></div>
-          <div className="col-lg-5">
+          <div className="col-md-2"></div>
+          <div className="col-md-5">
           <SimplePrecisionRecallCurve modelId={this.props.modelId}>
             <svg style={{ height:'700px', width: '500px' }}></svg>
           </SimplePrecisionRecallCurve>
           </div>
-          <div className="col-lg-8">
+          <div className="col-md-8">
             <ScatterChart className="with-3d-shadow with-transitions">
               <svg style={{ height: '500px', 'margin-left': 0 }} preserveAspectRatio="xMaxYMin"></svg>
             </ScatterChart>
           </div>
-          <div className="col-lg-4">
+          <div className="col-md-4">
             <div className="row">
               <PredictionsTable modelId={this.props.modelId} />
             </div>
