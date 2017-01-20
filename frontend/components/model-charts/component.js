@@ -27,7 +27,7 @@ export default React.createClass({
             </SimplePrecisionRecallCurve>
           </div>
           <div className="col-md-12">
-          <h3>&nbsp;</h3>
+            <h3>&nbsp;</h3>
           </div>
           <div className="col-md-7">
             <PredictionsTable modelId={this.props.modelId} />

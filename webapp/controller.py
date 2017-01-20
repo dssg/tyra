@@ -100,8 +100,10 @@ def get_threshold_precision_recall(model_id):
 def get_simple_precision_recall(model_id):
     query_arg = {'model_id': model_id}
     y = query.get_model_prediction(query_arg)
-    precision, recall, threshold = precision_recall_curve(list(y['label_value']), list(y['unit_score']))
-    output = [{'key': 'precision_recall', 'values': list(zip(list(precision), list(recall)))}]
+    precision, recall, threshold = precision_recall_curve(y['label_value'],
+                                                          y['unit_score'])
+    output = [{'key': 'precision_recall',
+               'values': list(zip(precision, recall))}]
     try:
         return jsonify(results=output)
     except:

@@ -28,9 +28,9 @@ export default React.createClass({
           </div>
           <div className="col-md-2"></div>
           <div className="col-md-5">
-          <SimplePrecisionRecallCurve modelId={this.props.modelId}>
-            <svg style={{ height:'700px', width: '500px' }}></svg>
-          </SimplePrecisionRecallCurve>
+            <SimplePrecisionRecallCurve modelId={this.props.modelId}>
+              <svg style={{ height:'700px', width: '500px' }}></svg>
+            </SimplePrecisionRecallCurve>
           </div>
           <div className="col-md-8">
             <ScatterChart className="with-3d-shadow with-transitions">
