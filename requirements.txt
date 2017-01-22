@@ -5,6 +5,9 @@ PyYAML==3.11
 psycopg2==2.4.5
 testing.postgresql
 pytest==2.9.2
+numpy
+scikit-learn
+scipy
 flask_sqlalchemy
 codecov
 pytest-cov

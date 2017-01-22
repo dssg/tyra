@@ -2,6 +2,7 @@ from flask import render_template, request, jsonify
 from webapp import app
 from webapp import query
 from collections import defaultdict
+from sklearn.metrics import precision_recall_curve
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -53,7 +54,8 @@ def search_models():
 
 @app.route('/evaluations/<int:model_id>/model_result', methods=['GET', 'POST'])
 def get_model_result(model_id):
-    output = query.get_model_prediction(id=model_id)
+    query_arg = {'model_id': model_id}
+    output = query.get_model_prediction(query_arg)
     try:
         output = output.to_dict('records')
         return jsonify(results=(output))
@@ -75,8 +77,8 @@ def feature_importance(model_id=63, num=10):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/precision_recall_threshold', methods=['GET', 'POST'])
-def get_precision_and_recall_threshold(model_id):
+@app.route('/evaluations/<int:model_id>/threshold_precision_recall', methods=['GET', 'POST'])
+def get_threshold_precision_recall(model_id):
     query_arg = {'model_id': model_id}
     precision = query.get_precision(query_arg)
     recall = query.get_recall(query_arg)
@@ -85,8 +87,24 @@ def get_precision_and_recall_threshold(model_id):
         recall = recall.to_dict('records')
         precision = [[p['parameter'], p['value']] for p in precision]
         recall = [[r['parameter'], r['value']] for r in recall]
+        print(precision)
         output = [{'key': 'Precision', 'values': precision},
                   {'key': 'Recall', 'values': recall}]
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route('/evaluations/<int:model_id>/simple_precision_recall', methods=['GET', 'POST'])
+def get_simple_precision_recall(model_id):
+    query_arg = {'model_id': model_id}
+    y = query.get_model_prediction(query_arg)
+    precision, recall, threshold = precision_recall_curve(y['label_value'],
+                                                          y['unit_score'])
+    output = [{'key': 'precision_recall',
+               'values': list(zip(precision, recall))}]
+    try:
         return jsonify(results=output)
     except:
         print('there are some problems')

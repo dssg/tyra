@@ -2,7 +2,8 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import FeatureImportanceChart from 'components/fimportance-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
-import PRThresholdCurve from 'components/prthreshold-chart/component'
+import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
+import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/component'
 import React from 'react'
 
 export default React.createClass({
@@ -13,17 +14,23 @@ export default React.createClass({
           <Tab>Model Summary</Tab>
           <Tab>Within-Model Comparison</Tab>
         </TabList>
-
         <TabPanel>
-          <div className="col-lg-8">
-            <PRThresholdCurve modelId={this.props.modelId}>
+          <div className="col-md-5">
+            <ThresholdPrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
-            </PRThresholdCurve>
+            </ThresholdPrecisionRecallCurve>
           </div>
-          <div className="col-lg-4">
-            <div className="row">
-              <PredictionsTable modelId={this.props.modelId} />
-            </div>
+          <div className="col-md-2"></div>
+          <div className="col-md-5">
+            <SimplePrecisionRecallCurve modelId={this.props.modelId}>
+              <svg style={{ height:'700px', width: '500px' }}></svg>
+            </SimplePrecisionRecallCurve>
+          </div>
+          <div className="col-md-12">
+            <h3>&nbsp;</h3>
+          </div>
+          <div className="col-md-7">
+            <PredictionsTable modelId={this.props.modelId} />
           </div>
         </TabPanel>
         <TabPanel>
