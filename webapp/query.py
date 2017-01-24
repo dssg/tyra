@@ -42,10 +42,10 @@ def get_models(query_arg):
         where run_time >= %(runtime)s and test = 'false'
         order by run_time desc limit 1
     )
-    select distinct(config->'test_end_date')
+    select distinct(config->>'test_end_date')
     from results.models
     join recent_prod_mg using (model_group_id)
-    order by config->'test_end_date' desc limit 2
+    order by config->>'test_end_date' desc limit 2
     """
     try:
         results = db.engine.execute(
