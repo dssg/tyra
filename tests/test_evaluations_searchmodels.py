@@ -5,6 +5,9 @@ from psycopg2.extras import Json
 import logging
 
 CUTOFF = datetime(2016, 5, 2)
+TOO_NEW = Json({'test_end_date': '2016-04-01'})
+TOO_OLD = Json({'test_end_date': '2014-04-01'})
+JUST_RIGHT = Json({'test_end_date': '2015-04-01'})
 
 model_groups_data = [
     # model_group_id
@@ -17,27 +20,30 @@ model_groups_data = [
 models_data = [
     # model_id, run_time, model_type, model_group_id, testing, config
 
-    # test end date is picked from this model group, as it is more recently run than model group 3
+    # test end date is picked from this model group,
+    # as it is more recently run than model group 3
     # the middle model should be picked because it is the second most recent
-    (1, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, Json({ 'test_end_date': '2016-04-01' })),
-    (2, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, Json({ 'test_end_date': '2015-04-01' })),
-    (3, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, Json({ 'test_end_date': '2014-04-01' })),
+    (1, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, TOO_NEW),
+    (2, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, JUST_RIGHT),
+    (3, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, TOO_OLD),
 
     # skip because runtime is before the cutoff
-    (4, CUTOFF - timedelta(days=3), 'a_model_type', 2, False, Json({ 'test_end_date': '2015-04-01' })),
+    (4, CUTOFF - timedelta(days=3), 'a_model_type', 2, False, JUST_RIGHT),
 
-    # this is a good model group, and model 10 should be picked based on test_end_date
-    (9, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, Json({ 'test_end_date': '2016-04-01' })),
-    (10, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, Json({ 'test_end_date': '2015-04-01' })),
-    (11, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, Json({ 'test_end_date': '2014-04-01' })),
+    # this is a good model group,
+    # and model 10 should be picked based on test_end_date
+    (9, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, TOO_NEW),
+    (10, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, JUST_RIGHT),
+    (11, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, TOO_OLD),
 
     # skip because marked testing
-    (5, CUTOFF + timedelta(days=1), 'a_model_type', 4, True, Json({ 'test_end_date': '2015-04-01' })),
+    (5, CUTOFF + timedelta(days=1), 'a_model_type', 4, True, JUST_RIGHT),
 
-    # the last three should be skipped because same model group as 1-3 but less recent runtimes
-    (6, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, Json({ 'test_end_date': '2016-04-01' })),
-    (7, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, Json({ 'test_end_date': '2015-04-01' })),
-    (8, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, Json({ 'test_end_date': '2014-04-01' })),
+    # the last three should be skipped because same model group as 1-3
+    # but less recent runtimes
+    (6, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, TOO_NEW),
+    (7, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, JUST_RIGHT),
+    (8, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, TOO_OLD),
 ]
 
 evaluations_data = [

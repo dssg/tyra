@@ -55,7 +55,7 @@ export default React.createClass({
     }
   },
   standardColumnRenderer: function(columnName, props) {
-    return (<span>{props.row[columnName]}</span>)
+    return (<span>{Math.round(props.row[columnName] * 100) / 100}</span>)
   },
   handleModelIdClick: function(modelId) {
     const self = this
