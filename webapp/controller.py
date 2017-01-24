@@ -43,10 +43,10 @@ def search_models():
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
 
-    output = query.get_models(query_arg)
+    output, test_end_date = query.get_models(query_arg)
     try:
         output = output.to_dict('records')
-        return jsonify(results=(output))
+        return jsonify(results=(output), as_of_date=test_end_date)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500

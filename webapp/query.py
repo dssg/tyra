@@ -1,5 +1,6 @@
 import pandas as pd
 from webapp import db
+import logging
 
 
 def get_model_prediction(query_arg):
@@ -33,6 +34,28 @@ def get_models(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
+
+    run_date_lookup_query = """
+    with recent_prod_mg as (
+        select model_group_id
+        from results.models
+        where run_time >= %(runtime)s and test = 'false'
+        order by run_time desc limit 1
+    )
+    select distinct(config->>'test_end_date')
+    from results.models
+    join recent_prod_mg using (model_group_id)
+    order by config->>'test_end_date' desc limit 2
+    """
+    try:
+        results = db.engine.execute(
+            run_date_lookup_query,
+            runtime=query_arg['timestamp']
+        )
+        test_end_date = [row for row in results][-1][0]
+    except Exception as e:
+        logging.warning(e)
+        raise
     query = """
     select
         e.model_id,
@@ -42,20 +65,29 @@ def get_models(query_arg):
     ({}) input_metrics
     join results.evaluations e using (metric, parameter)
     join results.models m using (model_id)
-    where run_time >= %(runtime)s
+    where m.config->>'test_end_date' = %(test_end_date)s
+    and test = 'false'
+    and run_time >= %(runtime)s
     """.format(metric_string)
-    df_models = pd.read_sql(
-        query,
-        params={'runtime': query_arg['timestamp']},
-        con=db.engine
-    )
+    try:
+        df_models = pd.read_sql(
+            query,
+            params={
+                'runtime': query_arg['timestamp'],
+                'test_end_date': test_end_date
+            },
+            con=db.engine
+        )
+    except Exception as e:
+        logging.warning(e)
+        raise
     output = df_models.pivot(
         index='model_id',
         columns='new_metric',
         values='value'
     )
     output.reset_index(level=0, inplace=True)
-    return output
+    return output, test_end_date
 
 
 def get_feature_importance(query_arg):

@@ -5,7 +5,7 @@ import ReactTable from 'react-table'
 
 export default React.createClass({
   getInitialState: function() {
-    return { data: [], loading: false }
+    return { data: [], loading: false, asOfDate: null }
   },
   componentDidMount: function() {
     this.search()
@@ -38,6 +38,7 @@ export default React.createClass({
       success: function(result) {
         self.setState({
           data: result.results,
+          asOfDate: result.as_of_date,
           loading: false
         })
       }
@@ -104,13 +105,17 @@ export default React.createClass({
       )
     } else {
       return (
-        <ReactTable
-          tableClassName="table"
-          columns={this.columns()}
-          data={this.state.data}
-          loadingComponent={function() { return null }}
-          showPageSizeOptions={false}
-          pageSize={15} />
+        <div>
+          <div>Models run after {this.props.startDate.format('YYYY-MM-DD')}</div>
+          <div>Metrics shown reflect performance when predicting results as of {this.state.asOfDate}. This is not necessarily indicative of model stability.</div>
+          <ReactTable
+            tableClassName="table"
+            columns={this.columns()}
+            data={this.state.data}
+            loadingComponent={function() { return null }}
+            showPageSizeOptions={false}
+            pageSize={15} />
+        </div>
       )
     }
   }
