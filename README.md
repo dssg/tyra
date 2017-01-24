@@ -19,6 +19,12 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - model_id - integer
 - run_time - timestamp
 - model_type - string
+- model_group_id - integer
+- test - boolean
+- config - JSON (can contain many things, but only test_end_date is used for now)
+
+### model_groups
+- model_group_id - integer
 
 ### evaluations
 - model_id - integer

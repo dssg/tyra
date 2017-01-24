@@ -1,6 +1,7 @@
 {
 	"results": [
-		{ "model_id": 1, "precision@10.0": 48.0, "recall@5.0": 45.0 },
-		{ "model_id": 3, "precision@10.0": 50.0, "recall@5.0": 60.0 }
-	]
+		{ "model_id": 2, "precision@10.0": 56.0, "recall@5.0": 55.0 },
+		{ "model_id": 10, "precision@10.0": 68.0, "recall@5.0": 65.0 }
+	],
+	"as_of_date": "2015-04-01"
 }

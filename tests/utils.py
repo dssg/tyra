@@ -13,15 +13,29 @@ def load_json_example(route):
 
 def setup_data(engine, data):
     engine.execute('create schema results')
+
+    engine.execute("""
+    create table results.model_groups (
+        model_group_id int
+    )""")
+    for row in data.get('model_groups', []):
+        engine.execute(
+            'insert into results.model_groups values (%s)',
+            row
+        )
+
     engine.execute("""
     create table results.models (
         model_id int,
         run_time timestamp,
-        model_type varchar
+        model_type varchar,
+        model_group_id int,
+        test bool,
+        config json
     )""")
     for model in data.get('models', []):
         engine.execute(
-            'insert into results.models values (%s, %s, %s)',
+            'insert into results.models values (%s, %s, %s, %s, %s, %s)',
             model
         )
 
