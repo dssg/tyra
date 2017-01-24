@@ -1,6 +1,5 @@
 import pandas as pd
 from webapp import db
-import logging
 
 
 def get_model_prediction(query_arg):
@@ -47,15 +46,11 @@ def get_models(query_arg):
     join recent_prod_mg using (model_group_id)
     order by config->'test_end_date' desc limit 2
     """
-    try:
-        results = db.engine.execute(
-            run_date_lookup_query,
-            runtime=query_arg['timestamp']
-        )
-        test_end_date = [row for row in results][-1][0]
-    except Exception as e:
-        logging.warning(e)
-        raise
+    results = db.engine.execute(
+        run_date_lookup_query,
+        runtime=query_arg['timestamp']
+    )
+    test_end_date = [row for row in results][-1][0]
     query = """
     select
         e.model_id,
@@ -69,18 +64,14 @@ def get_models(query_arg):
     and test = 'false'
     and run_time >= %(runtime)s
     """.format(metric_string)
-    try:
-        df_models = pd.read_sql(
-            query,
-            params={
-                'runtime': query_arg['timestamp'],
-                'test_end_date': test_end_date
-            },
-            con=db.engine
-        )
-    except Exception as e:
-        logging.warning(e)
-        raise
+    df_models = pd.read_sql(
+        query,
+        params={
+            'runtime': query_arg['timestamp'],
+            'test_end_date': test_end_date
+        },
+        con=db.engine
+    )
     output = df_models.pivot(
         index='model_id',
         columns='new_metric',
