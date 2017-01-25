@@ -107,7 +107,7 @@ export default React.createClass({
       return (
         <div>
           <div>Models run after {this.props.startDate.format('YYYY-MM-DD')}</div>
-          <div>Metrics shown reflect performance when predicting results as of {this.state.asOfDate}. This is not necessarily indicative of model stability.</div>
+          <div>Metrics shown reflect performance when testing results as of {this.state.asOfDate}. This is not necessarily indicative of model stability.</div>
           <ReactTable
             tableClassName="table"
             columns={this.columns()}
