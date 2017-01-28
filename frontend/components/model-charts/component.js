@@ -43,7 +43,7 @@ export default React.createClass({
         </TabPanel>
         <TabPanel>
           <div className="row"><h3>Metrics Over Time</h3></div>
-          <MetricTimeChart>
+          <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
             <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
           </MetricTimeChart>
           <div className="row"><h3>Feature Importance</h3></div>

@@ -31,6 +31,7 @@ export default React.createClass({
       [{ timestamp: self.props.startDate.format('YYYY-MM-DD') }],
       metricParams
     ))
+    console.log($.param(params))
     $.ajax({
       type: "POST",
       url: "/evaluations/search_models",

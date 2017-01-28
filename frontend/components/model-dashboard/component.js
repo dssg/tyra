@@ -55,7 +55,7 @@ export default React.createClass({
   renderModelCharts: function() {
     return React.createElement(
       this.props.chartsClass,
-      { modelId: this.state.modelId, setModelId: this.setModelId }
+      { modelId: this.state.modelId, setModelId: this.setModelId, metrics: this.state.metrics }
     )
   },
 

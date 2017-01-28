@@ -31,6 +31,7 @@ def testing():
 @app.route('/evaluations/search_models', methods=['POST'])
 def search_models():
     f = request.form
+    #print(f)
     query_arg = {}
     flattened_query = defaultdict(dict)
     for key in f.keys():
@@ -42,8 +43,9 @@ def search_models():
                 flattened_query[key.strip('metric')]['metric'] = f[key]
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
-
     output, test_end_date = query.get_models(query_arg)
+    #query_arg['model_id'] = 10
+    #print(query.get_metrics_over_time(query_arg))
     try:
         output = output.to_dict('records')
         return jsonify(results=(output), as_of_date=test_end_date)
@@ -68,7 +70,7 @@ def get_model_result(model_id):
 def feature_importance(model_id, num=10):
     query_arg = {'model_id':model_id, 'num':num}
     f_importance = query.get_feature_importance(query_arg)
-    print(f_importance)
+    #print(f_importance)
     try:
         f_importance = f_importance.to_dict('records')
         output = [{'key': 'Model'+str(model_id),
@@ -123,6 +125,32 @@ def get_roc(model_id):
               {'key': 'random', 'values': [[0, 0], [1, 1]]}]
     try:
         return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route('/evaluations/<int:model_id>/metric_overtime', methods=['GET','POST'])
+def get_metric_over_time(model_id):
+    f = request.form
+    print(f)
+    query_arg = {}
+    flattened_query = defaultdict(dict)
+    for key in f.keys():
+        if 'parameter' in key:
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                float(f[key])
+        elif 'metric' in key:
+            if f[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = f[key]
+    query_arg['metrics'] = flattened_query
+    query_arg['model_id'] = model_id
+    df = query.get_metrics_over_time(query_arg)
+    print(df)
+    output = df.to_dict('records')
+    print(output)
+    try:
+        return jsonify(results="success")
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500

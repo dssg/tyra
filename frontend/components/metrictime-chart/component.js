@@ -1,10 +1,11 @@
+import { addIndex, concat, curry, map, mergeAll, values } from 'ramda'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
 import d3 from 'd3'
 
 export default React.createClass({
   getInitialState: function() {
-    return { data: this.data }
+    return { data: [], loading: false}
   },
 
   data: [
@@ -22,7 +23,39 @@ export default React.createClass({
     }
   ],
 
+  componentDidMount: function() {
+    this.get_metric()
+  },
+
+  get_metric: function() {
+    let self = this
+    self.setState({ loading: true })
+    const metricParams = addIndex(map)(
+      function(value, idx) {
+        let newObj = {}
+        newObj['metric' + idx] = value.metric
+        newObj['parameter' + idx] = value.parameter
+        return newObj
+      },
+      values(self.props.metrics)
+    )
+    const params = mergeAll(metricParams)
+    console.log($.param(params))
+   $.ajax({
+      type: "POST",
+      url: "/evaluations/" + this.props.modelId + "/metric_overtime",
+      data: $.param(params),
+      success: function(result) {
+        self.setState({
+          data: result.results,
+          loading: false
+        })
+      }
+    })
+  },
+
   render: function() {
+      console.log(this.state.data)
     return (
       <div>
           {
