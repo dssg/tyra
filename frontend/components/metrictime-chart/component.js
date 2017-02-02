@@ -8,21 +8,6 @@ export default React.createClass({
     return { data: [], loading: false}
   },
 
-  data: [
-    {
-      key: "Base Rate",
-      values: [[2010, 0.09], [2011, 0.16], [2012, 0.11], [2013, 0.14], [2014, 0.08], [2015, 0.12], [2016, 0.06]]
-    },
-    {
-      key: "Recall",
-      values: [[2010, 0.17], [2011, 0.20], [2012, 0.15], [2013, 0.23], [2014, 0.30], [2015, 0.26], [2016, 0.24]]
-    },
-    {
-      key: "Precision",
-      values: [[2010, 0.47], [2011, 0.52], [2012, 0.43], [2013, 0.43], [2014, 0.41], [2015, 0.37], [2016, 0.34]]
-    }
-  ],
-
   componentDidMount: function() {
     this.get_metric()
   },
@@ -55,28 +40,42 @@ export default React.createClass({
   },
 
   render: function() {
-      console.log(this.state.data)
-    return (
-      <div>
-          {
-            React.createElement(NVD3Chart, {
-              type:"lineChart",
-              datum: this.state.data,
-              containerStyle:{ width: "700px", height: "500px" },
-              x: function(d) { return d[0] },
-              y: function(d) { return d[1] },
-              options:{
-                showDistX: true,
-                showDistY: true,
-                duration: 500,
-                useInteractiveGuideline: true,
-                xAxis: { axisLabel: 'Year' },
-                yAxis: { axisLabel: 'Metric' },
-                color: d3.scale.category10().range()
-              }
-            })
-          }
-      </div>
-    )
+    if(this.state.loading) {
+      return (
+        <div>
+          <h3>&nbsp;</h3>
+          <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+            {
+              React.createElement(NVD3Chart, {
+                type:"lineChart",
+                datum: this.state.data,
+                containerStyle:{ width: "700px", height: "500px" },
+                x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
+                y: function(d) { return d[1] },
+                options:{
+                  showDistX: true,
+                  showDistY: true,
+                  duration: 500,
+                  useInteractiveGuideline: true,
+                  xAxis: {
+                    axisLabel: 'Year',
+                    tickFormat: function(d) { return d3.time.format("%Y")(new Date(d)) }
+                  },
+                  yAxis: {
+                    axisLabel: 'Metric'
+                  },
+                  yDomain: [0, 1.05],
+                  color: d3.scale.category10().range()
+                }
+              })
+            }
+        </div>
+      )
+    }
   }
 })

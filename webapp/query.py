@@ -23,9 +23,6 @@ def get_model_prediction(query_arg):
 
 
 def get_models(query_arg):
-    #print("timestamp: ", query_arg['timestamp'])
-    #print("metrics: ", query_arg['metrics'])
-
     metric_string = ' union '.join([
         """
         select
@@ -34,8 +31,6 @@ def get_models(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
-
-    #print(metric_string)
 
     run_date_lookup_query = """
     with recent_prod_mg as (
@@ -154,39 +149,37 @@ def get_metrics_over_time(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
-    #metric_string = """
-    #    select 'precision@'::varchar metric,
-    #       '10.0'::varchar parameter
-    #       union
-    #    select  'precision@'::varchar metric,
-    #        '5.0'::varchar parameter
-    #"""
-    print(metric_string)
+
     query = """
-    with model_group_id_lookup as (
-    SELECT model_group_id
-    FROM results.models
-    WHERE model_id = %(model_id)s
-    )
-    select m.model_group_id,
-       m.run_time::text::date,
-       (config -> 'test_end_date') ::text::date as test_end_date,
-       e.model_id, e.metric || e.parameter as new_metric, value
-    from
-    ({}) input_metrics
-    join results.evaluations e using(metric, parameter)
-    join results.models m using (model_id)
-    where model_group_id = (select * from model_group_id_lookup)
-    order by m.run_time DESC, test_end_date DESC;
+    select
+        model_id, test_end_date, new_metric, max(value) as value
+    from (
+        with model_group_id_lookup as (
+            SELECT distinct(model_group_id) as model_group_id
+            FROM results.models
+            WHERE model_id = %(model_id)s
+        )
+        select m.model_id,
+           (config -> 'test_end_date') ::text::date as test_end_date,
+           e.metric || e.parameter as new_metric,
+           value
+        from
+        ({}) input_metrics
+        join results.evaluations e using(metric, parameter)
+        join results.models m using (model_id)
+        join model_group_id_lookup using (model_group_id)
+    ) ungrouped
+    group by model_id, test_end_date, new_metric
+    order by test_end_date DESC
     """.format(metric_string)
 
     df_metrics_overtime = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id']},
         con=db.engine)
-    print(df_metrics_overtime)
-    output = df_metrics_overtime.pivot(
-        index='model_id',
+
+    output = df_metrics_overtime.pivot_table(
+        index=['model_id', 'test_end_date'],
         columns='new_metric',
         values='value'
     )

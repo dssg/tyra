@@ -146,13 +146,21 @@ def get_metric_over_time(model_id):
     query_arg['metrics'] = flattened_query
     query_arg['model_id'] = model_id
     df = query.get_metrics_over_time(query_arg)
-    print(df)
-    output = df.to_dict('records')
-    print(output)
+    output = df.to_dict()
+    data = sorted([
+        {
+            'key': key,
+            'values': sorted([
+                (str(dt), value)
+                for dt, value in series.items()
+            ])
+        }
+        for key, series in output.items() if key != 'model_id'
+    ], key=lambda series: series['key'])
+
     try:
-        return jsonify(results="success")
-    except:
-        print('there are some problems')
+        return jsonify(results=data)
+    except Exception:
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
