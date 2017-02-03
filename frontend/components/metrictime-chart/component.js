@@ -35,7 +35,7 @@ export default React.createClass({
           loading: false
         })
       }
-   })
+    })
   },
 
   render: function() {

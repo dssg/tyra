@@ -153,7 +153,7 @@ def get_metric_over_time(model_id):
         }
         for key, series in output.items() if key != 'model_id'
     ], key=lambda series: series['key'])
-    data.append({'key': 'current model',
+    data.append({'key': 'model ' + str(model_id) ,
                  'values': [(data[0]['values'][-2][0], 0.0),
                             (data[0]['values'][-2][0], int(model_id))]})
     try:
