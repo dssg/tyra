@@ -35,7 +35,7 @@ export default React.createClass({
           loading: false
         })
       }
-    })
+   })
   },
 
   render: function() {
@@ -66,7 +66,7 @@ export default React.createClass({
                 yAxis: { axisLabel: 'Metric' },
                 yDomain: [0, 1.05],
                 color: d3.scale.category10().range()
-                }
+              }
             })
           }
       </div>
