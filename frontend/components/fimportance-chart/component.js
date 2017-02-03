@@ -39,26 +39,30 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h3>&nbsp;</h3>
+          <h4>Feature Importance</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
     } else {
       return (
         <div>
+          <h4>Feature Importance</h4>
           <button onClick={this.handleSort}>{this.state.button_value}</button>
           {
             React.createElement(NVD3Chart, {
               type:"multiBarHorizontalChart",
               datum: this.state.data,
-              x: 'label',
-              y: 'value',
+              x: function(d) { return d.label },
+              y: function(d) { return d.value },
               containerStyle: { width: "800px", height: "500px" },
               options:{
                 showValues: true,
                 showControls: true,
                 duration: 500,
-                tooltip: { enabled: true }
+                tooltip: { enabled: true },
+                yAxis: {
+                  tickformat: function(d) {return d3.format('.4f')}
+                }
               }
             })
           }

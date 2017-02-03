@@ -29,7 +29,6 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h3>&nbsp;</h3>
           <h4>Precision Recall Curve</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
@@ -37,7 +36,6 @@ export default React.createClass({
     } else {
       return (
         <div>
-          <h3>&nbsp;</h3>
           <h4>Precision Recall Curve</h4>
           {
             React.createElement(NVD3Chart, {

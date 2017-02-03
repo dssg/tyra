@@ -1,6 +1,7 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import FeatureImportanceChart from 'components/fimportance-chart/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
+import ModelInfo from 'components/model-info/component'
 import PredictionsTable from 'components/predictions-table/component'
 import RocCurve from 'components/roc-chart/component'
 import React from 'react'
@@ -17,6 +18,7 @@ export default React.createClass({
           <Tab>Within-Model Comparison</Tab>
         </TabList>
         <TabPanel>
+          <ModelInfo modelId={this.props.modelId}></ModelInfo>
           <div className="col-md-5">
             <ThresholdPrecisionRecallCurve modelId={this.props.modelId}>
               <svg style={{ height:'700px', width: '500px' }}></svg>
@@ -42,11 +44,10 @@ export default React.createClass({
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="row"><h3>Metrics Over Time</h3></div>
+          <ModelInfo modelId={this.props.modelId}></ModelInfo>
           <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
             <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
           </MetricTimeChart>
-          <div className="row"><h3>Feature Importance</h3></div>
           <FeatureImportanceChart modelId={this.props.modelId}>
             <svg style={{ height: '400px', width: '800px' }}></svg>
           </FeatureImportanceChart>
