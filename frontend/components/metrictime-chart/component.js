@@ -25,7 +25,6 @@ export default React.createClass({
       values(self.props.metrics)
     )
     const params = mergeAll(metricParams)
-    console.log($.param(params))
    $.ajax({
       type: "POST",
       url: "/evaluations/" + this.props.modelId + "/metric_overtime",
@@ -55,7 +54,7 @@ export default React.createClass({
                 type:"lineChart",
                 datum: this.state.data,
                 containerStyle:{ width: "700px", height: "500px" },
-                x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
+                x: function(d) { return d[0].slice(0, 4) },
                 y: function(d) { return d[1] },
                 options:{
                   showDistX: true,
@@ -64,7 +63,7 @@ export default React.createClass({
                   useInteractiveGuideline: true,
                   xAxis: {
                     axisLabel: 'Year',
-                    tickFormat: function(d) { return d3.time.format("%Y")(new Date(d)) }
+                    /*tickFormat: function(d) { return d3.time.format("%Y")(new Date(d)) }*/
                   },
                   yAxis: {
                     axisLabel: 'Metric'
