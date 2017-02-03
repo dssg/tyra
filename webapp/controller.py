@@ -31,7 +31,6 @@ def testing():
 @app.route('/evaluations/search_models', methods=['POST'])
 def search_models():
     f = request.form
-    #print(f)
     query_arg = {}
     flattened_query = defaultdict(dict)
     for key in f.keys():
@@ -44,8 +43,6 @@ def search_models():
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
     output, test_end_date = query.get_models(query_arg)
-    #query_arg['model_id'] = 10
-    #print(query.get_metrics_over_time(query_arg))
     try:
         output = output.to_dict('records')
         return jsonify(results=(output), as_of_date=test_end_date)
@@ -70,7 +67,6 @@ def get_model_result(model_id):
 def feature_importance(model_id, num=10):
     query_arg = {'model_id':model_id, 'num':num}
     f_importance = query.get_feature_importance(query_arg)
-    #print(f_importance)
     try:
         f_importance = f_importance.to_dict('records')
         output = [{'key': 'Model'+str(model_id),
@@ -157,7 +153,9 @@ def get_metric_over_time(model_id):
         }
         for key, series in output.items() if key != 'model_id'
     ], key=lambda series: series['key'])
-    data.append({'key':'current model', 'values':[(data[0]['values'][-2][0], 0.0), (data[0]['values'][-2][0], int(model_id))]})
+    data.append({'key':'current model',
+                 'values':[(data[0]['values'][-2][0], 0.0),
+                           (data[0]['values'][-2][0], int(model_id))]})
     try:
         return jsonify(results=data)
     except Exception:
