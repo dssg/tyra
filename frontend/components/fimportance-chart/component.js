@@ -61,7 +61,7 @@ export default React.createClass({
                 duration: 500,
                 tooltip: { enabled: true },
                 yAxis: {
-                  tickformat: function(d) {return d3.format('.4f')}
+                  tickformat: function() {return d3.format('.4f')}
                 }
               }
             })

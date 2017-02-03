@@ -1,11 +1,11 @@
-import { addIndex, concat, curry, map, mergeAll, values } from 'ramda'
+import { addIndex, map, mergeAll, values } from 'ramda'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
 import d3 from 'd3'
 
 export default React.createClass({
   getInitialState: function() {
-    return { data: [], loading: false}
+    return { data: [], loading: false }
   },
 
   componentDidMount: function() {
@@ -25,18 +25,18 @@ export default React.createClass({
       values(self.props.metrics)
     )
     const params = mergeAll(metricParams)
-   $.ajax({
-     type: "POST",
-     url: "/evaluations/" + this.props.modelId + "/metric_overtime",
-     data: $.param(params),
-     success: function(result) {
-       self.setState({
-         data: result.results,
-         loading: false
-       })
-     }
-   })
- },
+    $.ajax({
+      type: "POST",
+      url: "/evaluations/" + this.props.modelId + "/metric_overtime",
+      data: $.param(params),
+      success: function(result) {
+        self.setState({
+          data: result.results,
+          loading: false
+        })
+      }
+    })
+  },
 
   render: function() {
     if(this.state.loading) {
@@ -62,15 +62,11 @@ export default React.createClass({
                 showDistY: true,
                 duration: 500,
                 useInteractiveGuideline: true,
-                 xAxis: {
-                 axisLabel: 'Year',
-                },
-                yAxis: {
-                  axisLabel: 'Metric'
-                },
+                xAxis: { axisLabel: 'Year' },
+                yAxis: { axisLabel: 'Metric' },
                 yDomain: [0, 1.05],
                 color: d3.scale.category10().range()
-              }
+                }
             })
           }
       </div>
