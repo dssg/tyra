@@ -2,6 +2,7 @@ from datetime import datetime
 from tests.utils import load_json_example, rig_test_client
 import json
 from psycopg2.extras import Json
+from unittest.mock import patch
 
 
 EARLIER = datetime(2016, 5, 2)
@@ -45,6 +46,7 @@ data = {
 }
 
 
+@patch.dict('os.environ', {'EVALUATION_CUTOFF': '2015-09-01'})
 def test_metric_overtime():
     with rig_test_client(data) as test_app:
         route = '/evaluations/1/metric_overtime'
