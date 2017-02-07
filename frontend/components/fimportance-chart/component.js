@@ -6,18 +6,21 @@ export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
+      loading: false,
       sortflag: true,
       button_value: 'Sort by Name'
     }
   },
   componentDidMount: function() {
     const self = this
+    self.setState({ loading: true })
     $.ajax({
       type: "GET",
       url: "/evaluations/" + this.props.modelId + "/feature_importance",
       success: function(result) {
         self.setState({
           data: result.results,
+          loading: false
         })
       }
     })
@@ -33,26 +36,39 @@ export default React.createClass({
     }
   },
   render: function() {
-    return (
-      <div>
-        <button onClick={this.handleSort}>{this.state.button_value}</button>
-        {
-          React.createElement(NVD3Chart, {
-            type:"multiBarHorizontalChart",
-            datum: this.state.data,
-            x: 'label',
-            y: 'value',
-            containerStyle: { width: "800px", height: "500px" },
-            options:{
-              showValues: true,
-              showControls: true,
-              duration: 500,
-              tooltip: { enabled: true }
-            }
-          })
-        }
-      </div>
-    )
+    if(this.state.loading) {
+      return (
+        <div>
+          <h4>Feature Importance</h4>
+          <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <h4>Feature Importance</h4>
+          <button onClick={this.handleSort}>{this.state.button_value}</button>
+          {
+            React.createElement(NVD3Chart, {
+              type:"multiBarHorizontalChart",
+              datum: this.state.data,
+              x: function(d) { return d.label },
+              y: function(d) { return d.value },
+              containerStyle: { width: "800px", height: "500px" },
+              options:{
+                showValues: true,
+                showControls: true,
+                duration: 500,
+                tooltip: { enabled: true },
+                yAxis: {
+                  tickformat: function() {return d3.format('.4f')}
+                }
+              }
+            })
+          }
+        </div>
+      )
+    }
   }
 })
 

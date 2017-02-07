@@ -29,7 +29,6 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h3><strong>Model {this.props.modelId}</strong></h3>
           <h4>Top-K Percent Precision and Recall by Threshold</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
@@ -37,7 +36,6 @@ export default React.createClass({
     } else {
       return (
         <div>
-          <h3><strong>Model {this.props.modelId}</strong></h3>
           <h4>Top-K Percent Precision and Recall by Threshold</h4>
           {
             React.createElement(NVD3Chart, {
