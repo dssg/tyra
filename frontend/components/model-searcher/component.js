@@ -4,7 +4,7 @@ import MetricList from 'components/metric-list/component'
 import React from 'react'
 import uniqueId from 'utils/unique-id'
 
-const defaultMetric = { 'metric': 'precision', 'parameter': '' }
+const defaultMetric = { 'metric': 'precision', 'parameter': 'top 100' }
 
 export default React.createClass({
   handleSearch: function() {
@@ -36,6 +36,7 @@ export default React.createClass({
       <form method="post" role="form" id="form_arg">
         <div className="row">
           <MetricList
+            metricOptions={this.props.metricOptions}
             addMetric={this.addMetric}
             removeMetric={this.removeMetric}
             metricChanged={this.metricChanged}

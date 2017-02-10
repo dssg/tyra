@@ -9,6 +9,7 @@ export default React.createClass({
         key={key}
         index={key}
         metric={metric}
+        metricOptions={this.props.metricOptions}
         metricChanged={this.props.metricChanged}
         parameterChanged={this.props.parameterChanged}
         handleDeleteClick={this.props.removeMetric} />

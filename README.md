@@ -21,7 +21,6 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - model_type - string
 - model_group_id - integer
 - test - boolean
-- config - JSON (can contain many things, but only test_end_date is used for now)
 
 ### model_groups
 - model_group_id - integer
@@ -31,12 +30,14 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - metric - string (each value should be one of the Available Metrics below)
 - parameter - string (most data represents floats, though)
 - value - numeric
+- as_of_date - timestamp
 
 ### predictions
 - model_id - integer
-- unit_id - bigint
-- unit_score - numeric
+- entity_id - bigint
+- score - numeric
 - label_value - int
+- as_of_date - timestamp
 
 ### feature_importances
 - model_id - integer

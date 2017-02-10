@@ -2,8 +2,9 @@ import pandas as pd
 from webapp import db
 import logging
 import os
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+import pdb
 
 
 def evaluation_cutoff_date():
@@ -12,22 +13,33 @@ def evaluation_cutoff_date():
         date.today() - relativedelta(years=1)
     )
 
+INCLUDE_TEST_MODELS = False
+
+if INCLUDE_TEST_MODELS:
+    TEST_CLAUSE = "(1=1)"
+else:
+    TEST_CLAUSE = "(test = 'false')"
+
 
 def get_model_prediction(query_arg):
     query = """
     SELECT
-        unit_id,
-        unit_score,
+        entity_id,
+        score,
         label_value
     FROM results.predictions
     WHERE model_id = %(model_id)s
-    ORDER BY unit_score DESC
+    AND as_of_date = %(as_of_date)s
+    ORDER BY score DESC
     """
     df_models = pd.read_sql(
         query,
-        params={'model_id': query_arg['model_id']},
+        params={
+            'model_id': query_arg['model_id'],
+            'as_of_date': query_arg['as_of_date']
+        },
         con=db.engine
-        )
+    )
     output = df_models
     return output
 
@@ -46,22 +58,29 @@ def get_models(query_arg):
     with recent_prod_mg as (
         select model_group_id
         from results.models
-        where run_time >= %(runtime)s and test = 'false'
+        join results.evaluations using (model_id)
+        where run_time >= %(runtime)s
+        and {}
         order by run_time desc limit 1
     )
-    select distinct(config->>'test_end_date')
+    select distinct(e.as_of_date)
     from results.models
     join recent_prod_mg using (model_group_id)
-    where (config -> 'test_end_date') ::text::date < %(evaluation_cutoff)s
-    order by config->>'test_end_date' desc limit 1
-    """
+    join results.evaluations e using (model_id)
+    where e.as_of_date < %(evaluation_cutoff)s
+    order by e.as_of_date desc limit 1
+    """.format(TEST_CLAUSE)
+    print(run_date_lookup_query)
     try:
-        results = db.engine.execute(
+        results = [row for row in db.engine.execute(
             run_date_lookup_query,
             runtime=query_arg['timestamp'],
             evaluation_cutoff=evaluation_cutoff_date()
-        )
-        test_end_date = [row for row in results][-1][0]
+        )]
+        if results:
+            test_end_date = results[-1][0]
+        else:
+            return pd.DataFrame(), datetime.now()
     except Exception as e:
         logging.warning(e)
         raise
@@ -74,10 +93,11 @@ def get_models(query_arg):
     ({}) input_metrics
     join results.evaluations e using (metric, parameter)
     join results.models m using (model_id)
-    where m.config->>'test_end_date' = %(test_end_date)s
-    and test = 'false'
+    where e.as_of_date = %(test_end_date)s
+    and {}
     and run_time >= %(runtime)s
-    """.format(metric_string)
+    """.format(metric_string, TEST_CLAUSE)
+    print(query)
     try:
         df_models = pd.read_sql(
             query,
@@ -118,36 +138,48 @@ def get_feature_importance(query_arg):
 
 def get_precision(query_arg):
     query = """
-    select parameter :: NUMERIC, value
+    select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
     where metric= 'precision@'
     and model_id = %(model_id)s
-    and parameter != 'default'
+    and as_of_date = %(as_of_date)s
+    and parameter like '%%_pct'
     order by parameter;
     """
     df_precision = pd.read_sql(
         query,
-        params={'model_id': query_arg['model_id']},
+        params={
+            'model_id': query_arg['model_id'],
+            'as_of_date': query_arg['as_of_date'],
+        },
         con=db.engine
         )
+    print('precision')
+    print(df_precision)
     output = df_precision
     return output
 
 
 def get_recall(query_arg):
     query = """
-    select parameter :: NUMERIC, value
+    select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
     where metric= 'recall@'
     and model_id = %(model_id)s
-    and parameter != 'default'
+    and as_of_date = %(as_of_date)s
+    and parameter like '%%_pct'
     order by parameter;
     """
     df_precision = pd.read_sql(
         query,
-        params={'model_id': query_arg['model_id']},
+        params={
+            'model_id': query_arg['model_id'],
+            'as_of_date': query_arg['as_of_date'],
+        },
         con=db.engine
-        )
+    )
+    print('recall')
+    print(df_precision)
     output = df_precision
     return output
 
@@ -164,26 +196,19 @@ def get_metrics_over_time(query_arg):
 
     query = """
     select
-        model_id, test_end_date, new_metric, max(value) as value
+    model_id, as_of_date::date, new_metric, max(value) as value
     from (
-        with model_group_id_lookup as (
-            SELECT distinct(model_group_id) as model_group_id
-            FROM results.models
-            WHERE model_id = %(model_id)s
-        )
-        select m.model_id,
-           (config -> 'test_end_date') ::text::date as test_end_date,
-           e.metric || e.parameter as new_metric,
+        select model_id,
+           as_of_date,
+           metric || parameter as new_metric,
            value
         from
         ({}) input_metrics
         join results.evaluations e using(metric, parameter)
-        join results.models m using (model_id)
-        join model_group_id_lookup using (model_group_id)
-        where test = 'false'
-        and (config -> 'test_end_date') ::text::date < %(evaluation_cutoff)s
+        where model_id = %(model_id)s
+        and as_of_date < %(evaluation_cutoff)s
     ) ungrouped
-    group by model_id, test_end_date, new_metric
+    group by model_id, as_of_date, new_metric
     """.format(metric_string)
 
     df_metrics_overtime = pd.read_sql(
@@ -195,7 +220,7 @@ def get_metrics_over_time(query_arg):
         con=db.engine)
 
     output = df_metrics_overtime.pivot_table(
-        index=['model_id', 'test_end_date'],
+        index=['model_id', 'as_of_date'],
         columns='new_metric',
         values='value'
     )

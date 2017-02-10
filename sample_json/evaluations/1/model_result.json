@@ -1,8 +1,8 @@
 {
 	"results": [
-		{ "label_value": 4.0, "unit_id": 4567.0, "unit_score": 8.0 },
-        { "label_value": 3.0, "unit_id": 3456.0, "unit_score": 7.0 },
-        { "label_value": 1.0, "unit_id": 1234.0, "unit_score": 5.0 },
-        { "label_value": 2.0, "unit_id": 2345.0, "unit_score": 5.0 }
+		{ "label_value": 4.0, "entity_id": 4567.0, "score": 8.0 },
+        { "label_value": 3.0, "entity_id": 3456.0, "score": 7.0 },
+        { "label_value": 1.0, "entity_id": 1234.0, "score": 5.0 },
+        { "label_value": 2.0, "entity_id": 2345.0, "score": 5.0 }
 	]
 }
