@@ -2,6 +2,10 @@
 
 ## Prediction model evaluation dashboard
 
+[![build status](https://travis-ci.org/dssg/tyra.svg?branch=master)](https://travis-ci.org/dssg/tyra)
+
+[![codecov](https://codecov.io/gh/dssg/tyra/branch/master/graph/badge.svg)](https://codecov.io/gh/dssg/tyra)
+
 ## Quick Start
 
 1. Install requirements: `pip3 install -r requirements.txt`
