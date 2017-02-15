@@ -16,12 +16,12 @@ def evaluation_cutoff_date():
 def get_model_prediction(query_arg):
     query = """
     SELECT
-        unit_id,
-        unit_score,
+        entity_id as unit_id,
+        score as unit_score,
         label_value
     FROM results.predictions
     WHERE model_id = %(model_id)s
-    ORDER BY unit_score DESC
+    ORDER BY score DESC
     """
     df_models = pd.read_sql(
         query,
