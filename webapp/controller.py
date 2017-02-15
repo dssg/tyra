@@ -81,7 +81,10 @@ def search_models():
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/model_result/<as_of_date>', methods=['GET', 'POST'])
+@app.route(
+    '/evaluations/<int:model_id>/model_result/<as_of_date>',
+    methods=['GET', 'POST']
+)
 def get_model_result(model_id, as_of_date):
     query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     output = query.get_model_prediction(query_arg)
@@ -93,9 +96,12 @@ def get_model_result(model_id, as_of_date):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/feature_importance', methods=['GET','POST'])
+@app.route(
+    '/evaluations/<int:model_id>/feature_importance',
+    methods=['GET', 'POST']
+)
 def feature_importance(model_id, num=10):
-    query_arg = {'model_id':model_id, 'num':num}
+    query_arg = {'model_id': model_id, 'num': num}
     f_importance = query.get_feature_importance(query_arg)
     try:
         f_importance = f_importance.to_dict('records')
@@ -166,7 +172,10 @@ def get_roc(model_id, as_of_date):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/metric_overtime', methods=['GET','POST'])
+@app.route(
+    '/evaluations/<int:model_id>/metric_overtime',
+    methods=['GET', 'POST']
+)
 def get_metric_over_time(model_id):
     f = request.form
     print(f)
@@ -193,7 +202,7 @@ def get_metric_over_time(model_id):
         }
         for key, series in output.items() if key != 'model_id'
     ], key=lambda series: series['key'])
-    data.append({'key': 'model ' + str(model_id) ,
+    data.append({'key': 'model ' + str(model_id),
                  'values': [(data[0]['values'][-1][0], 0.0),
                             (data[0]['values'][-1][0], int(model_id))]})
     try:
@@ -210,4 +219,3 @@ def within_model():
 @app.route('/evaluations/between_models', methods=['GET', 'POST'])
 def between_models():
     return render_template('between_models.html')
-

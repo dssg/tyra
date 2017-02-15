@@ -12,6 +12,7 @@ def evaluation_cutoff_date():
         date.today() - relativedelta(years=1)
     )
 
+
 INCLUDE_TEST_MODELS = False
 
 if INCLUDE_TEST_MODELS:

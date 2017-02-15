@@ -1,5 +1,5 @@
-import React from 'react'
 import { concat, contains, map } from 'ramda'
+import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
