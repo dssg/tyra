@@ -1,7 +1,7 @@
 import { addIndex, concat, curry, map, mergeAll, values } from 'ramda'
+import prettifyMetric from 'utils/prettify-metric'
 import React from 'react'
 import ReactTable from 'react-table'
-import prettifyMetric from 'utils/prettify-metric'
 
 
 export default React.createClass({

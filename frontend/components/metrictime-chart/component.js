@@ -1,7 +1,7 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
+import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
-import d3 from 'd3'
 
 export default React.createClass({
   getInitialState: function() {
@@ -63,8 +63,8 @@ export default React.createClass({
                 duration: 500,
                 useInteractiveGuideline: true,
                 xAxis: {
-                    axisLabel: 'Test Date',
-                    tickFormat: function(d) { return d3.time.format("%Y-%m-%d")(new Date(d)) }
+                  axisLabel: 'Test Date',
+                  tickFormat: function(d) { return d3.time.format("%Y-%m-%d")(new Date(d)) }
                 },
                 yAxis: { axisLabel: 'Metric' },
                 yDomain: [0, 1.05],
@@ -72,8 +72,8 @@ export default React.createClass({
               }
             })
           }
-      </div>
-    )
-  }
+        </div>
+      )
+    }
   }
 })

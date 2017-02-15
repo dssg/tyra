@@ -4,7 +4,6 @@ import logging
 import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
-import pdb
 
 
 def evaluation_cutoff_date():

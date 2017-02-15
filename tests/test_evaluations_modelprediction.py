@@ -18,7 +18,8 @@ data = {
 
 def test_model_prediction():
     with rig_test_client(data) as test_app:
-        response = test_app.get('/evaluations/1/model_result/{}'.format(AS_OF_DATE))
+        url = '/evaluations/1/model_result/{}'.format(AS_OF_DATE)
+        response = test_app.get(url)
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example('/evaluations/1/model_result')

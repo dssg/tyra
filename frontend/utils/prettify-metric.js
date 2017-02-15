@@ -4,12 +4,12 @@ let prettifyMetricParam = function(param) {
   } else if(param.endsWith('_pct')) {
     return 'top ' + param.replace('_pct', '%')
   } else {
-    return param;
+    return param
   }
 }
 export default function(metric) {
   let parts = metric.split('@')
-  if(parts.length == 2) {
+  if(parts.length === 2) {
     return parts[0] + '@' + prettifyMetricParam(parts[1])
   } else {
     return metric

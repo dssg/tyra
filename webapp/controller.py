@@ -4,7 +4,6 @@ from webapp import query
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
-import pdb
 import datetime
 
 # filter user-passed metrics through this list
@@ -49,6 +48,7 @@ def prettify_metric_param(param):
     else:
         return param
 
+
 def prettify_metric(metric):
     m, param = metric.split('@')
     pretty_param = prettify_metric_param(param)
@@ -72,7 +72,10 @@ def search_models():
     output, test_end_date = query.get_models(query_arg)
     try:
         output = output.to_dict('records')
-        return jsonify(results=(output), as_of_date=test_end_date.date().isoformat())
+        return jsonify(
+            results=(output),
+            as_of_date=test_end_date.date().isoformat()
+        )
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
@@ -105,7 +108,10 @@ def feature_importance(model_id, num=10):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/threshold_precision_recall/<as_of_date>', methods=['GET', 'POST'])
+@app.route(
+    '/evaluations/<int:model_id>/threshold_precision_recall/<as_of_date>',
+    methods=['GET', 'POST']
+)
 def get_threshold_precision_recall(model_id, as_of_date):
     as_of_date = datetime.datetime.strptime(as_of_date, "%Y-%m-%d").date()
     query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
@@ -125,7 +131,10 @@ def get_threshold_precision_recall(model_id, as_of_date):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/simple_precision_recall/<as_of_date>', methods=['GET', 'POST'])
+@app.route(
+    '/evaluations/<int:model_id>/simple_precision_recall/<as_of_date>',
+    methods=['GET', 'POST']
+)
 def get_simple_precision_recall(model_id, as_of_date):
     query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     pred = query.get_model_prediction(query_arg)
@@ -140,7 +149,10 @@ def get_simple_precision_recall(model_id, as_of_date):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/roc/<as_of_date>', methods=['GET', 'POST'])
+@app.route(
+    '/evaluations/<int:model_id>/roc/<as_of_date>',
+    methods=['GET', 'POST']
+)
 def get_roc(model_id, as_of_date):
     query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     pred = query.get_model_prediction(query_arg)
