@@ -28,7 +28,7 @@ Tyra is designed to work on different data science projects, but to accomplish t
 ### evaluations
 - model_id - integer
 - metric - string (each value should be one of the Available Metrics below)
-- parameter - string (most data represents floats, though)
+- parameter - string
 - value - numeric
 - as_of_date - timestamp
 
@@ -44,20 +44,26 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - feature - string
 - feature_importance - numeric
 
-Whether or not the `model_id` columns in `predictions` and `evaluations` is defined as a foreign key, it should act as one as the tables are joined using it.
+Whether or not the `model_id` and `as_of_date` columns in `predictions` and `evaluations` are defined as a foreign key, they should act as one as the tables are joined using it.
 
 No assertions are made on other tables in the `results` schema or other schemas, or on other columns in these tables.
 
 ### Available Metrics
-The list of metrics that will be displayed to the user currently lives in `webapp/static/components/metric-selector.js`, but for convenience the list at the time of writing is:
-- precision@
-- recall@
+The list of metrics that will be displayed to the user currently lives in `parameters.yaml`. The currently shipped list looks like this:
+- precision
+- recall
 - auc
-- f1
-- true positives@
-- true negatives@
-- false positives@
-- false negatives@
+- true positives
+- true negatives
+- false positives
+- false negatives
+
+Both absolute value and percent thresholding are supported for metric parameters. The format for each one in the `results.evaluations.parameter` is as follows:
+
+`100_abs` (top 100 entities)
+`10.0_pct` (top 10%)
+
+Tyra expects these metrics to be computed ahead of time, so if your evaluation code does not compute all of these thresholds for all of the threshold-able metrics ahead of time, we recommend removing entries from parameters.yaml to make the lists match up and avoid confusion in the UI.
 
 
 ## Running multiple instances
