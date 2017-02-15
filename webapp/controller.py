@@ -3,29 +3,56 @@ from webapp import app
 from webapp import query
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
+import yaml
+import datetime
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
     "precision",
     "recall",
     "auc",
-    "f1",
     "true positives",
     "true negatives",
     "false positives",
     "false negatives"
 ])
 
+with open('parameters.yaml') as f:
+    PARAMETERS = yaml.load(f)
+
 
 @app.route('/')
 @app.route('/evaluations')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', parameters=PARAMETERS)
 
 
 @app.route('/testing')
 def testing():
     return render_template('testing.html')
+
+
+def dbify_metric_param(param):
+    cleaned_param = param[len('Top '):]
+    if cleaned_param.endswith('%'):
+        return cleaned_param.replace('%', '_pct')
+    else:
+        return cleaned_param + '_abs'
+
+
+def prettify_metric_param(param):
+    if param.endswith('_abs'):
+        return 'top {}'.format(param.replace('_abs', ''))
+    elif param.endswith('_pct'):
+        return 'top {}'.format(param.replace('_pct', '%'))
+    else:
+        return param
+
+
+def prettify_metric(metric):
+    m, param = metric.split('@')
+    pretty_param = prettify_metric_param(param)
+    return '{}@{}'.format(m, pretty_param)
 
 
 @app.route('/evaluations/search_models', methods=['POST'])
@@ -36,7 +63,7 @@ def search_models():
     for key in f.keys():
         if 'parameter' in key:
             flattened_query[key.strip('parameter')]['parameter'] = \
-                float(f[key])
+                dbify_metric_param(f[key])
         elif 'metric' in key:
             if f[key] in METRIC_WHITELIST:
                 flattened_query[key.strip('metric')]['metric'] = f[key]
@@ -45,15 +72,21 @@ def search_models():
     output, test_end_date = query.get_models(query_arg)
     try:
         output = output.to_dict('records')
-        return jsonify(results=(output), as_of_date=test_end_date)
+        return jsonify(
+            results=(output),
+            as_of_date=test_end_date.date().isoformat()
+        )
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/model_result', methods=['GET', 'POST'])
-def get_model_result(model_id):
-    query_arg = {'model_id': model_id}
+@app.route(
+    '/evaluations/<int:model_id>/model_result/<as_of_date>',
+    methods=['GET', 'POST']
+)
+def get_model_result(model_id, as_of_date):
+    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     output = query.get_model_prediction(query_arg)
     try:
         output = output.to_dict('records')
@@ -63,9 +96,12 @@ def get_model_result(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/feature_importance', methods=['GET','POST'])
+@app.route(
+    '/evaluations/<int:model_id>/feature_importance',
+    methods=['GET', 'POST']
+)
 def feature_importance(model_id, num=10):
-    query_arg = {'model_id':model_id, 'num':num}
+    query_arg = {'model_id': model_id, 'num': num}
     f_importance = query.get_feature_importance(query_arg)
     try:
         f_importance = f_importance.to_dict('records')
@@ -78,9 +114,13 @@ def feature_importance(model_id, num=10):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/threshold_precision_recall', methods=['GET', 'POST'])
-def get_threshold_precision_recall(model_id):
-    query_arg = {'model_id': model_id}
+@app.route(
+    '/evaluations/<int:model_id>/threshold_precision_recall/<as_of_date>',
+    methods=['GET', 'POST']
+)
+def get_threshold_precision_recall(model_id, as_of_date):
+    as_of_date = datetime.datetime.strptime(as_of_date, "%Y-%m-%d").date()
+    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     precision = query.get_precision(query_arg)
     recall = query.get_recall(query_arg)
     try:
@@ -97,12 +137,15 @@ def get_threshold_precision_recall(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/simple_precision_recall', methods=['GET', 'POST'])
-def get_simple_precision_recall(model_id):
-    query_arg = {'model_id': model_id}
+@app.route(
+    '/evaluations/<int:model_id>/simple_precision_recall/<as_of_date>',
+    methods=['GET', 'POST']
+)
+def get_simple_precision_recall(model_id, as_of_date):
+    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     pred = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
-                                                          pred['unit_score'])
+                                                          pred['score'])
     output = [{'key': 'precision_recall',
                'values': list(zip(precision, recall))}]
     try:
@@ -112,11 +155,14 @@ def get_simple_precision_recall(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/roc', methods=['GET', 'POST'])
-def get_roc(model_id):
-    query_arg = {'model_id': model_id}
+@app.route(
+    '/evaluations/<int:model_id>/roc/<as_of_date>',
+    methods=['GET', 'POST']
+)
+def get_roc(model_id, as_of_date):
+    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
     pred = query.get_model_prediction(query_arg)
-    fpr, tpr, threshold = roc_curve(pred['label_value'], pred['unit_score'])
+    fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
     output = [{'key': 'roc', 'values': list(zip(fpr, tpr))},
               {'key': 'random', 'values': [[0, 0], [1, 1]]}]
     try:
@@ -126,7 +172,10 @@ def get_roc(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/<int:model_id>/metric_overtime', methods=['GET','POST'])
+@app.route(
+    '/evaluations/<int:model_id>/metric_overtime',
+    methods=['GET', 'POST']
+)
 def get_metric_over_time(model_id):
     f = request.form
     print(f)
@@ -135,7 +184,7 @@ def get_metric_over_time(model_id):
     for key in f.keys():
         if 'parameter' in key:
             flattened_query[key.strip('parameter')]['parameter'] = \
-                float(f[key])
+                dbify_metric_param(f[key])
         elif 'metric' in key:
             if f[key] in METRIC_WHITELIST:
                 flattened_query[key.strip('metric')]['metric'] = f[key]
@@ -145,7 +194,7 @@ def get_metric_over_time(model_id):
     output = df.to_dict()
     data = sorted([
         {
-            'key': key,
+            'key': prettify_metric(key),
             'values': sorted([
                 (str(dt), value)
                 for dt, value in series.items()
@@ -153,7 +202,7 @@ def get_metric_over_time(model_id):
         }
         for key, series in output.items() if key != 'model_id'
     ], key=lambda series: series['key'])
-    data.append({'key': 'model ' + str(model_id) ,
+    data.append({'key': 'model ' + str(model_id),
                  'values': [(data[0]['values'][-1][0], 0.0),
                             (data[0]['values'][-1][0], int(model_id))]})
     try:
@@ -170,4 +219,3 @@ def within_model():
 @app.route('/evaluations/between_models', methods=['GET', 'POST'])
 def between_models():
     return render_template('between_models.html')
-

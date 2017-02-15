@@ -5,7 +5,7 @@ import moment from 'moment'
 import React from 'react'
 import uniqueId from 'utils/unique-id'
 
-const defaultMetric = { 'metric': 'precision', 'parameter': '' }
+const defaultMetric = { 'metric': 'precision', 'parameter': 'top 100' }
 const defaultStartDate = moment().subtract(1, 'M')
 
 
@@ -15,9 +15,10 @@ export default React.createClass({
     metrics[uniqueId()] = clone(defaultMetric)
     return {
       modelId: null,
+      asOfDate: null,
       metrics: metrics,
       startDate: defaultStartDate,
-      searchId: ''
+      searchId: '',
     }
   },
 
@@ -41,11 +42,17 @@ export default React.createClass({
     this.setState({ modelId: newId })
   },
 
+  setAsOfDate: function(newDate) {
+    this.setState({ asOfDate: newDate })
+  },
+
   renderModelTable: function() {
     return (
       <ModelTable
         modelSearchParameters={this.state.modelSearchParameters}
         setModelId={this.setModelId}
+        setAsOfDate={this.setAsOfDate}
+        asOfDate={this.state.asOfDate}
         searchId={this.state.searchId}
         metrics={this.state.metrics}
         startDate={this.state.startDate} />
@@ -55,7 +62,7 @@ export default React.createClass({
   renderModelCharts: function() {
     return React.createElement(
       this.props.chartsClass,
-      { modelId: this.state.modelId, setModelId: this.setModelId, metrics: this.state.metrics }
+      { modelId: this.state.modelId, asOfDate: this.state.asOfDate, setModelId: this.setModelId, metrics: this.state.metrics }
     )
   },
 
@@ -77,6 +84,7 @@ export default React.createClass({
               metrics={this.state.metrics}
               startDate={this.state.startDate}
               handleSearch={this.handleSearch}
+              metricOptions={this.props.metricOptions}
               setMetrics={this.setMetrics}
               setStartDate={this.setStartDate} />
           </div>

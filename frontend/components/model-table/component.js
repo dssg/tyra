@@ -1,11 +1,12 @@
 import { addIndex, concat, curry, map, mergeAll, values } from 'ramda'
+import prettifyMetric from 'utils/prettify-metric'
 import React from 'react'
 import ReactTable from 'react-table'
 
 
 export default React.createClass({
   getInitialState: function() {
-    return { data: [], loading: false, asOfDate: null }
+    return { data: [], loading: false }
   },
   componentDidMount: function() {
     this.search()
@@ -38,9 +39,9 @@ export default React.createClass({
       success: function(result) {
         self.setState({
           data: result.results,
-          asOfDate: result.as_of_date,
           loading: false
         })
+        self.props.setAsOfDate(result.as_of_date)
       }
     })
   },
@@ -89,7 +90,7 @@ export default React.createClass({
         }
       } else {
         return {
-          header: columnName,
+          header: prettifyMetric(columnName),
           id: columnName,
           accessor: function(d) { return d[columnName] },
           render: curry(self.standardColumnRenderer)(columnName)
@@ -106,8 +107,8 @@ export default React.createClass({
     } else {
       return (
         <div>
-          <div>Models run after {this.props.startDate.format('YYYY-MM-DD')}</div>
-          <div>Metrics shown reflect performance when testing results as of {this.state.asOfDate}. This is not necessarily indicative of model stability.</div>
+          <div>Models run after {this.props.startDate.format('YYYY-MM-DD')} - <strong>{this.state.data.length}</strong> models found</div>
+          <div>Metrics shown reflect performance when testing results as of {this.props.asOfDate}. This is not necessarily indicative of model stability.</div>
           <ReactTable
             tableClassName="table"
             columns={this.columns()}

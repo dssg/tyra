@@ -1,7 +1,7 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
+import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
-import d3 from 'd3'
 
 export default React.createClass({
   getInitialState: function() {
@@ -55,22 +55,25 @@ export default React.createClass({
               type:"lineChart",
               datum: this.state.data,
               containerStyle:{ width: "700px", height: "500px" },
-              x: function(d) { return d[0].slice(0, 4) },
+              x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
               y: function(d) { return d[1] },
               options:{
                 showDistX: true,
                 showDistY: true,
                 duration: 500,
                 useInteractiveGuideline: true,
-                xAxis: { axisLabel: 'Year' },
+                xAxis: {
+                  axisLabel: 'Test Date',
+                  tickFormat: function(d) { return d3.time.format("%Y-%m-%d")(new Date(d)) }
+                },
                 yAxis: { axisLabel: 'Metric' },
                 yDomain: [0, 1.05],
                 color: d3.scale.category10().range()
               }
             })
           }
-      </div>
-    )
-  }
+        </div>
+      )
+    }
   }
 })

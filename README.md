@@ -2,6 +2,9 @@
 
 ## Prediction model evaluation dashboard
 
+[![build status](https://travis-ci.org/dssg/tyra.svg?branch=master)](https://travis-ci.org/dssg/tyra)
+[![codecov](https://codecov.io/gh/dssg/tyra/branch/master/graph/badge.svg)](https://codecov.io/gh/dssg/tyra)
+
 ## Quick Start
 
 1. Install requirements: `pip3 install -r requirements.txt`
@@ -21,7 +24,6 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - model_type - string
 - model_group_id - integer
 - test - boolean
-- config - JSON (can contain many things, but only test_end_date is used for now)
 
 ### model_groups
 - model_group_id - integer
@@ -29,34 +31,42 @@ Tyra is designed to work on different data science projects, but to accomplish t
 ### evaluations
 - model_id - integer
 - metric - string (each value should be one of the Available Metrics below)
-- parameter - string (most data represents floats, though)
+- parameter - string
 - value - numeric
+- as_of_date - timestamp
 
 ### predictions
 - model_id - integer
-- unit_id - bigint
-- unit_score - numeric
+- entity_id - bigint
+- score - numeric
 - label_value - int
+- as_of_date - timestamp
 
 ### feature_importances
 - model_id - integer
 - feature - string
 - feature_importance - numeric
 
-Whether or not the `model_id` columns in `predictions` and `evaluations` is defined as a foreign key, it should act as one as the tables are joined using it.
+Whether or not the `model_id` and `as_of_date` columns in `predictions` and `evaluations` are defined as a foreign key, they should act as one as the tables are joined using it.
 
 No assertions are made on other tables in the `results` schema or other schemas, or on other columns in these tables.
 
 ### Available Metrics
-The list of metrics that will be displayed to the user currently lives in `webapp/static/components/metric-selector.js`, but for convenience the list at the time of writing is:
-- precision@
-- recall@
+The list of metrics that will be displayed to the user currently lives in `parameters.yaml`. The currently shipped list looks like this:
+- precision
+- recall
 - auc
-- f1
-- true positives@
-- true negatives@
-- false positives@
-- false negatives@
+- true positives
+- true negatives
+- false positives
+- false negatives
+
+Both absolute value and percent thresholding are supported for metric parameters. The format for each one in the `results.evaluations.parameter` is as follows:
+
+`100_abs` (top 100 entities)
+`10.0_pct` (top 10%)
+
+Tyra expects these metrics to be computed ahead of time, so if your evaluation code does not compute all of these thresholds for all of the threshold-able metrics ahead of time, we recommend removing entries from parameters.yaml to make the lists match up and avoid confusion in the UI.
 
 
 ## Running multiple instances

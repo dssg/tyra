@@ -30,12 +30,11 @@ def setup_data(engine, data):
         run_time timestamp,
         model_type varchar,
         model_group_id int,
-        test bool,
-        config json
+        test bool
     )""")
     for model in data.get('models', []):
         engine.execute(
-            'insert into results.models values (%s, %s, %s, %s, %s, %s)',
+            'insert into results.models values (%s, %s, %s, %s, %s)',
             model
         )
 
@@ -44,25 +43,27 @@ def setup_data(engine, data):
         model_id int,
         metric character varying,
         parameter character varying,
-        value numeric
+        value numeric,
+        as_of_date timestamp
     )""")
     for row in data.get('evaluations', []):
         engine.execute(
-            'insert into results.evaluations values (%s, %s, %s, %s)',
+            'insert into results.evaluations values (%s, %s, %s, %s, %s)',
             row
         )
 
     engine.execute("""
     create table results.predictions (
         model_id int,
-        unit_id bigint,
-        unit_score numeric,
-        label_value int
+        entity_id bigint,
+        score numeric,
+        label_value int,
+        as_of_date timestamp
     )""")
 
     for row in data.get('predictions', []):
         engine.execute(
-            'insert into results.predictions values (%s, %s, %s, %s)',
+            'insert into results.predictions values (%s, %s, %s, %s, %s)',
             row
         )
 

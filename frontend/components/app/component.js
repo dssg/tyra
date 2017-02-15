@@ -6,6 +6,7 @@ export default React.createClass({
   render: function() {
     return (
       <ModelDashboard
+        metricOptions={this.props.parameters}
         chartsClass={ModelCharts} />
     )
   }

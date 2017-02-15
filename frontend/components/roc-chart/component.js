@@ -15,7 +15,7 @@ export default React.createClass({
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/roc",
+      url: "/evaluations/" + this.props.modelId + "/roc/" + this.props.asOfDate,
       success: function(result) {
         self.setState({
           data: result.results,

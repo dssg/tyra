@@ -5,9 +5,9 @@ from psycopg2.extras import Json
 import logging
 
 CUTOFF = datetime(2016, 5, 2)
-TOO_NEW = Json({'test_end_date': '2016-04-01'})
-TOO_OLD = Json({'test_end_date': '2014-04-01'})
-JUST_RIGHT = Json({'test_end_date': '2015-04-01'})
+TOO_NEW = '2016-04-01'
+TOO_OLD = '2014-04-01'
+JUST_RIGHT = '2015-04-01'
 
 model_groups_data = [
     # model_group_id
@@ -18,53 +18,53 @@ model_groups_data = [
 ]
 
 models_data = [
-    # model_id, run_time, model_type, model_group_id, testing, config
+    # model_id, run_time, model_type, model_group_id, testing
 
     # test end date is picked from this model group,
     # as it is more recently run than model group 3
     # the middle model should be picked because it is the second most recent
-    (1, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, TOO_NEW),
-    (2, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, JUST_RIGHT),
-    (3, CUTOFF + timedelta(days=3), 'a_model_type', 1, False, TOO_OLD),
+    (1, CUTOFF + timedelta(days=3), 'a_model_type', 1, False),
+    (2, CUTOFF + timedelta(days=3), 'a_model_type', 1, False),
+    (3, CUTOFF + timedelta(days=3), 'a_model_type', 1, False),
 
     # skip because runtime is before the cutoff
-    (4, CUTOFF - timedelta(days=3), 'a_model_type', 2, False, JUST_RIGHT),
+    (4, CUTOFF - timedelta(days=3), 'a_model_type', 2, False),
 
     # this is a good model group,
     # and model 10 should be picked based on test_end_date
-    (9, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, TOO_NEW),
-    (10, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, JUST_RIGHT),
-    (11, CUTOFF + timedelta(days=1), 'a_model_type', 3, False, TOO_OLD),
+    (9, CUTOFF + timedelta(days=1), 'a_model_type', 3, False),
+    (10, CUTOFF + timedelta(days=1), 'a_model_type', 3, False),
+    (11, CUTOFF + timedelta(days=1), 'a_model_type', 3, False),
 
     # skip because marked testing
-    (5, CUTOFF + timedelta(days=1), 'a_model_type', 4, True, JUST_RIGHT),
+    (5, CUTOFF + timedelta(days=1), 'a_model_type', 4, True),
 
     # the last three should be skipped because same model group as 1-3
     # but less recent runtimes
-    (6, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, TOO_NEW),
-    (7, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, JUST_RIGHT),
-    (8, CUTOFF + timedelta(days=2), 'a_model_type', 1, False, TOO_OLD),
+    (6, CUTOFF + timedelta(days=2), 'a_model_type', 1, False),
+    (7, CUTOFF + timedelta(days=2), 'a_model_type', 1, False),
+    (8, CUTOFF + timedelta(days=2), 'a_model_type', 1, False),
 ]
 
 evaluations_data = [
-    # model_id, metric, parameter, value
-    (1, 'recall@', '5.0', 45),
-    (1, 'recall@', '10.0', 46),
-    (1, 'precision@', '5.0', 47),
-    (1, 'precision@', '10.0', 48),
-    (2, 'recall@', '5.0', 55),
-    (2, 'precision@', '10.0', 56),
-    (3, 'recall@', '5.0', 60),
-    (3, 'precision@', '10.0', 50),
-    (4, 'precision@', '10.0', 48),
-    (5, 'recall@', '5.0', 45),
-    (5, 'recall@', '10.0', 46),
-    (5, 'precision@', '5.0', 47),
-    (5, 'precision@', '10.0', 48),
-    (10, 'recall@', '5.0', 65),
-    (10, 'recall@', '10.0', 66),
-    (10, 'precision@', '5.0', 67),
-    (10, 'precision@', '10.0', 68),
+    # model_id, metric, parameter, value, as_of_date
+    (1, 'recall@', '5.0_pct', 45, TOO_NEW),
+    (1, 'recall@', '10.0_pct', 46, TOO_NEW),
+    (1, 'precision@', '5.0_pct', 47, TOO_NEW),
+    (1, 'precision@', '10.0_pct', 48, TOO_NEW),
+    (2, 'recall@', '5.0_pct', 55, JUST_RIGHT),
+    (2, 'precision@', '10.0_pct', 56, JUST_RIGHT),
+    (3, 'recall@', '5.0_pct', 60, TOO_OLD),
+    (3, 'precision@', '10.0_pct', 50, TOO_OLD),
+    (4, 'precision@', '10.0_pct', 48, JUST_RIGHT),
+    (5, 'recall@', '5.0_pct', 45, JUST_RIGHT),
+    (5, 'recall@', '10.0_pct', 46, JUST_RIGHT),
+    (5, 'precision@', '5.0_pct', 47, JUST_RIGHT),
+    (5, 'precision@', '10.0_pct', 48, JUST_RIGHT),
+    (10, 'recall@', '5.0_pct', 65, JUST_RIGHT),
+    (10, 'recall@', '10.0_pct', 66, JUST_RIGHT),
+    (10, 'precision@', '5.0_pct', 67, JUST_RIGHT),
+    (10, 'precision@', '10.0_pct', 68, JUST_RIGHT),
 ]
 
 data = {
@@ -81,14 +81,13 @@ def test_search_models():
             route,
             data=dict(
                 metric1='recall',
-                parameter1='5.0',
+                parameter1='top 5.0%',
                 metric2='precision',
-                parameter2='10.0',
+                parameter2='top 10.0%',
                 timestamp=CUTOFF
             )
         )
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example(route)
-        logging.warning(response_data)
         assert expected == response_data
