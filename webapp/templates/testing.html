@@ -3,7 +3,9 @@
 
 <div id="app"></div>
 <script type="text/javascript">
-	ReactDOM.render(React.createElement(AppTesting), document.getElementById('app'));
+	var parameters = {{ parameters|tojson }};
+	var props = { 'parameters': parameters }
+	ReactDOM.render(React.createElement(AppTesting, props), document.getElementById('app'));
 </script>
 
 {% endblock %}

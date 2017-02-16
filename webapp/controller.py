@@ -29,7 +29,7 @@ def index():
 
 @app.route('/testing')
 def testing():
-    return render_template('testing.html')
+    return render_template('testing.html', parameters=PARAMETERS)
 
 
 def dbify_metric_param(param):
