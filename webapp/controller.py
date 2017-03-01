@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from webapp import app
 from webapp import query
+from webapp.model_ranking import ranked_models
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
@@ -71,7 +72,7 @@ def search_models():
     query_arg['metrics'] = flattened_query
     output, test_end_date = query.get_models(query_arg)
     try:
-        output = output.to_dict('records')
+        output = ranked_models(output.to_dict('records'), 'mse')
         return jsonify(
             results=(output),
             as_of_date=test_end_date.date().isoformat()
