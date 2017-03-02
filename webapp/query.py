@@ -184,14 +184,14 @@ def get_recall(query_arg):
     return output
 
 
-def get_metrics_over_time(query_arg):
+def get_metrics_over_time(metrics, filter_string, filter_values, index):
     metric_string = ' union '.join([
         """
         select
             '{metric}@'::varchar metric,
             '{parameter}'::varchar parameter
         """.format(**args)
-        for num, args in query_arg['metrics'].items()
+        for num, args in metrics.items()
     ])
 
     query = """
@@ -203,24 +203,21 @@ def get_metrics_over_time(query_arg):
            metric || parameter as new_metric,
            value
         from
-        ({}) input_metrics
+        ({metric_string}) input_metrics
         join results.evaluations e using(metric, parameter)
-        where model_id = %(model_id)s
+        join results.models m using (model_id)
+        where {filter_string}
         and as_of_date < %(evaluation_cutoff)s
     ) ungrouped
     group by model_id, as_of_date, new_metric
-    """.format(metric_string)
+    """.format(metric_string=metric_string, filter_string=filter_string)
 
-    df_metrics_overtime = pd.read_sql(
-        query,
-        params={
-            'model_id': query_arg['model_id'],
-            'evaluation_cutoff': evaluation_cutoff_date()
-        },
-        con=db.engine)
+    params = filter_values.copy()
+    params['evaluation_cutoff'] = evaluation_cutoff_date()
+    df_metrics_overtime = pd.read_sql(query, params=params, con=db.engine)
 
     output = df_metrics_overtime.pivot_table(
-        index=['model_id', 'as_of_date'],
+        index=index,
         columns='new_metric',
         values='value'
     )

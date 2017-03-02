@@ -78,7 +78,12 @@ def ranked_models(models, ranking_function):
     if ranking_function not in RANKERS:
         raise ValueError('Ranking function not implemented')
 
+    for model in models:
+        import pdb
+        pdb.set_trace()
+        model[ranking_function] = RANKERS[ranking_function](model=model)
+
     return sorted(
         models,
-        key=lambda model: RANKERS[ranking_function](model=model),
+        key=lambda model: model[ranking_function],
     )

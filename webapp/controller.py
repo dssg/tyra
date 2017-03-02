@@ -56,29 +56,44 @@ def prettify_metric(metric):
     return '{}@{}'.format(m, pretty_param)
 
 
+def flatten_metric_query(form):
+    flattened_query = defaultdict(dict)
+    for key in form.keys():
+        if 'parameter' in key:
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                dbify_metric_param(form[key])
+        elif 'metric' in key:
+            if form[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = form[key]
+    return flattened_query
+
+
 @app.route('/evaluations/search_models', methods=['POST'])
 def search_models():
     f = request.form
-    query_arg = {}
-    flattened_query = defaultdict(dict)
-    for key in f.keys():
-        if 'parameter' in key:
-            flattened_query[key.strip('parameter')]['parameter'] = \
-                dbify_metric_param(f[key])
-        elif 'metric' in key:
-            if f[key] in METRIC_WHITELIST:
-                flattened_query[key.strip('metric')]['metric'] = f[key]
-    query_arg['timestamp'] = f['timestamp']
-    query_arg['metrics'] = flattened_query
-    output, test_end_date = query.get_models(query_arg)
+    output = query.get_metrics_over_time(
+        flatten_metric_query(f),
+        'run_time > %(ts)s',
+        {'ts': f['timestamp']},
+        index=['model_id']
+    )
     try:
-        output = ranked_models(output.to_dict('records'), 'mse')
+        n = output.to_dict('records')
+        ranked = ranked_models(n, 'mse'),
+        print('ranked')
+        print(ranked)
+        series = next(iter(
+            [v for k, v in ranked.items() if isinstance(v, dict)]
+        ), None)
+        if not series:
+            raise ValueError('No metric time series found')
+        as_of_date = series.keys()[0]
         return jsonify(
             results=(output),
-            as_of_date=test_end_date.date().isoformat()
+            as_of_date=as_of_date
         )
-    except:
-        print('there are some problems')
+    except Exception as e:
+        print(e)
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
@@ -179,19 +194,12 @@ def get_roc(model_id, as_of_date):
 )
 def get_metric_over_time(model_id):
     f = request.form
-    print(f)
-    query_arg = {}
-    flattened_query = defaultdict(dict)
-    for key in f.keys():
-        if 'parameter' in key:
-            flattened_query[key.strip('parameter')]['parameter'] = \
-                dbify_metric_param(f[key])
-        elif 'metric' in key:
-            if f[key] in METRIC_WHITELIST:
-                flattened_query[key.strip('metric')]['metric'] = f[key]
-    query_arg['metrics'] = flattened_query
-    query_arg['model_id'] = model_id
-    df = query.get_metrics_over_time(query_arg)
+    metric_query = flatten_metric_query(f)
+    df = query.get_metrics_over_time(
+        metric_query,
+        'model_id = %(model_id)s',
+        {'model_id': model_id}
+    )
     output = df.to_dict()
     data = sorted([
         {
