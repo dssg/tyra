@@ -4,6 +4,7 @@ import ModelTable from 'components/model-table/component'
 import moment from 'moment'
 import React from 'react'
 import uniqueId from 'utils/unique-id'
+import ModelBigGraph from 'components/model-biggraph/component'
 
 const defaultMetric = { 'metric': 'precision', 'parameter': 'top 100' }
 const defaultStartDate = moment().subtract(1, 'M')
@@ -91,6 +92,7 @@ export default React.createClass({
           <div className="col-lg-9">
             <div className="row">
               <div className="col-lg-12">
+                <ModelBigGraph />
                 { !isEmpty(this.state.searchId) ? this.renderModelTable() : null }
               </div>
             </div>
