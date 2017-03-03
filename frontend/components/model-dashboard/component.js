@@ -60,6 +60,13 @@ export default React.createClass({
     )
   },
 
+  renderModelBigGraph: function() {
+    return (
+      <ModelBigGraph setModelId={this.setModelId}
+                     setAsOfDate={this.setAsOfDate} />
+    )
+  },
+
   renderModelCharts: function() {
     return React.createElement(
       this.props.chartsClass,
@@ -92,8 +99,8 @@ export default React.createClass({
           <div className="col-lg-9">
             <div className="row">
               <div className="col-lg-12">
-                <ModelBigGraph />
-                { !isEmpty(this.state.searchId) ? this.renderModelTable() : null }
+                { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null}
+                { !isEmpty(this.state.searchId) ? this.renderModelTable() : null}
               </div>
             </div>
           </div>

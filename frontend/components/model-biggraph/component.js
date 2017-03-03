@@ -4,6 +4,17 @@ import ReactHighcharts  from 'react-highcharts';
 export default React.createClass({
   getInitialState: function() {
     return {
+      config: {}
+    }
+  },
+  handleModelIdClick: function(modelId, asOfDate) {
+    const self = this
+    self.props.setModelId(modelId.split(" ")[1])
+    self.props.setAsOfDate(asOfDate)
+  },
+  componentDidMount: function() {
+    let self = this;
+    this.setState({
       config: {
         title: {
           text: 'Model Select',
@@ -24,7 +35,9 @@ export default React.createClass({
             },
             events: {
               click: function() {
-                window.open(this.options.url, '_blank');
+                //window.open(this.options.url, '_blank');
+                //location.href = this.options.url;
+                self.handleModelIdClick(this.options.name, this.options.asOfDate);
               }
             }
           }
@@ -55,40 +68,38 @@ export default React.createClass({
         series: [
         {
           type: "line",
-          name: "model 1203",
+          name: "Model 2403",
+          asOfDate: "2016-03-01",
           data: [0.61, 0.54, 0.64, 0.53, 0.57, 0.55, 0.59],
-          url: "http://dssg.uchicago.edu"
+          url: "/evaluations/2511/feature_importance"
         },
         {
           type: "line",
-          name: "model 1411",
+          name: "Model 3021",
+          asOfDate: "2016-03-01",
           data: [0.31, 0.24, 0.22, 0.29, 0.28, 0.21, 0.24],
-          url: "http://tweddielin.com"
         },
         {
           type: "line",
-          name: "model 1221",
+          name: "Model 2581",
+          asOfDate: "2016-03-01",
           data: [0.37, 0.36, 0.42, 0.40, 0.33, 0.24, 0.28],
-          url: "http://dsapp.uchicago.edu"
         },
         {
           type: "line",
-          name: "model 1132",
+          name: "Model 2270",
+          asOfDate: "2016-03-01",
           data: [0.74, 0.71, 0.73, 0.57, 0.55, 0.67, 0.74],
-          url: "http://google.com"
         },
         {
           type: "line",
-          name: "model 1119",
+          name: "Model 2619",
+          asOfDate: "2016-03-01",
           data: [0.12, 0.12, 0.10, 0.11, 0.17, 0.15, 0.14],
-          url: "http://google.com"
         }
         ]
       }
-    }
-  },
-  componentDidMount: function() {
-
+    })
   },
   get_metric: function() {
 
