@@ -1,3 +1,4 @@
+import { addIndex, map, mergeAll, values } from 'ramda'
 import React from 'react'
 import ReactHighcharts  from 'react-highcharts';
 
@@ -13,7 +14,7 @@ export default React.createClass({
     self.props.setAsOfDate(asOfDate)
   },
   componentDidMount: function() {
-    let self = this;
+    let self = this
     this.setState({
       config: {
         title: {
@@ -35,8 +36,6 @@ export default React.createClass({
             },
             events: {
               click: function() {
-                //window.open(this.options.url, '_blank');
-                //location.href = this.options.url;
                 self.handleModelIdClick(this.options.name, this.options.asOfDate);
               }
             }
@@ -100,9 +99,29 @@ export default React.createClass({
         ]
       }
     })
+    this.get_metric(2619);
   },
-  get_metric: function() {
-
+  get_metric: function(modelId) {
+    let self = this
+    const metricParams = addIndex(map)(
+      function(value, idx) {
+        let newObj = {}
+        newObj['metric' + idx] = value.metric
+        newObj['parameter' + idx] = value.parameter
+        return newObj
+      },
+      values(self.props.metrics)
+    )
+    const params = mergeAll(metricParams)
+    console.log(params)
+    $.ajax({
+      type: "POST",
+      url: "/evaluations/" + modelId + "/metric_overtime",
+      data: $.param(params),
+      success: function(result) {
+        console.log(result.results)
+      }
+    })
   },
   render: function() {
     return (

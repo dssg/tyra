@@ -63,7 +63,8 @@ export default React.createClass({
   renderModelBigGraph: function() {
     return (
       <ModelBigGraph setModelId={this.setModelId}
-                     setAsOfDate={this.setAsOfDate} />
+                     setAsOfDate={this.setAsOfDate}
+                     metrics = {this.state.metrics} />
     )
   },
 
