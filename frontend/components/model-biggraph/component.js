@@ -132,7 +132,7 @@ export default React.createClass({
     }
   },
   getModelsToShow: function() {
-    const modelIdToShow = [2403, 3021, 2581, 2270, 2619]
+    const modelIdToShow = [2403]//, 3021, 2581, 2270, 2619]
     return modelIdToShow
   },
   handleModelIdClick: function(modelId, asOfDate) {
@@ -160,20 +160,19 @@ export default React.createClass({
       url: "/evaluations/" + modelId + "/metric_overtime",
       data: $.param(params),
       success: function(result) {
-        let timeseries = values(result.results[0])[1]
-        // self.setState({
-        //   config: {
-        //     yAxis: {title:{text: values(result.results[0])[0]}},
-        //     series: [
-        //       {
-        //         type: "line",
-        //         name: values(result.results)[1].key,
-        //         asOfDate: "2016-03-01",
-        //         data: map(function(x) {return [new Date(x[0]).toISOString(), x[1]]}, timeseries)
-        //       }
-        //         ]
-        //   }
-        // })
+        const timeseries = values(result.results[0])[1]
+        let newConfig = self.state.config
+        newConfig.yAxis = {title:{text: values(result.results[0])[0]}};
+        newConfig.series = [
+          {
+            type: "line",
+            name: values(result.results)[1].key,
+            asOfDate: "2016-03-01",
+            data: map(function(x) {return [Date.parse(x[0]), x[1]]}, timeseries)
+          }
+        ]
+        self.setState({config: newConfig})
+        //console.log(newConfig)
         console.log(values(result.results)[1].key)
         console.log(values(result.results[0])[0])
         console.log(values(result.results[0])[1])
