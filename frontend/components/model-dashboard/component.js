@@ -99,8 +99,10 @@ export default React.createClass({
           </div>
           <div className="col-lg-9">
             <div className="row">
-              <div className="col-lg-12">
+              <div className="row">
                 { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null}
+              </div>
+              <div className="row">
                 { !isEmpty(this.state.searchId) ? this.renderModelTable() : null}
               </div>
             </div>

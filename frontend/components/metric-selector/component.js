@@ -60,7 +60,7 @@ export default React.createClass({
             return <option key={choice} value={choice}>{choice}</option>
           })}
         </select>
-        <span style={{ margin: '0 1em 0 1em' }}>@</span>
+        <span style={{ margin: '0 0.5em 0 0.5em' }}>@</span>
         { this.state.showParameters ? this.renderParameterPicker() : null }
         &nbsp;
         <button
