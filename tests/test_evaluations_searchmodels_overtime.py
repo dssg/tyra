@@ -30,20 +30,20 @@ models_data = [
 
 evaluations_data = [
     # model_id, metric, parameter, value, as_of_date
-    (1, 'recall@', '5.0_pct', 46, FOUR),
-    (1, 'recall@', '5.0_pct', 45, THREE),
-    (1, 'recall@', '5.0_pct', 40, TWO),
-    (1, 'recall@', '5.0_pct', 44, ONE),
-    (1, 'recall@', '5.0_pct', 30, TOO_NEW),
-    (2, 'recall@', '5.0_pct', 55, FOUR),
-    (2, 'recall@', '5.0_pct', 56, THREE),
-    (2, 'recall@', '5.0_pct', 55, TWO),
-    (2, 'recall@', '5.0_pct', 56, ONE),
-    (3, 'recall@', '5.0_pct', 47, FOUR),
-    (3, 'recall@', '5.0_pct', 46, THREE),
-    (3, 'recall@', '5.0_pct', 41, TWO),
-    (3, 'recall@', '5.0_pct', 45, ONE),
-    (3, 'recall@', '5.0_pct', 31, TOO_NEW),
+    (1, 'recall@', '5.0_pct', 0.46, FOUR),
+    (1, 'recall@', '5.0_pct', 0.45, THREE),
+    (1, 'recall@', '5.0_pct', 0.40, TWO),
+    (1, 'recall@', '5.0_pct', 0.44, ONE),
+    (1, 'recall@', '5.0_pct', 0.30, TOO_NEW),
+    (2, 'recall@', '5.0_pct', 0.55, FOUR),
+    (2, 'recall@', '5.0_pct', 0.56, THREE),
+    (2, 'recall@', '5.0_pct', 0.55, TWO),
+    (2, 'recall@', '5.0_pct', 0.56, ONE),
+    (3, 'recall@', '5.0_pct', 0.47, FOUR),
+    (3, 'recall@', '5.0_pct', 0.46, THREE),
+    (3, 'recall@', '5.0_pct', 0.41, TWO),
+    (3, 'recall@', '5.0_pct', 0.45, ONE),
+    (3, 'recall@', '5.0_pct', 0.31, TOO_NEW),
 ]
 
 data = {
@@ -88,6 +88,4 @@ def test_search_models_over_time():
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example(route)
-        print(expected)
-        print(response_data)
         assert expected == response_data
