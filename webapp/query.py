@@ -196,7 +196,7 @@ def get_metrics_over_time(metrics, filter_string, filter_values, index):
 
     query = """
     select
-    model_id, as_of_date::date, new_metric, max(value) as value
+    model_id, as_of_date::date::text, new_metric, max(value) as value
     from (
         select model_id,
            as_of_date,
@@ -221,5 +221,4 @@ def get_metrics_over_time(metrics, filter_string, filter_values, index):
         columns='new_metric',
         values='value'
     )
-    output.reset_index(level=0, inplace=True)
     return output

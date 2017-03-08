@@ -71,26 +71,57 @@ def flatten_metric_query(form):
 @app.route('/evaluations/search_models', methods=['POST'])
 def search_models():
     f = request.form
+    query_arg = {}
+    flattened_query = defaultdict(dict)
+    for key in f.keys():
+        if 'parameter' in key:
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                dbify_metric_param(f[key])
+        elif 'metric' in key:
+            if f[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = f[key]
+    query_arg['timestamp'] = f['timestamp']
+    query_arg['metrics'] = flattened_query
+    output, test_end_date = query.get_models(query_arg)
+    try:
+        output = output.to_dict('records')
+        return jsonify(
+            results=(output),
+            as_of_date=test_end_date.date().isoformat()
+        )
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+def convert(indata):
+    outdata = []
+    model_lookup = defaultdict(lambda: defaultdict(dict))
+    for key, metrics in indata.items():
+        model_id, as_of_date = key
+        for metric, value in metrics.items():
+            model_lookup[model_id][metric][as_of_date] = value
+    for model_id, metrics in model_lookup.items():
+        entry = metrics
+        entry['model_id'] = model_id
+        outdata.append(entry)
+    return outdata
+
+
+@app.route('/evaluations/search_models_over_time', methods=['POST'])
+def search_models_over_time():
+    f = request.form
     output = query.get_metrics_over_time(
         flatten_metric_query(f),
         'run_time > %(ts)s',
         {'ts': f['timestamp']},
-        index=['model_id']
+        index=['model_id', 'as_of_date']
     )
     try:
-        n = output.to_dict('records')
-        ranked = ranked_models(n, 'mse'),
-        print('ranked')
-        print(ranked)
-        series = next(iter(
-            [v for k, v in ranked.items() if isinstance(v, dict)]
-        ), None)
-        if not series:
-            raise ValueError('No metric time series found')
-        as_of_date = series.keys()[0]
+        unranked = convert(output.to_dict('index'))
+        ranked = ranked_models(unranked, 'mse')
         return jsonify(
-            results=(output),
-            as_of_date=as_of_date
+            results=ranked,
         )
     except Exception as e:
         print(e)
@@ -198,7 +229,8 @@ def get_metric_over_time(model_id):
     df = query.get_metrics_over_time(
         metric_query,
         'model_id = %(model_id)s',
-        {'model_id': model_id}
+        {'model_id': model_id},
+        'as_of_date'
     )
     output = df.to_dict()
     data = sorted([
@@ -216,7 +248,8 @@ def get_metric_over_time(model_id):
                             (data[0]['values'][-1][0], int(model_id))]})
     try:
         return jsonify(results=data)
-    except Exception:
+    except Exception as e:
+        print(e)
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
