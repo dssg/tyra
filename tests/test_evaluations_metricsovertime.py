@@ -23,7 +23,7 @@ models_data = [
 ]
 
 evaluations_data = [
-    # model_id, metric, parameter, value
+    # model_id, metric, parameter, value, as_of_date
     (1, 'recall@', '5.0_pct', 65, TWO_YR_AGO),
     (1, 'recall@', '10.0_pct', 66, TWO_YR_AGO),
     (1, 'precision@', '5.0_pct', 67, TWO_YR_AGO),
@@ -57,4 +57,6 @@ def test_metric_overtime():
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example(route)
+        print(expected)
+        print(response_data)
         assert expected == response_data
