@@ -45,6 +45,7 @@ export default React.createClass({
 
   setAsOfDate: function(newDate) {
     this.setState({ asOfDate: newDate })
+    console.log('dashboard: ' + this.state.asOfDate)
   },
 
   renderModelTable: function() {
@@ -64,11 +65,14 @@ export default React.createClass({
     return (
       <ModelBigGraph setModelId={this.setModelId}
                      setAsOfDate={this.setAsOfDate}
+                     startDate={this.state.startDate}
+                     asOfDate={this.state.asOfDate}
                      metrics = {this.state.metrics} />
     )
   },
 
   renderModelCharts: function() {
+    console.log('render: ' + this.state.asOfDate)
     return React.createElement(
       this.props.chartsClass,
       { modelId: this.state.modelId, asOfDate: this.state.asOfDate, setModelId: this.setModelId, metrics: this.state.metrics }
@@ -101,9 +105,6 @@ export default React.createClass({
             <div className="row">
               <div className="row">
                 { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null}
-              </div>
-              <div className="row">
-                { !isEmpty(this.state.searchId) ? this.renderModelTable() : null}
               </div>
             </div>
           </div>

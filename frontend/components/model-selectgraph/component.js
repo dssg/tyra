@@ -1,4 +1,4 @@
-import { addIndex, map, mergeAll, values, over, lensIndex, head } from 'ramda'
+import { addIndex, map, mergeAll, values, concat, keys, toPairs, zipObj, nth, forEach, prop, assoc, zip } from 'ramda'
 import React from 'react'
 import ReactHighcharts  from 'react-highcharts';
 import d3 from 'd3'
@@ -143,7 +143,8 @@ export default React.createClass({
     self.props.setAsOfDate(asOfDate)
   },
   componentDidMount: function() {
-    map(this.get_metric, this.getModelsToShow());
+    this.get_metric()
+    //map(this.get_metric, this.getModelsToShow());
   },
   shouldComponentUpdate: function(nextProps, nextState) {
     if (this.state !== nextState) {
@@ -154,7 +155,7 @@ export default React.createClass({
   },
   get_data: function() {
   },
-  get_metric: function(modelId) {
+  get_metric: function() {
     let self = this
     const metricParams = addIndex(map)(
       function(value, idx) {
@@ -165,34 +166,38 @@ export default React.createClass({
       },
       values(self.props.metrics)
     )
-    const params = mergeAll(metricParams)
+    const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
     console.log(params)
     $.ajax({
       type: "POST",
-      url: "/evaluations/" + modelId + "/metric_overtime",
+      url: "/evaluations/search_models_over_time",
       data: $.param(params),
       success: function(result) {
-        const timeseries = values(result.results[0])[1]
-        let newConfig = self.state.config
-        const yAxis_title = values(result.results[0])[0];
-        const series_name = values(result.results)[1].key;
-        const series_data = map(function(x) {return [Date.parse(x[0]), x[1]]}, timeseries);
-        newConfig.yAxis = {title:{text: yAxis_title}};
-        newConfig.series = [
-          {
-            type: "line",
-            name: series_name,
-            asOfDate: "2016-03-01",
-            data: series_data
+        let invalidEntries = 0;
+        function filterByNumOfData(item) {
+          if (Object.keys(values(item)[2]).length > 5) {
+            return true;
           }
-        ]
-        self.setState({config: newConfig})
-        //console.log(newConfig)
-        console.log(values(result.results)[1].key)
-        console.log(values(result.results[0])[0])
-        console.log(values(result.results[0])[1])
-        console.log(map(function(x) {return [Date.parse(x[0]), x[1]]}, timeseries))
+          invalidEntries++;
+          return false;
+        };
+        const filteredModels = result.results.filter(filterByNumOfData)
+        const modelsToBeShow = filteredModels.slice(0,5)
+        console.log(modelsToBeShow)
+        let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
+        let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
+        const series_data = map(make_timeseries, modelsToBeShow)
 
+        const yAxis_title = params['metric0'] + ' @ ' +params['parameter0'];
+        let getId = x => prop('model_id', x)
+        let get_seriesname = x => map(getId, x)
+        const series_name = get_seriesname(modelsToBeShow)
+        let make_seriesconfig = x => assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':'2013-03-01'}))
+        let newConfig = self.state.config
+        newConfig.yAxis = {title:{text: yAxis_title}};
+        newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
+        self.setState({config: newConfig})
+        console.log(newConfig)
       }
     })
   },

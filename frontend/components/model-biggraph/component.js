@@ -9,6 +9,8 @@ export default React.createClass({
   renderSelectGraph: function() {
     return <ModelSelectGraph setModelId={this.props.setModelId}
                              setAsOfDate={this.props.setAsOfDate}
+                             startDate={this.props.startDate}
+                             asOfDate={this.state.asOfDate}
                              metrics = {this.props.metrics} />
   },
   render: function() {
