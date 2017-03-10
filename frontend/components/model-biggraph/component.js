@@ -7,11 +7,14 @@ export default React.createClass({
     return { numOfModelToShow: [1, 3, 5, 10] }
   },
   renderSelectGraph: function() {
-    return <ModelSelectGraph setModelId={this.props.setModelId}
-                             setAsOfDate={this.props.setAsOfDate}
-                             startDate={this.props.startDate}
-                             asOfDate={this.state.asOfDate}
-                             metrics = {this.props.metrics} />
+    return (
+      <ModelSelectGraph setModelId={this.props.setModelId}
+                        setAsOfDate={this.props.setAsOfDate}
+                        startDate={this.props.startDate}
+                        asOfDate={this.props.asOfDate}
+                        searchId={this.props.searchId}
+                        metrics = {this.props.metrics} />
+            )
   },
   render: function() {
     return (

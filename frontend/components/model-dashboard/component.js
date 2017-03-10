@@ -45,7 +45,6 @@ export default React.createClass({
 
   setAsOfDate: function(newDate) {
     this.setState({ asOfDate: newDate })
-    console.log('dashboard: ' + this.state.asOfDate)
   },
 
   renderModelTable: function() {
@@ -63,9 +62,11 @@ export default React.createClass({
 
   renderModelBigGraph: function() {
     return (
-      <ModelBigGraph setModelId={this.setModelId}
+      <ModelBigGraph modelSearchParameters={this.state.modelSearchParameters}
+                     setModelId={this.setModelId}
                      setAsOfDate={this.setAsOfDate}
                      startDate={this.state.startDate}
+                     searchId={this.state.searchId}
                      asOfDate={this.state.asOfDate}
                      metrics = {this.state.metrics} />
     )

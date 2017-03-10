@@ -3,6 +3,154 @@ import React from 'react'
 import ReactHighcharts  from 'react-highcharts';
 import d3 from 'd3'
 
+export default React.createClass({
+  getInitialState: function() {
+    let self = this
+    return {
+      loading: false,
+      config: {
+        title: {
+          text: 'Model Select',
+          style: {"color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300"}
+        },
+        chart: {
+          width: 650,
+          height: 500
+        },
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            marker: {enabled: false},
+            states: {
+              hover: {
+                enabled: true,
+                lineWidthPlus: 5
+              }
+            },
+            events: {
+              click: function() {
+                self.handleModelIdClick(this.options.name, this.options.asOfDate);
+              }
+            }
+          }
+        },
+        credits: {
+          enabled: false
+        },
+        legend: {
+          enabled: true,
+          margin: 10,
+          layout: "horizontal",
+          itemMarginTop: 5,
+          itemHoverStyle: { "color": "#FFB2CD"},
+          itemStyle: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+        },
+        xAxis: {
+          labels: {
+            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+          },
+          type: 'datetime',
+        },
+        yAxis: {
+          title: {
+            text: 'Precision @ Top 5%',
+            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+          }
+        },
+        series: []
+      }
+    }
+  },
+  getModelsToShow: function() {
+    const modelIdToShow = [2403]//, 3021, 2581, 2270, 2619]
+    return modelIdToShow
+  },
+  handleModelIdClick: function(modelId, asOfDate) {
+    const self = this
+    self.props.setModelId(modelId.split(" ")[1])
+    self.props.setAsOfDate(asOfDate)
+  },
+  componentDidMount: function() {
+    this.ajax_call()
+  },
+  componentDidUpdate: function(prevProps) {
+    const self = this
+    if(prevProps.searchId !== self.props.searchId) {
+      this.ajax_call()
+    }
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    const self = this
+    if (this.state !== nextState || self.props.searchId !== nextProps.searchId) {
+      return true
+    }
+      return false
+  },
+  ajax_call: function() {
+    let self = this
+    self.setState({ loading: true })
+    const metricParams = addIndex(map)(
+      function(value, idx) {
+        let newObj = {}
+        newObj['metric' + idx] = value.metric
+        newObj['parameter' + idx] = value.parameter
+        return newObj
+      },
+      values(self.props.metrics)
+    )
+    const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
+    console.log(params)
+    $.ajax({
+      type: "POST",
+      url: "/evaluations/search_models_over_time",
+      data: $.param(params),
+      success: function(result) {
+        let invalidEntries = 0;
+        function filterByNumOfData(item) {
+          if (Object.keys(values(item)[2]).length > 5) {
+            return true;
+          }
+          invalidEntries++;
+          return false;
+        };
+        const filteredModels = result.results.filter(filterByNumOfData)
+        const modelsToBeShow = filteredModels.slice(0,5)
+        console.log(modelsToBeShow)
+        let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
+        let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
+        const series_data = map(make_timeseries, modelsToBeShow)
+        const yAxis_title = params['metric0'] + ' @ ' +params['parameter0'];
+        let getId = x => prop('model_id', x)
+        let get_seriesname = x => map(getId, x)
+        const series_name = get_seriesname(modelsToBeShow)
+        let make_seriesconfig = x => assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':'2013-03-01'}))
+        let newConfig = self.state.config
+        newConfig.yAxis = {title:{text: yAxis_title}};
+        newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
+        self.setState({
+          config: newConfig,
+          loading: false
+        })
+        console.log(newConfig)
+      }
+    })
+  },
+  render: function() {
+    if(this.state.loading) {
+      return (
+        <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
+      )
+    } else {
+      return (
+        <div>
+          <ReactHighcharts config = {this.state.config} />
+        </div>
+      )
+    }
+  }
+})
+
+
 const fakedata = [
           {
             type: "line",
@@ -75,137 +223,3 @@ const fakedata = [
                   ]
           }
 ]
-
-export default React.createClass({
-  getInitialState: function() {
-    let self = this
-    return {
-      config: {
-        title: {
-          text: 'Model Select',
-          style: {"color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300"}
-        },
-        chart: {
-          width: 650,
-          height: 500
-        },
-        plotOptions: {
-          series: {
-            cursor: 'pointer',
-            marker: {enabled: false},
-            states: {
-              hover: {
-                enabled: true,
-                lineWidthPlus: 5
-              }
-            },
-            events: {
-              click: function() {
-                self.handleModelIdClick(this.options.name, this.options.asOfDate);
-              }
-            }
-          }
-        },
-        credits: {
-          enabled: false
-        },
-        legend: {
-          enabled: true,
-          margin: 10,
-          layout: "horizontal",
-          itemMarginTop: 5,
-          itemHoverStyle: { "color": "#FFB2CD"},
-          itemStyle: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
-        },
-        xAxis: {
-          labels: {
-            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
-          },
-          type: 'datetime',
-        },
-        yAxis: {
-          title: {
-            text: 'Precision @ Top 5%',
-            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
-          }
-        },
-        series: []
-      }
-    }
-  },
-  getModelsToShow: function() {
-    const modelIdToShow = [2403]//, 3021, 2581, 2270, 2619]
-    return modelIdToShow
-  },
-  handleModelIdClick: function(modelId, asOfDate) {
-    const self = this
-    self.props.setModelId(modelId.split(" ")[1])
-    self.props.setAsOfDate(asOfDate)
-  },
-  componentDidMount: function() {
-    this.get_metric()
-    //map(this.get_metric, this.getModelsToShow());
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    if (this.state !== nextState) {
-      return true
-    }
-      return false
-
-  },
-  get_data: function() {
-  },
-  get_metric: function() {
-    let self = this
-    const metricParams = addIndex(map)(
-      function(value, idx) {
-        let newObj = {}
-        newObj['metric' + idx] = value.metric
-        newObj['parameter' + idx] = value.parameter
-        return newObj
-      },
-      values(self.props.metrics)
-    )
-    const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
-    console.log(params)
-    $.ajax({
-      type: "POST",
-      url: "/evaluations/search_models_over_time",
-      data: $.param(params),
-      success: function(result) {
-        let invalidEntries = 0;
-        function filterByNumOfData(item) {
-          if (Object.keys(values(item)[2]).length > 5) {
-            return true;
-          }
-          invalidEntries++;
-          return false;
-        };
-        const filteredModels = result.results.filter(filterByNumOfData)
-        const modelsToBeShow = filteredModels.slice(0,5)
-        console.log(modelsToBeShow)
-        let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
-        let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
-        const series_data = map(make_timeseries, modelsToBeShow)
-
-        const yAxis_title = params['metric0'] + ' @ ' +params['parameter0'];
-        let getId = x => prop('model_id', x)
-        let get_seriesname = x => map(getId, x)
-        const series_name = get_seriesname(modelsToBeShow)
-        let make_seriesconfig = x => assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':'2013-03-01'}))
-        let newConfig = self.state.config
-        newConfig.yAxis = {title:{text: yAxis_title}};
-        newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
-        self.setState({config: newConfig})
-        console.log(newConfig)
-      }
-    })
-  },
-  render: function() {
-    return (
-      <div>
-          <ReactHighcharts config = {this.state.config} />
-      </div>
-      )
-  }
-})
