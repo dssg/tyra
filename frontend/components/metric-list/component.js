@@ -25,13 +25,13 @@ export default React.createClass({
           {values(mapObjIndexed(this.renderSelector, this.props.metrics))}
         </div>
         <div className="row">
-          <button
+          {/*<button
             type="button"
             onClick={this.props.addMetric}
             style={{ padding: '5px 10px' }}
             className="btn btn-info btn-xs">
             Add
-          </button>
+          </button>*/}
         </div>
       </span>
     )
