@@ -78,10 +78,15 @@ export default React.createClass({
     if(prevProps.searchId !== self.props.searchId) {
       this.ajax_call()
     }
+    if(prevProps.numOfModelToShow !== self.props.numOfModelToShow) {
+      this.ajax_call()
+    }
   },
   shouldComponentUpdate: function(nextProps, nextState) {
     const self = this
-    if (this.state !== nextState || self.props.searchId !== nextProps.searchId) {
+    if (this.state !== nextState ||
+        self.props.searchId !== nextProps.searchId ||
+        self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
       return true
     }
       return false
@@ -114,8 +119,7 @@ export default React.createClass({
           return false;
         };
         const filteredModels = result.results.filter(filterByNumOfData)
-        const modelsToBeShow = filteredModels.slice(0,5)
-        console.log(modelsToBeShow)
+        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
         let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
         let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
         const series_data = map(make_timeseries, modelsToBeShow)
