@@ -63,12 +63,12 @@ export default React.createClass({
         <span style={{ margin: '0 0.5em 0 0.5em' }}>@</span>
         { this.state.showParameters ? this.renderParameterPicker() : null }
         &nbsp;
-        <button
+        {/*<button
           className='btn btn-xs btn-danger'
           type='button'
           onClick={this.handleDelete}>
           X
-        </button>
+        </button>*/}
       </div>
     )
   }
