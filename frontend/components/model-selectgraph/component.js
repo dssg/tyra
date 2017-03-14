@@ -66,6 +66,8 @@ export default React.createClass({
   componentDidMount: function() {
     this.ajax_call()
   },
+  componentWillUnmount: function() {
+  },
   shouldComponentUpdate: function(nextProps, nextState) {
     const self = this
     if (this.state !== nextState ||
