@@ -1,10 +1,10 @@
 import { clone, isEmpty } from 'ramda'
+import ModelBigGraph from 'components/model-biggraph/component'
 import ModelSearcher from 'components/model-searcher/component'
 import ModelTable from 'components/model-table/component'
 import moment from 'moment'
 import React from 'react'
 import uniqueId from 'utils/unique-id'
-import ModelBigGraph from 'components/model-biggraph/component'
 
 const defaultMetric = { 'metric': 'precision', 'parameter': 'top 100' }
 const defaultStartDate = moment().subtract(1, 'M')
@@ -69,7 +69,7 @@ export default React.createClass({
         startDate={this.state.startDate}
         searchId={this.state.searchId}
         asOfDate={this.state.asOfDate}
-        metrics = {this.state.metrics} />
+        metrics={this.state.metrics} />
     )
   },
 

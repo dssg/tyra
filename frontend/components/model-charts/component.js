@@ -11,7 +11,6 @@ import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/componen
 
 export default React.createClass({
   render: function() {
-    console.log('chart: ' + this.props.asOfDate)
     return (
       <Tabs>
         <TabList>
