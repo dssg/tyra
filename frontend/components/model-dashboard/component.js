@@ -62,18 +62,18 @@ export default React.createClass({
 
   renderModelBigGraph: function() {
     return (
-      <ModelBigGraph modelSearchParameters={this.state.modelSearchParameters}
-                     setModelId={this.setModelId}
-                     setAsOfDate={this.setAsOfDate}
-                     startDate={this.state.startDate}
-                     searchId={this.state.searchId}
-                     asOfDate={this.state.asOfDate}
-                     metrics = {this.state.metrics} />
+      <ModelBigGraph
+        modelSearchParameters={this.state.modelSearchParameters}
+        setModelId={this.setModelId}
+        setAsOfDate={this.setAsOfDate}
+        startDate={this.state.startDate}
+        searchId={this.state.searchId}
+        asOfDate={this.state.asOfDate}
+        metrics = {this.state.metrics} />
     )
   },
 
   renderModelCharts: function() {
-    console.log('render: ' + this.state.asOfDate)
     return React.createElement(
       this.props.chartsClass,
       { modelId: this.state.modelId, asOfDate: this.state.asOfDate, setModelId: this.setModelId, metrics: this.state.metrics }
@@ -105,7 +105,7 @@ export default React.createClass({
           <div className="col-lg-9">
             <div className="row">
               <div className="row">
-                { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null}
+                { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null }
               </div>
             </div>
           </div>

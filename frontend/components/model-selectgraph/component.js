@@ -26,9 +26,12 @@ export default React.createClass({
                 lineWidthPlus: 5
               }
             },
-            events: {
-              click: function() {
-                self.handleModelIdClick(this.options.name, this.options.asOfDate);
+            point: {
+              events: {
+                click: function() {
+                  let d = new Date(this.options.x)
+                  self.handleModelIdClick(this.series.name, d.toISOString().split('T')[0]);
+                }
               }
             }
           }
@@ -116,14 +119,15 @@ export default React.createClass({
         };
         const filteredModels = result.results.filter(filterByNumOfData)
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
+        console.log(modelsToBeShow)
         let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
         let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
         const series_data = map(make_timeseries, modelsToBeShow)
-        const yAxis_title = params['metric0'] + ' @ ' +params['parameter0'];
+        const yAxis_title = params['metric0'] + ' @ ' + params['parameter0'];
         let getId = x => prop('model_id', x)
         let get_seriesname = x => map(getId, x)
         const series_name = get_seriesname(modelsToBeShow)
-        let make_seriesconfig = x => assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':'2013-03-01'}))
+        let make_seriesconfig = x => assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate}))
         let newConfig = self.state.config
         newConfig.yAxis = {title:{text: yAxis_title}};
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
