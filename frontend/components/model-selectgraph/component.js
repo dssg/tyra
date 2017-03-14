@@ -118,14 +118,14 @@ export default React.createClass({
         }
         const filteredModels = result.results.filter(filterByNumOfData)
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
-        let str2Date = x => { [Date.parse(nth(0, x)), nth(1, x)] }
-        let make_timeseries = x => { map(str2Date, toPairs(nth(2, values(x)))) }
+        let str2Date = x => { return [Date.parse(nth(0, x)), nth(1, x)] }
+        let make_timeseries = x => { return map(str2Date, toPairs(nth(2, values(x)))) }
         const series_data = map(make_timeseries, modelsToBeShow)
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
-        let getId = x => { prop('model_id', x) }
-        let get_seriesname = x => { map(getId, x) }
+        let getId = x => { return prop('model_id', x) }
+        let get_seriesname = x => { return map(getId, x) }
         const series_name = get_seriesname(modelsToBeShow)
-        let make_seriesconfig = x => { assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
+        let make_seriesconfig = x => { return assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
         let newConfig = self.state.config
         newConfig.yAxis = {title:{ text: yAxis_title }}
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
