@@ -1,4 +1,4 @@
-import { addIndex, map, mergeAll, values, concat, keys, toPairs, zipObj, nth, forEach, prop, assoc, zip } from 'ramda'
+import { addIndex, map, mergeAll, values, concat, toPairs, nth, prop, assoc, zip } from 'ramda'
 import React from 'react'
 import ReactHighcharts  from 'react-highcharts'
 
