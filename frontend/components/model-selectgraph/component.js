@@ -10,7 +10,7 @@ export default React.createClass({
       config: {
         title: {
           text: 'Model Select',
-          style: {"color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300"}
+          style: { "color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300" }
         },
         chart: {
           width: 650,
@@ -19,7 +19,7 @@ export default React.createClass({
         plotOptions: {
           series: {
             cursor: 'pointer',
-            marker: {enabled: false},
+            marker: { enabled: false },
             states: {
               hover: {
                 enabled: true,
@@ -30,7 +30,7 @@ export default React.createClass({
               events: {
                 click: function() {
                   let d = new Date(this.options.x)
-                  self.handleModelIdClick(this.series.name, d.toISOString().split('T')[0]);
+                  self.handleModelIdClick(this.series.name, d.toISOString().split('T')[0])
                 }
               }
             }
@@ -44,29 +44,24 @@ export default React.createClass({
           margin: 10,
           layout: "horizontal",
           itemMarginTop: 5,
-          itemHoverStyle: { "color": "#FFB2CD"},
-          itemStyle: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+          itemHoverStyle: { "color": "#FFB2CD" },
+          itemStyle: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" }
         },
         xAxis: {
           labels: {
-            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+            style: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" }
           },
           type: 'datetime',
         },
         yAxis: {
           title: {
             text: 'Precision @ Top 5%',
-            style: {"fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300"}
+            style: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" }
           }
         },
         series: []
       }
     }
-  },
-  handleModelIdClick: function(modelId, asOfDate) {
-    const self = this
-    self.props.setModelId(modelId.split(" ")[1])
-    self.props.setAsOfDate(asOfDate)
   },
   componentDidMount: function() {
     this.ajax_call()
@@ -80,6 +75,11 @@ export default React.createClass({
       this.ajax_call()
     }
   },
+  handleModelIdClick: function(modelId, asOfDate) {
+    const self = this
+    self.props.setModelId(modelId.split(" ")[1])
+    self.props.setAsOfDate(asOfDate)
+  },
   shouldComponentUpdate: function(nextProps, nextState) {
     const self = this
     if (this.state !== nextState ||
@@ -87,7 +87,7 @@ export default React.createClass({
         self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
       return true
     }
-      return false
+    return false
   },
   ajax_call: function() {
     let self = this
@@ -107,7 +107,7 @@ export default React.createClass({
       url: "/evaluations/search_models_over_time",
       data: $.param(params),
       success: function(result) {
-        let invalidEntries = 0;
+        let invalidEntries = 0
         const minDataPoints = 2
         function filterByNumOfData(item) {
           if (Object.keys(values(item)[2]).length >= minDataPoints) {
