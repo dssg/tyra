@@ -22,9 +22,9 @@ export default React.createClass({
       $.ajax({
         type: "GET",
         url: "/evaluations/" + this.props.modelId + "/model_result/" + this.props.asOfDate,
-          success: function(result) {
-            self.setState({
-              data: result.results,
+        success: function(result) {
+          self.setState({
+            data: result.results,
           })
         }
       })
