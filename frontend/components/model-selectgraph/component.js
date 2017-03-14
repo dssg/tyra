@@ -1,6 +1,6 @@
 import { addIndex, map, mergeAll, values, concat, keys, toPairs, zipObj, nth, forEach, prop, assoc, zip } from 'ramda'
 import React from 'react'
-import ReactHighcharts  from 'react-highcharts';
+import ReactHighcharts  from 'react-highcharts'
 
 export default React.createClass({
   getInitialState: function() {
@@ -66,6 +66,15 @@ export default React.createClass({
   componentDidMount: function() {
     this.ajax_call()
   },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    const self = this
+    if (this.state !== nextState ||
+        self.props.searchId !== nextProps.searchId ||
+        self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
+      return true
+    }
+    return false
+  },
   componentDidUpdate: function(prevProps) {
     const self = this
     if(prevProps.searchId !== self.props.searchId) {
@@ -79,15 +88,6 @@ export default React.createClass({
     const self = this
     self.props.setModelId(modelId.split(" ")[1])
     self.props.setAsOfDate(asOfDate)
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    const self = this
-    if (this.state !== nextState ||
-        self.props.searchId !== nextProps.searchId ||
-        self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
-      return true
-    }
-    return false
   },
   ajax_call: function() {
     let self = this

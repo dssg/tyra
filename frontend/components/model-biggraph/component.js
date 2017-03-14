@@ -20,7 +20,7 @@ export default React.createClass({
         searchId={this.props.searchId}
         metrics={this.props.metrics}
         numOfModelToShow={this.state.numOfModelToShow} />
-        )
+    )
   },
   render: function() {
     return (
