@@ -102,7 +102,6 @@ export default React.createClass({
       values(self.props.metrics)
     )
     const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
-    console.log(params)
     $.ajax({
       type: "POST",
       url: "/evaluations/search_models_over_time",
@@ -119,7 +118,6 @@ export default React.createClass({
         };
         const filteredModels = result.results.filter(filterByNumOfData)
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
-        console.log(modelsToBeShow)
         let str2Date = x => [Date.parse(nth(0, x)), nth(1, x)]
         let make_timeseries = x => map(str2Date, toPairs(nth(2, values(x))))
         const series_data = map(make_timeseries, modelsToBeShow)
@@ -135,7 +133,6 @@ export default React.createClass({
           config: newConfig,
           loading: false
         })
-        console.log(newConfig)
       }
     })
   },
