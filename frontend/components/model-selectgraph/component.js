@@ -61,10 +61,6 @@ export default React.createClass({
       }
     }
   },
-  getModelsToShow: function() {
-    const modelIdToShow = [2403]//, 3021, 2581, 2270, 2619]
-    return modelIdToShow
-  },
   handleModelIdClick: function(modelId, asOfDate) {
     const self = this
     self.props.setModelId(modelId.split(" ")[1])
@@ -111,8 +107,9 @@ export default React.createClass({
       data: $.param(params),
       success: function(result) {
         let invalidEntries = 0;
+        const minDataPoints = 2
         function filterByNumOfData(item) {
-          if (Object.keys(values(item)[2]).length > 5) {
+          if (Object.keys(values(item)[2]).length >= minDataPoints) {
             return true;
           }
           invalidEntries++;
