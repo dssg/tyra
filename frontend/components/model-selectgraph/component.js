@@ -1,6 +1,6 @@
-import { addIndex, map, mergeAll, values, concat, toPairs, nth, prop, assoc, zip } from 'ramda'
+import { addIndex, assoc, concat, map, nth, prop, mergeAll, toPairs, values, zip } from 'ramda'
 import React from 'react'
-import ReactHighcharts  from 'react-highcharts'
+import ReactHighcharts from 'react-highcharts'
 
 export default React.createClass({
   getInitialState: function() {
