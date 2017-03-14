@@ -1,5 +1,5 @@
-import React from 'react'
 import ModelSelectGraph from 'components/model-selectgraph/component'
+import React from 'react'
 
 
 export default React.createClass({
