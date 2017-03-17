@@ -52,12 +52,17 @@ export default React.createClass({
             style: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" }
           },
           type: 'datetime',
+          gridLineWidth: 0,
         },
         yAxis: {
+          lineWidth:1,
+          gridLineWidth: 0,
+          tickWidth: 1,
+          tickPosition: 'outside',
           title: {
             text: 'Precision @ Top 5%',
-            style: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" }
-          }
+            style: { "fontSize": "15px", "fontFamily": "Open Sans", "fontWeight": "300" },
+          },
         },
         series: []
       }
@@ -127,7 +132,7 @@ export default React.createClass({
         const series_name = get_seriesname(modelsToBeShow)
         let make_seriesconfig = (x) => { return assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
         let newConfig = self.state.config
-        newConfig.yAxis = { title:{ text: yAxis_title } }
+        newConfig.yAxis.title.text = yAxis_title
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
         self.setState({
           config: newConfig,
