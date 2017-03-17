@@ -8,17 +8,27 @@ export default React.createClass({
     }
   },
   componentDidMount: function() {
-    const self = this
-    $.ajax({
-      type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/model_result/" + this.props.asOfDate,
-      success: function(result) {
-        self.setState({
-          data: result.results,
-        })
-      }
-    })
+    this.ajax_call()
+  },
+  componentDidUpdate: function(prevProps) {
+    if(prevProps.asOfDate !== this.props.asOfDate) {
+      this.ajax_call()
+    }
+  },
 
+  ajax_call: function() {
+    const self = this
+    if (this.props.asOfDate !== null) {
+      $.ajax({
+        type: "GET",
+        url: "/evaluations/" + this.props.modelId + "/model_result/" + this.props.asOfDate,
+        success: function(result) {
+          self.setState({
+            data: result.results,
+          })
+        }
+      })
+    }
   },
   render: function() {
     return (

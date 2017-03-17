@@ -1,4 +1,5 @@
 import { clone, isEmpty } from 'ramda'
+import ModelBigGraph from 'components/model-biggraph/component'
 import ModelSearcher from 'components/model-searcher/component'
 import ModelTable from 'components/model-table/component'
 import moment from 'moment'
@@ -59,6 +60,19 @@ export default React.createClass({
     )
   },
 
+  renderModelBigGraph: function() {
+    return (
+      <ModelBigGraph
+        modelSearchParameters={this.state.modelSearchParameters}
+        setModelId={this.setModelId}
+        setAsOfDate={this.setAsOfDate}
+        startDate={this.state.startDate}
+        searchId={this.state.searchId}
+        asOfDate={this.state.asOfDate}
+        metrics={this.state.metrics} />
+    )
+  },
+
   renderModelCharts: function() {
     return React.createElement(
       this.props.chartsClass,
@@ -90,8 +104,8 @@ export default React.createClass({
           </div>
           <div className="col-lg-9">
             <div className="row">
-              <div className="col-lg-12">
-                { !isEmpty(this.state.searchId) ? this.renderModelTable() : null }
+              <div className="row">
+                { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null }
               </div>
             </div>
           </div>

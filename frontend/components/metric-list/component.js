@@ -15,6 +15,17 @@ export default React.createClass({
         handleDeleteClick={this.props.removeMetric} />
     )
   },
+  renderAddButton: function() {
+    return (
+      <button
+        type="button"
+        onClick={this.props.addMetric}
+        style={{ padding: '5px 10px' }}
+        className="btn btn-info btn-xs">
+        Add
+      </button>
+    )
+  },
   render: function() {
     return (
       <span>
@@ -25,13 +36,7 @@ export default React.createClass({
           {values(mapObjIndexed(this.renderSelector, this.props.metrics))}
         </div>
         <div className="row">
-          <button
-            type="button"
-            onClick={this.props.addMetric}
-            style={{ padding: '5px 10px' }}
-            className="btn btn-info btn-xs">
-            Add
-          </button>
+          {/*this.renderAddButton()*/}
         </div>
       </span>
     )

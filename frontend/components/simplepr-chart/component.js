@@ -9,21 +9,29 @@ export default React.createClass({
       loading: false
     }
   },
-
   componentDidMount: function() {
+    this.ajax_call()
+  },
+  componentDidUpdate: function(prevProps) {
+    if(prevProps.asOfDate !== this.props.asOfDate) {
+      this.ajax_call()
+    }
+  },
+  ajax_call: function() {
     const self = this
     self.setState({ loading: true })
-    $.ajax({
-      type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/simple_precision_recall/" + this.props.asOfDate,
-      success: function(result) {
-        self.setState({
-          data: result.results,
-          loading: false
-        })
-      }
-    })
-
+    if (this.props.asOfDate !== null) {
+      $.ajax({
+        type: "GET",
+        url: "/evaluations/" + this.props.modelId + "/simple_precision_recall/" + this.props.asOfDate,
+        success: function(result) {
+          self.setState({
+            data: result.results,
+            loading: false
+          })
+        }
+      })
+    }
   },
   render: function() {
     if(this.state.loading) {
