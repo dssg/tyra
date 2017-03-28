@@ -7,7 +7,7 @@ import React from 'react'
 import uniqueId from 'utils/unique-id'
 
 const defaultMetric = { 'metric': 'precision', 'parameter': 'top 100' }
-const defaultStartDate = moment().subtract(1, 'M')
+const defaultStartDate = moment().subtract(7, 'days')
 
 
 export default React.createClass({
