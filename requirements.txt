@@ -6,9 +6,10 @@ psycopg2==2.5
 testing.postgresql
 pytest==2.9.2
 numpy
-scikit-learn
 scipy
+scikit-learn
 flask_sqlalchemy
 codecov
 pytest-cov
 tox
+gunicorn
