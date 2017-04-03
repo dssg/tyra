@@ -5,6 +5,7 @@ import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
+db.create_all(bind=None)
 
 def evaluation_cutoff_date():
     return os.getenv(
