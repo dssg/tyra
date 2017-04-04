@@ -3,8 +3,6 @@ import os
 import yaml
 from sqlalchemy.engine.url import URL
 
-SQLALCHEMY_BINDS = {'users': 'sqlite:///' + os.getcwd() + '/webapp/users.db'}
-
 profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
 if os.path.exists(profile_file):
