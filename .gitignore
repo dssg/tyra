@@ -97,3 +97,6 @@ node_modules/
 
 # Webpack bundle
 webapp/static/output.js
+
+# Socket file
+.sock
