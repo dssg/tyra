@@ -7,11 +7,15 @@ export default React.createClass({
   getInitialState: function() {
     return { logInSuccess: false}
   },
+  componentWillMount: function() {
+  },
+  setLogInSuccess: function(success) {
+    this.setState({ logInSuccess: success})
+  },
   render: function() {
-    console.log(this.state.logInSuccess)
     if(!this.state.logInSuccess) {
       return (
-        <LogIn />
+        <LogIn logInSuccess={this.setLogInSuccess} />
       )
     } else {
       return (
