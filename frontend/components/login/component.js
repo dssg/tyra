@@ -2,7 +2,7 @@ import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
-    return {account: '', password: '', success: true}
+    return { account: '', password: '', success: true }
   },
   handleAccountChange: function(event) {
     this.setState({ account: event.target.value })
