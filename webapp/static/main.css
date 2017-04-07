@@ -261,3 +261,9 @@ table.focus-highlight td:before {
   stroke-width:2.5px;
   cursor: pointer;
 }
+
+.navbar-default {
+	background-color: #000000;
+	border-color: #000000;
+}
+
