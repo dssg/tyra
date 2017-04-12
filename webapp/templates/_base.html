@@ -26,11 +26,16 @@
   <script type='text/javascript' src="{{ url_for('static', filename='output.js') }}"></script>
 
     <!-- Page Content -->
-    <div class="container center-container">
-
-      <div class="headrow" id="headrow">
-		  <h2>Evaluation Dashboard</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <a class="navbar-brand">
+          <img class="pull-left" hspace="10px" src="{{ url_for('static', filename='favicon.ico') }}" height="25">
+          Evaluation Dashboard</a>
+        </div>
       </div>
+    </nav>
+    <div class="container center-container">
       <!-- messages -->
       {% for message in get_flashed_messages() %}
         <div class="alert alert-success alert-dismissible" role="alert">
