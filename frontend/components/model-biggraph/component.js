@@ -5,15 +5,15 @@ const NUMLIST = [5, 10, 15, 20]
 
 export default React.createClass({
   getInitialState: function() {
-    return { numOfModelToShow: 5 }
+    return { numOfModelGroupsToShow: 5 }
   },
-  handleNumOfModelToShow: function(event) {
-    this.setState({ numOfModelToShow: event.target.value })
+  handleNumOfModelGroupsToShow: function(event) {
+    this.setState({ numOfModelGroupsToShow: event.target.value })
   },
   renderSelectGraph: function() {
     return (
       <ModelSelectGraph
-        setModelId={this.props.setModelId}
+        setModelGroupId={this.props.setModelGroupId}
         setAsOfDate={this.props.setAsOfDate}
         startDate={this.props.startDate}
         asOfDate={this.props.asOfDate}
@@ -30,7 +30,10 @@ export default React.createClass({
         </div>
         <div className="col-lg-4" style={{ textAlign:"right" }}>
           <div className="row">
-            <select value={this.state.numOfModelToShow} onChange={this.handleNumOfModelToShow}>
+            <select
+              value={this.state.numOfModelGroupsToShow}
+              onChange={this.handleNumOfModelGroupsToShow}
+            >
               {NUMLIST.map(function(num) {
                 return <option key={num} value={num}>{num}</option>
               })}

@@ -15,7 +15,7 @@ export default React.createClass({
     let metrics = {}
     metrics[uniqueId()] = clone(defaultMetric)
     return {
-      modelId: null,
+      modelGroupId: null,
       asOfDate: null,
       metrics: metrics,
       startDate: defaultStartDate,
@@ -35,12 +35,12 @@ export default React.createClass({
     this.setState({ startDate: newDate })
   },
 
-  removeModelId: function() {
-    this.setState({ modelId: null })
+  removeModelGroupId: function() {
+    this.setState({ modelGroupId: null })
   },
 
-  setModelId: function(newId) {
-    this.setState({ modelId: newId })
+  setModelGroupId: function(newId) {
+    this.setState({ modelGroupId: newId })
   },
 
   setAsOfDate: function(newDate) {
@@ -51,7 +51,7 @@ export default React.createClass({
     return (
       <ModelTable
         modelSearchParameters={this.state.modelSearchParameters}
-        setModelId={this.setModelId}
+        setModelGroupId={this.setModelGroupId}
         setAsOfDate={this.setAsOfDate}
         asOfDate={this.state.asOfDate}
         searchId={this.state.searchId}
@@ -64,7 +64,7 @@ export default React.createClass({
     return (
       <ModelBigGraph
         modelSearchParameters={this.state.modelSearchParameters}
-        setModelId={this.setModelId}
+        setModelGroupId={this.setModelGroupId}
         setAsOfDate={this.setAsOfDate}
         startDate={this.state.startDate}
         searchId={this.state.searchId}
@@ -76,16 +76,16 @@ export default React.createClass({
   renderModelCharts: function() {
     return React.createElement(
       this.props.chartsClass,
-      { modelId: this.state.modelId, asOfDate: this.state.asOfDate, setModelId: this.setModelId, metrics: this.state.metrics }
+      { modelGroupId: this.state.modelGroupId, asOfDate: this.state.asOfDate, setModelGroupId: this.setModelGroupId, metrics: this.state.metrics }
     )
   },
 
   render: function() {
-    if(this.state.modelId) {
+    if(this.state.modelGroupId) {
       return (
         <div className="container center-container">
           <div className="row">
-            <button onClick={this.removeModelId} id="GoBack" className="btn btn-primary">Back to Search</button>
+            <button onClick={this.removeModelGroupId} id="GoBack" className="btn btn-primary">Back to Search</button>
           </div>
           { this.renderModelCharts() }
         </div>

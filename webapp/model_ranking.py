@@ -7,7 +7,7 @@ def metric_series(model):
 
     Returns: (list) the value of all metric keys
     """
-    return [series for key, series in model.items() if key != 'model_id']
+    return [series for key, series in model.items() if key != 'model_group_id']
 
 
 def sorted_values(series):

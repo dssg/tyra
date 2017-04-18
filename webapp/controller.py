@@ -98,12 +98,12 @@ def convert(indata):
     outdata = []
     model_lookup = defaultdict(lambda: defaultdict(dict))
     for key, metrics in indata.items():
-        model_id, as_of_date = key
+        model_group_id, train_end_time = key
         for metric, value in metrics.items():
-            model_lookup[model_id][metric][as_of_date] = value
+            model_lookup[model_group_id][metric][train_end_time] = value
     for model_id, metrics in model_lookup.items():
         entry = metrics
-        entry['model_id'] = model_id
+        entry['model_group_id'] = model_group_id
         outdata.append(entry)
     return outdata
 
@@ -115,7 +115,7 @@ def search_models_over_time():
         flatten_metric_query(f),
         'run_time > %(ts)s',
         {'ts': f['timestamp']},
-        index=['model_id', 'as_of_date']
+        index=['model_group_id', 'as_of_date']
     )
     try:
         unranked = convert(output.to_dict('index'))

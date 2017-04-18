@@ -63,12 +63,12 @@ def get_models(query_arg):
         and {}
         order by run_time desc limit 1
     )
-    select distinct(e.as_of_date)
+    select distinct(e.evaluation_start_time)
     from results.models
     join recent_prod_mg using (model_group_id)
     join results.evaluations e using (model_id)
-    where e.as_of_date < %(evaluation_cutoff)s
-    order by e.as_of_date desc limit 1
+    where e.evaluation_start_time < %(evaluation_cutoff)s
+    order by e.evaluation_start_time desc limit 1
     """.format(TEST_CLAUSE)
     print(run_date_lookup_query)
     try:
@@ -93,7 +93,7 @@ def get_models(query_arg):
     ({}) input_metrics
     join results.evaluations e using (metric, parameter)
     join results.models m using (model_id)
-    where e.as_of_date = %(test_end_date)s
+    where e.evaluation_start_time = %(test_end_date)s
     and {}
     and run_time >= %(runtime)s
     """.format(metric_string, TEST_CLAUSE)
@@ -142,7 +142,7 @@ def get_precision(query_arg):
     from results.evaluations
     where metric= 'precision@'
     and model_id = %(model_id)s
-    and as_of_date = %(as_of_date)s
+    and evaluation_start_time = %(as_of_date)s
     and parameter like '%%_pct'
     order by parameter;
     """
@@ -166,7 +166,7 @@ def get_recall(query_arg):
     from results.evaluations
     where metric= 'recall@'
     and model_id = %(model_id)s
-    and as_of_date = %(as_of_date)s
+    and evaluation_start_time = %(as_of_date)s
     and parameter like '%%_pct'
     order by parameter;
     """
@@ -196,20 +196,22 @@ def get_metrics_over_time(metrics, filter_string, filter_values, index):
 
     query = """
     select
-    model_id, as_of_date::date::text, new_metric, max(value) as value
+    model_group_id, evaluation_start_time::date::text as as_of_date, new_metric, max(value) as value
     from (
-        select model_id,
-           as_of_date,
+        select mg.model_group_id,
+           evaluation_start_time,
            metric || parameter as new_metric,
            value
         from
         ({metric_string}) input_metrics
         join results.evaluations e using(metric, parameter)
         join results.models m using (model_id)
+        join results.model_groups mg using (model_group_id)
         where {filter_string}
-        and as_of_date < %(evaluation_cutoff)s
+        and evaluation_start_time = m.train_end_time::timestamp
+        and evaluation_start_time < %(evaluation_cutoff)s
     ) ungrouped
-    group by model_id, as_of_date, new_metric
+    group by model_group_id, evaluation_start_time, new_metric
     """.format(metric_string=metric_string, filter_string=filter_string)
 
     params = filter_values.copy()

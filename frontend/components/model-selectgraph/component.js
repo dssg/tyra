@@ -30,7 +30,7 @@ export default React.createClass({
               events: {
                 click: function() {
                   let d = new Date(this.options.x)
-                  self.handleModelIdClick(this.series.name, d.toISOString().split('T')[0])
+                  self.handleModelGroupClick(this.series.name, d.toISOString().split('T')[0])
                 }
               }
             }
@@ -75,7 +75,7 @@ export default React.createClass({
     const self = this
     if (this.state !== nextState ||
         self.props.searchId !== nextProps.searchId ||
-        self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
+        self.props.numOfModelGroupsToShow !== nextProps.numOfModelGroupsToShow) {
       return true
     }
     return false
@@ -85,15 +85,15 @@ export default React.createClass({
     if(prevProps.searchId !== self.props.searchId) {
       this.ajax_call()
     }
-    if(prevProps.numOfModelToShow !== self.props.numOfModelToShow) {
+    if(prevProps.numOfModelGroupsToShow !== self.props.numOfModelGroupsToShow) {
       this.ajax_call()
     }
   },
   componentWillUnmount: function() {
   },
-  handleModelIdClick: function(modelId, asOfDate) {
+  handleModelGroupClick: function(modelGroupId, asOfDate) {
     const self = this
-    self.props.setModelId(modelId.split(" ")[1])
+    self.props.setModelGroupId(modelGroupId.split(" ")[1])
     self.props.setAsOfDate(asOfDate)
   },
   ajax_call: function() {
@@ -122,12 +122,12 @@ export default React.createClass({
           return false
         }
         const filteredModels = result.results.filter(filterByNumOfData)
-        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
+        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
         let make_timeseries = (x) => { return map(str2Date, toPairs(nth(2, values(x)))) }
         const series_data = map(make_timeseries, modelsToBeShow)
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
-        let getId = (x) => { return prop('model_id', x) }
+        let getId = (x) => { return prop('model_group_id', x) }
         let get_seriesname = (x) => { return map(getId, x) }
         const series_name = get_seriesname(modelsToBeShow)
         let make_seriesconfig = (x) => { return assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
