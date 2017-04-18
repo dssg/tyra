@@ -41,7 +41,7 @@ data = {
 }
 
 
-@patch.dict('os.environ', {'EVALUATION_CUTOFF': '2015-09-01'})
+@patch.dict('os.environ', {'EVALUATION_CUTOFF': '2016-04-02'})
 def test_metric_overtime():
     with rig_test_client(data) as test_app:
         route = '/evaluations/1/metric_overtime'
