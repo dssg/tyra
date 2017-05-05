@@ -47,7 +47,7 @@ models_data = [
 ]
 
 evaluations_data = [
-    # model_id, metric, parameter, value, as_of_date
+    # model_id, metric, parameter, value, evaluation_start_time
     (1, 'recall@', '5.0_pct', 45, TOO_NEW),
     (1, 'recall@', '10.0_pct', 46, TOO_NEW),
     (1, 'precision@', '5.0_pct', 47, TOO_NEW),

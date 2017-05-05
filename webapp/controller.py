@@ -68,7 +68,7 @@ def flatten_metric_query(form):
     return flattened_query
 
 
-@app.route('/evaluations/search_models', methods=['POST'])
+@app.route('/evaluations/search_models', methods=['GET','POST'])
 def search_models():
     f = request.form
     query_arg = {}
@@ -83,11 +83,14 @@ def search_models():
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
     output, test_end_date = query.get_models(query_arg)
+    #print(query.get_model_groups(query_arg))
+    #print(output)
     try:
         output = output.to_dict('records')
+        #return jsonify(results=(output))
         return jsonify(
             results=(output),
-            as_of_date=test_end_date.date().isoformat()
+            evaluation_start_time=test_end_date.date().isoformat()
         )
     except:
         print('there are some problems')
@@ -108,6 +111,27 @@ def convert(indata):
     return outdata
 
 
+@app.route('/evaluations/search_model_groups', methods=['GET', 'POST'])
+def get_model_groups():
+    # f = request.form
+    # query_arg = {}
+    # flattened_query = defaultdict(dict)
+    # for key in f.keys():
+    #     if 'parameter' in key:
+    #         flattened_query[key.strip('parameter')]['parameter'] = \
+    #             dbify_metric_param(f[key])
+    #     elif 'metric' in key:
+    #         if f[key] in METRIC_WHITELIST:
+    #             flattened_query[key.strip('metric')]['metric'] = f[key]
+    # query_arg['timestamp'] = f['timestamp']
+    # query_arg['metrics'] = flattened_query
+    # print(query_arg)
+    output = query.get_model_groups()
+    output = output.to_dict('records')
+    print(output)
+    return jsonify(results=(output))
+
+
 @app.route('/evaluations/search_models_over_time', methods=['POST'])
 def search_models_over_time():
     f = request.form
@@ -117,9 +141,10 @@ def search_models_over_time():
         {'ts': f['timestamp']},
         index=['model_group_id', 'as_of_date']
     )
+    print(output)
     try:
         unranked = convert(output.to_dict('index'))
-        ranked = ranked_models(unranked, 'mse')
+        #ranked = ranked_models(unranked, 'mse')
         return jsonify(
             results=ranked,
         )

@@ -43,6 +43,65 @@ def get_model_prediction(query_arg):
     output = df_models
     return output
 
+def get_model_groups():
+    #for num, args in query_arg['metrics'].items():
+    #    print(num, args)
+
+    #query_dict = list(query_arg['metrics'].items())[0][1]
+
+    lookup_query = """
+    SELECT
+    r_table.model_group_id,
+    avg(r_table.value)
+    FROM
+    (SELECT
+       model_group_id,
+       e.value,
+       e.evaluation_start_time :: DATE
+     FROM results.models AS m
+       JOIN results.evaluations e USING (model_id)
+       JOIN results.model_groups AS mg USING (model_group_id)
+     WHERE evaluation_start_time = train_end_time :: TIMESTAMP + INTERVAL '1y'
+           AND parameter = %(parameter)s
+           AND metric = %(metric)s
+           AND model_comment = 'with accident as adverse') r_table
+    GROUP BY r_table.model_group_id
+    ORDER BY avg DESC
+    LIMIT 10
+    """
+    #print(query)
+    #ranked_result = pd.read_sql(lookup_query,
+    #    params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@'},
+    #    con=db.engine)
+    #print(ranked_result['model_group_id'])
+
+    query = """
+    SELECT
+    model_group_id,
+    json_agg((select row_to_json(_)
+            from (select m.model_id,
+                         m.run_time::date,
+                         e.value,
+                         e.evaluation_start_time::date)
+                         as _)
+            ORDER BY e.evaluation_start_time
+          ) as series
+    FROM results.models as m
+    JOIN results.evaluations e using(model_id)
+    WHERE evaluation_start_time = train_end_time::timestamp + interval '1 year'
+    AND parameter = '100_abs'
+    AND metric='precision@'
+    AND run_time >= '2017-03-01'
+    AND model_group_id in {}
+    AND model_comment = 'with accident as adverse'
+    GROUP BY model_group_id
+    """.format((1, 2, 3, 4, 5))
+    df_models = pd.read_sql(query, con=db.engine)
+    print(df_models)
+
+    return df_models
+
+
 
 def get_models(query_arg):
     metric_string = ' union '.join([
@@ -53,7 +112,7 @@ def get_models(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
-
+    print(query_arg)
     run_date_lookup_query = """
     with recent_prod_mg as (
         select model_group_id

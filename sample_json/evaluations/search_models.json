@@ -3,5 +3,5 @@
 		{ "model_id": 2, "precision@10.0_pct": 56.0, "recall@5.0_pct": 55.0 },
 		{ "model_id": 10, "precision@10.0_pct": 68.0, "recall@5.0_pct": 65.0 }
 	],
-	"as_of_date": "2015-04-01"
+	"evaluation_start_time": "2015-04-01"
 }
