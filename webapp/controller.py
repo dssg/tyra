@@ -113,20 +113,20 @@ def convert(indata):
 
 @app.route('/evaluations/search_model_groups', methods=['GET', 'POST'])
 def get_model_groups():
-    # f = request.form
-    # query_arg = {}
-    # flattened_query = defaultdict(dict)
-    # for key in f.keys():
-    #     if 'parameter' in key:
-    #         flattened_query[key.strip('parameter')]['parameter'] = \
-    #             dbify_metric_param(f[key])
-    #     elif 'metric' in key:
-    #         if f[key] in METRIC_WHITELIST:
-    #             flattened_query[key.strip('metric')]['metric'] = f[key]
-    # query_arg['timestamp'] = f['timestamp']
-    # query_arg['metrics'] = flattened_query
-    # print(query_arg)
-    output = query.get_model_groups()
+    f = request.form
+    query_arg = {}
+    flattened_query = defaultdict(dict)
+    for key in f.keys():
+        if 'parameter' in key:
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                dbify_metric_param(f[key])
+        elif 'metric' in key:
+            if f[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = f[key]
+    query_arg['timestamp'] = f['timestamp']
+    query_arg['metrics'] = flattened_query
+    print(query_arg)
+    output = query.get_model_groups(query_arg)
     output = output.to_dict('records')
     print(output)
     return jsonify(results=(output))
