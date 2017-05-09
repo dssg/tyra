@@ -1,0 +1,15 @@
+echo "Building output.js"
+cd frontend/
+npm run build
+echo "Done building output.js"
+
+cd ..
+
+LOGFILE=/home/tlin/tyra/log/gunicorn.log
+LOGDIR=$(dirname $LOGFILE)
+NUM_WORKERS=3
+
+test -d $LOGDIR || mkdir -p $LOGDIR
+
+echo "Start Gunicorn"
+exec gunicorn --bind 0.0.0.0:5003 wsgi
