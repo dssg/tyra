@@ -9,6 +9,7 @@ numpy
 scipy
 scikit-learn
 flask_sqlalchemy
+flask-login
 codecov
 pytest-cov
 tox
