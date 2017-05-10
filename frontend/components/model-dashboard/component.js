@@ -30,7 +30,6 @@ export default React.createClass({
   handleLogout: function() {
     console.log("logout button pressed")
     $.ajax({
-      type: "GET",
       url: "/logout",
       success: function() {
         window.location = '/login'

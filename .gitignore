@@ -98,3 +98,5 @@ node_modules/
 # Webpack bundle
 webapp/static/output.js
 
+# Users info
+users.json

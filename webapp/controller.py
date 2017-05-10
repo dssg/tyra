@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect, url_for
+from flask import render_template, request, jsonify, redirect, url_for, flash
 import flask_login
 from webapp import app
 from webapp import query
@@ -291,13 +291,18 @@ def login():
         return render_template('login.html')
 
     email = request.form['email']
-    if request.form['pw'] == users[email]['pw']:
-        user = User()
-        user.id = email
-        flask_login.login_user(user)
-        return redirect(url_for('index'))
-
-    return 'Bad login'
+    try:
+        if request.form['pw'] == users[email]['pw']:
+            user = User()
+            user.id = email
+            flask_login.login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid password or account!', 'danger')
+            return redirect(url_for('login'))
+    except:
+        flash('Invalid password or account!', 'danger')
+        return redirect(url_for('login'))
 
 @app.route('/protected')
 @flask_login.login_required
@@ -306,5 +311,10 @@ def protected():
 
 @app.route('/logout', methods=['GET','POST'])
 def logout():
+    flash('Logged out successfully!', 'warning')
     flask_login.logout_user()
     return redirect(url_for('login'))
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return 'Unauthorized'
