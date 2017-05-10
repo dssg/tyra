@@ -27,6 +27,16 @@ export default React.createClass({
     this.setState({ searchId: newSearchId })
   },
 
+  handleLogout: function() {
+    console.log("logout button pressed")
+    $.ajax({
+      type: "GET",
+      url: "/logout",
+      success: function() {
+        window.location = '/login'
+      }
+    })
+  },
   setMetrics: function(newMetrics) {
     this.setState({ metrics: newMetrics })
   },
@@ -93,6 +103,7 @@ export default React.createClass({
     } else {
       return (
         <div className="container center-container">
+          <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
           <div className="col-lg-3">
             <ModelSearcher
               metrics={this.state.metrics}
