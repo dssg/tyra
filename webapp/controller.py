@@ -314,7 +314,7 @@ def protected():
     return 'Logged in as: ' + flask_login.current_user.id
 
 
-@app.route('/logout', methods=['GET','POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     flash('Logged out successfully!', 'warning')
     flask_login.logout_user()
