@@ -1,4 +1,4 @@
-workers = 3 
+workers = 1
 timeout = 120
 loglevel = 'debug'
 name = 'tyra' 

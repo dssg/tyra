@@ -14,7 +14,7 @@ fujs = FlaskUtilJs(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-with open('users.json') as h:
+with open('example_users.json') as h:
     users = json.load(h)
 
 from webapp import controller, query
