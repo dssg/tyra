@@ -80,6 +80,7 @@ celerybeat-schedule
 
 # virtualenv
 venv/
+venv_tyra/
 ENV/
 
 # Spyder project settings
@@ -96,3 +97,6 @@ node_modules/
 
 # Webpack bundle
 webapp/static/output.js
+
+# Users info
+users.json

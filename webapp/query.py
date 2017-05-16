@@ -5,7 +5,6 @@ import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
-
 def evaluation_cutoff_date():
     return os.getenv(
         'EVALUATION_CUTOFF_DATE',
@@ -75,7 +74,7 @@ def get_model_groups(query_arg):
           ) as series
     FROM results.models as m
     JOIN results.evaluations e using(model_id)
-    WHERE evaluation_start_time = train_end_time::timestamp + interval '1 year'
+    WHERE evaluation_start_time = train_end_time::timestamp
     AND parameter = %(parameter)s
     AND metric = %(metric)s
     AND run_time >= %(runtime)s

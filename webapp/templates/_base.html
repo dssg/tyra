@@ -26,14 +26,19 @@
   <script type='text/javascript' src="{{ url_for('static', filename='output.js') }}"></script>
 
     <!-- Page Content -->
-    <div class="container center-container">
-
-      <div class="headrow" id="headrow">
-		  <h2>Evaluation Dashboard</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <a class="navbar-brand">
+          <img class="pull-left" hspace="10px" src="{{ url_for('static', filename='favicon.ico') }}" height="25">
+          Evaluation Dashboard</a>
+        </div>
       </div>
+    </nav>
+    <div class="container center-container">
       <!-- messages -->
-      {% for message in get_flashed_messages() %}
-        <div class="alert alert-success alert-dismissible" role="alert">
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           {{ message }}
         </div>
