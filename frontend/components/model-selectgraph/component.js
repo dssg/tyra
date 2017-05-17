@@ -114,22 +114,12 @@ export default React.createClass({
       url: "/evaluations/search_model_groups",
       data: $.param(params),
       success: function(result) {
-        //const minDataPoints = 2
-        // function filterByNumOfData(item) {
-        //   if (Object.keys(values(item)[2]).length >= minDataPoints) {
-        //     return true
-        //   }
-        //   return false
-        // }
-        console.log(result.results)
-        const filteredModels = result.results//.filter(filterByNumOfData)
+        // Will implement the filterByModelComment here
+        const filteredModels = result.results
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
-        console.log(modelsToBeShow[0].series)
         let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value'], x))}
-
-
-        console.log(map(str2Date, map(model_schema, modelsToBeShow[0].series)))
+        //console.log(map(str2Date, map(model_schema, modelsToBeShow[0].series)))
         let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
         //let make_timeseries = (x) => { return map(str2Date, toPairs(nth(2, values(x)))) }
         const series_data = map(make_timeseries, modelsToBeShow)

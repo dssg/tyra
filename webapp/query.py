@@ -53,7 +53,6 @@ def get_model_groups(query_arg):
     model_group_id
     FROM results.ranked_table
     ORDER BY avg DESC
-    LIMIT 5
     """
     #print(query)
     ranked_result = pd.read_sql(lookup_query,
@@ -67,6 +66,7 @@ def get_model_groups(query_arg):
     json_agg((select row_to_json(_)
             from (select m.model_id,
                          m.run_time::date,
+                         m.model_comment,
                          e.value,
                          e.evaluation_start_time::date)
                          as _)

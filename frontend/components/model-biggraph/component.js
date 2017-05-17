@@ -2,13 +2,29 @@ import ModelSelectGraph from 'components/model-selectgraph/component'
 import React from 'react'
 
 const NUMLIST = [5, 10, 15, 20]
+const MODELCOMMENT = ['with accident as adverse',
+                      'without accident as adverse',
+                      'sworn officers correct month feature mix',
+                      'sworn officers correct month 1m 3y',
+                      'frequency sworn officers',
+                      'sworn officers rf test',
+                      'debug',
+                      'sworn officers correct month mix 1m 6y',
+                      'sworn officers correct month 1y',
+                      'frequency sworn officers 6m',
+                      'test run',
+                      'sworn officers',
+                      'sworn officers correct month 1m 6y']
 
 export default React.createClass({
   getInitialState: function() {
-    return { numOfModelGroupsToShow: 5 }
+    return { numOfModelGroupsToShow: 5, labelOfModelGroups: 'with accident as adverse' }
   },
   handleNumOfModelGroupsToShow: function(event) {
     this.setState({ numOfModelGroupsToShow: event.target.value })
+  },
+  handleLabelOfModelGroups: function(event) {
+    this.setState({ labelOfModelGroups: event.target.value})
   },
   renderSelectGraph: function() {
     return (
@@ -19,16 +35,17 @@ export default React.createClass({
         asOfDate={this.props.asOfDate}
         searchId={this.props.searchId}
         metrics={this.props.metrics}
-        numOfModelToShow={this.state.numOfModelToShow} />
+        numOfModelGroupsToShow={this.state.numOfModelGroupsToShow}
+        labelOfModelGroups={this.state.labelOfModelGroups} />
     )
   },
   render: function() {
     return (
       <div>
-        <div className="col-lg-8">
+        <div className="col-lg-9">
           {this.renderSelectGraph()}
         </div>
-        <div className="col-lg-4" style={{ textAlign:"right" }}>
+        <div className="col-lg-3 sidenav" style={{ textAlign:"left" }}>
           <div className="row">
             <select
               value={this.state.numOfModelGroupsToShow}
@@ -39,6 +56,18 @@ export default React.createClass({
               })}
             </select>
             &nbsp; curve(s) to show
+          </div>
+          <div className="row">
+          <p> model comment:
+          <select
+            value={this.state.labelOfModelGroups}
+            onChange={this.handleLabelOfModelGroups}
+            >
+          {MODELCOMMENT.map(function(comment) {
+            return <option key={comment} value={comment}>{comment}</option>
+          })}
+          </select>
+          </p>
           </div>
         </div>
       </div>
