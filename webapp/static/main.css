@@ -93,7 +93,9 @@ table.focus-highlight td:before {
 /* General */
 .row{
     margin-top: 15px;
-    margin-bottom: 5px
+    margin-bottom: 5px;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .headrow{
@@ -274,3 +276,12 @@ table.focus-highlight td:before {
     top:0;
     right:0;
 }
+
+.sidenav {
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+}
+
+.row.content {height: 850px}
+
