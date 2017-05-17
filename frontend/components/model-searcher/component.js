@@ -33,18 +33,17 @@ export default React.createClass({
   },
   render: function() {
     return (
+      <div className='container-fluid center-container'>
       <form method="post" role="form" id="form_arg">
-        <div className="row">
-          <MetricList
+        <MetricList
             metricOptions={this.props.metricOptions}
             addMetric={this.addMetric}
             removeMetric={this.removeMetric}
             metricChanged={this.metricChanged}
             parameterChanged={this.parameterChanged}
             metrics={this.props.metrics} />
-        </div>
         <div className="row">
-        After
+        After &nbsp;
         <DatePicker
           selected={this.props.startDate}
           onChange={this.handleDateChange} />
@@ -59,6 +58,7 @@ export default React.createClass({
           </button>
         </div>
       </form>
+      </div>
     )
   }
 })

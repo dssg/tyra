@@ -28,17 +28,13 @@ export default React.createClass({
   },
   render: function() {
     return (
-      <span>
-        <div className="row">
-          Show models with
-        </div>
-        <div className="row">
-          {values(mapObjIndexed(this.renderSelector, this.props.metrics))}
-        </div>
-        <div className="row">
-          {/*this.renderAddButton()*/}
-        </div>
-      </span>
+      <div className='row'>
+        <p>Show models with</p>
+        {values(mapObjIndexed(this.renderSelector, this.props.metrics))}
+        {/*<div className="row">
+          {this.renderAddButton()}
+        </div>*/}
+      </div>
     )
   }
 })
