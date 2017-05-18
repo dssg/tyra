@@ -29,7 +29,7 @@ export default React.createClass({
   renderSelectGraph: function() {
     return (
       <ModelSelectGraph
-        setModelGroupId={this.props.setModelGroupId}
+        setModelId={this.props.setModelId}
         setAsOfDate={this.props.setAsOfDate}
         startDate={this.props.startDate}
         asOfDate={this.props.asOfDate}
