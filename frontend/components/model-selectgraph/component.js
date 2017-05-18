@@ -114,7 +114,7 @@ export default React.createClass({
       url: "/evaluations/search_models_over_time",
       data: $.param(params),
       success: function(result) {
-        const minDataPoints = 2
+        const minDataPoints = 5
         function filterByNumOfData(item) {
           if (Object.keys(values(item)[2]).length >= minDataPoints) {
             return true

@@ -267,3 +267,10 @@ table.focus-highlight td:before {
 	border-color: #000000;
 }
 
+#logOutButton {
+	margin-top: 8px;
+    margin-right: 10px;
+	position: absolute;
+    top:0;
+    right:0;
+}

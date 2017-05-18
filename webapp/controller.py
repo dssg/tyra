@@ -1,4 +1,5 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, url_for, flash
+import flask_login
 from webapp import app
 from webapp import query
 from webapp.model_ranking import ranked_models
@@ -6,6 +7,7 @@ from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
 import datetime
+from webapp import users, login_manager
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -22,8 +24,9 @@ with open('parameters.yaml') as f:
     PARAMETERS = yaml.load(f)
 
 
-@app.route('/')
+
 @app.route('/evaluations')
+@flask_login.login_required
 def index():
     return render_template('index.html', parameters=PARAMETERS)
 
@@ -253,11 +256,71 @@ def get_metric_over_time(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
-@app.route('/evaluations/within_model', methods=['GET', 'POST'])
-def within_model():
-    return render_template('within_model.html')
+# Login functions
+class User(flask_login.UserMixin):
+    pass
 
 
-@app.route('/evaluations/between_models', methods=['GET', 'POST'])
-def between_models():
-    return render_template('between_models.html')
+@login_manager.user_loader
+def user_loader(email):
+    if email not in users:
+        return
+
+    user = User()
+    user.id = email
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get('email')
+    if email not in users:
+        return
+
+    user = User()
+    user.id = email
+
+    # DO NOT ever store passwords in plaintext and always compare password
+    # hashes using constant-time comparison!
+    user.is_authenticated = request.form['pw'] == users[email]['pw']
+
+    return user
+
+
+@app.route('/')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+
+    email = request.form['email']
+    try:
+        if request.form['pw'] == users[email]['pw']:
+            user = User()
+            user.id = email
+            flask_login.login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid password or account!', 'danger')
+            return redirect(url_for('login'))
+    except:
+        flash('Invalid password or account!', 'danger')
+        return redirect(url_for('login'))
+
+
+@app.route('/protected')
+@flask_login.login_required
+def protected():
+    return 'Logged in as: ' + flask_login.current_user.id
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    flash('Logged out successfully!', 'warning')
+    flask_login.logout_user()
+    return redirect(url_for('login'))
+
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return 'Unauthorized'

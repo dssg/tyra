@@ -37,8 +37,8 @@
     </nav>
     <div class="container center-container">
       <!-- messages -->
-      {% for message in get_flashed_messages() %}
-        <div class="alert alert-success alert-dismissible" role="alert">
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           {{ message }}
         </div>
