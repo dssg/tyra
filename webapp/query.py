@@ -58,7 +58,7 @@ def get_model_groups(query_arg):
     ranked_result = pd.read_sql(lookup_query,
         params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@'},
         con=db.engine)
-    print(ranked_result['model_group_id'].tolist())
+    #print(ranked_result['model_group_id'].tolist())
 
     query = """
     SELECT
@@ -78,10 +78,10 @@ def get_model_groups(query_arg):
     AND parameter = %(parameter)s
     AND metric = %(metric)s
     AND run_time >= %(runtime)s
-    AND model_group_id in {}
-    AND model_comment = 'with accident as adverse'
+    AND model_group_id in {0}
+    AND model_comment = '{1}'
     GROUP BY model_group_id
-    """.format(tuple(ranked_result['model_group_id'].tolist()))
+    """.format(tuple(ranked_result['model_group_id'].tolist()), query_arg['model_comment'])
     df_models = pd.read_sql(query,
         params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@', 'runtime': query_arg['timestamp']},
         con=db.engine)

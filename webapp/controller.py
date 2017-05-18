@@ -114,8 +114,8 @@ def convert(indata):
     return outdata
 
 
-@app.route('/evaluations/search_model_groups', methods=['GET', 'POST'])
-def get_model_groups():
+@app.route('/evaluations/search_model_groups/<string:model_comment>', methods=['GET', 'POST'])
+def get_model_groups(model_comment="sworn officers correct month 1m 6y"):
     f = request.form
     query_arg = {}
     flattened_query = defaultdict(dict)
@@ -128,6 +128,7 @@ def get_model_groups():
                 flattened_query[key.strip('metric')]['metric'] = f[key]
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
+    query_arg['model_comment'] = model_comment
     print(query_arg)
     output = query.get_model_groups(query_arg)
     output = output.to_dict('records')
