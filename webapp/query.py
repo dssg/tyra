@@ -42,6 +42,16 @@ def get_model_prediction(query_arg):
     output = df_models
     return output
 
+
+def get_model_comments(run_time):
+    query = """
+    SELECT DISTINCT(model_comment) FROM results.ranked_table
+    WHERE run_time >= '{}'
+    """.format(run_time)
+    model_comments = pd.read_sql(query, con=db.engine)
+    return model_comments
+
+
 def get_model_groups(query_arg):
     for num, args in query_arg['metrics'].items():
         print(num, args)
@@ -87,7 +97,6 @@ def get_model_groups(query_arg):
         con=db.engine)
 
     return df_models
-
 
 
 def get_models(query_arg):
