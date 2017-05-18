@@ -18,7 +18,7 @@ const MODELCOMMENT = ['with accident as adverse',
 
 export default React.createClass({
   getInitialState: function() {
-    return { numOfModelGroupsToShow: 5, labelOfModelGroups: 'with accident as adverse' }
+    return { numOfModelGroupsToShow: 5, labelOfModelGroups: "sworn officers correct month 1m 3y" }
   },
   handleNumOfModelGroupsToShow: function(event) {
     this.setState({ numOfModelGroupsToShow: event.target.value })

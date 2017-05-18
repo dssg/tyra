@@ -1,4 +1,4 @@
-import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick } from 'ramda'
+import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick, filter } from 'ramda'
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -9,17 +9,17 @@ export default React.createClass({
       loading: false,
       config: {
         title: {
-          text: 'Model Select',
+          text: 'Top Models',
           style: { "color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300" }
         },
         chart: {
-          width: 650,
-          height: 500
+          width: 950,
+          height: 600
         },
         plotOptions: {
           series: {
             cursor: 'pointer',
-            marker: { enabled: false },
+            marker: { enabled: true },
             states: {
               hover: {
                 enabled: true,
@@ -75,7 +75,8 @@ export default React.createClass({
     const self = this
     if (this.state !== nextState ||
         self.props.searchId !== nextProps.searchId ||
-        self.props.numOfModelGroupsToShow !== nextProps.numOfModelGroupsToShow) {
+        self.props.numOfModelGroupsToShow !== nextProps.numOfModelGroupsToShow ||
+        self.props.labelOfModelGroups !== nextProps.labelOfModelGroups) {
       return true
     }
     return false
@@ -86,6 +87,9 @@ export default React.createClass({
       this.ajax_call()
     }
     if(prevProps.numOfModelGroupsToShow !== self.props.numOfModelGroupsToShow) {
+      this.ajax_call()
+    }
+    if(prevProps.labelOfModelGroups !== self.props.labelOfModelGroups) {
       this.ajax_call()
     }
   },
@@ -111,10 +115,10 @@ export default React.createClass({
     const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
     $.ajax({
       type: "POST",
-      url: "/evaluations/search_model_groups",
+      url: "/evaluations/search_model_groups/" + self.props.labelOfModelGroups,
       data: $.param(params),
       success: function(result) {
-        // Will implement the filterByModelComment here
+        console.log(result.results[0])
         const filteredModels = result.results
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
