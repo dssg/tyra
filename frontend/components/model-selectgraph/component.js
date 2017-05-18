@@ -13,7 +13,6 @@ export default React.createClass({
           style: { "color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300" }
         },
         chart: {
-          width: 950,
           height: 600
         },
         plotOptions: {
@@ -123,11 +122,8 @@ export default React.createClass({
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
         let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value'], x))}
-        //console.log(map(str2Date, map(model_schema, modelsToBeShow[0].series)))
         let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
-        //let make_timeseries = (x) => { return map(str2Date, toPairs(nth(2, values(x)))) }
         const series_data = map(make_timeseries, modelsToBeShow)
-        //console.log(series_data)
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
         let getId = (x) => { return prop('model_group_id', x) }
         let get_seriesname = (x) => { return map(getId, x) }

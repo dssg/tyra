@@ -42,10 +42,10 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <div className="col-lg-9">
+        <div className="col-lg-8">
           {this.renderSelectGraph()}
         </div>
-        <div className="col-lg-3 sidenav" style={{ textAlign:"left" }}>
+        <div className="col-sm-4 sidenav " style={{ textAlign:"left" }}>
           <div className="row">
             <select
               value={this.state.numOfModelGroupsToShow}
@@ -58,7 +58,7 @@ export default React.createClass({
             &nbsp; curve(s) to show
           </div>
           <div className="row">
-          <p> model comment:
+          model comment: <br />
           <select
             value={this.state.labelOfModelGroups}
             onChange={this.handleLabelOfModelGroups}
@@ -67,7 +67,6 @@ export default React.createClass({
             return <option key={comment} value={comment}>{comment}</option>
           })}
           </select>
-          </p>
           </div>
         </div>
       </div>

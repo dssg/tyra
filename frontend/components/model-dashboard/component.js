@@ -102,7 +102,7 @@ export default React.createClass({
       return (
         <div className="container-fluid center-container">
           <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
-          <div className="col-lg-3 sidenav">
+          <div className="col-lg-2 sidenav">
             <div className="row content">
               <ModelSearcher
                 metrics={this.state.metrics}
@@ -113,8 +113,8 @@ export default React.createClass({
                 setStartDate={this.setStartDate} />
             </div>
           </div>
-          <div className="col-lg-9">
-            <div className="container-fluid text-center">
+          <div className="col-lg-10 nopadding">
+            <div className="container-fluid text-center nopadding">
               { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null }
             </div>
           </div>
