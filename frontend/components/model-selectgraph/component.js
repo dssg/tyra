@@ -1,4 +1,5 @@
-import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick, filter } from 'ramda'
+import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick, filter, flatten } from 'ramda'
+import * as R from "ramda"
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -29,7 +30,8 @@ export default React.createClass({
               events: {
                 click: function() {
                   let d = new Date(this.options.x)
-                  self.handleModelGroupClick(this.series.name, d.toISOString().split('T')[0])
+                  console.log(this.options)
+                  self.handleModelClick(this.series.name , d.toISOString().split('T')[0])
                 }
               }
             }
@@ -94,9 +96,9 @@ export default React.createClass({
   },
   componentWillUnmount: function() {
   },
-  handleModelGroupClick: function(modelGroupId, asOfDate) {
+  handleModelClick: function(modelId, asOfDate) {
     const self = this
-    self.props.setModelGroupId(modelGroupId.split(" ")[1])
+    self.props.setModelId(modelId.split(" ")[1])
     self.props.setAsOfDate(asOfDate)
   },
   ajax_call: function() {
@@ -117,21 +119,33 @@ export default React.createClass({
       url: "/evaluations/search_model_groups/" + self.props.labelOfModelGroups,
       data: $.param(params),
       success: function(result) {
-        console.log(result.results[0])
         const filteredModels = result.results
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
-        let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
-        let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value'], x))}
+        let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x), nth(2, x)] }
+        let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value', 'model_id'], x))}
         let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
         const series_data = map(make_timeseries, modelsToBeShow)
+        console.log(series_data)
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
-        let getId = (x) => { return prop('model_group_id', x) }
-        let get_seriesname = (x) => { return map(getId, x) }
+        let getGroupId = (x) => { return prop('model_group_id', x) }
+        let get_seriesname = (x) => { return map(getGroupId, x) }
         const series_name = get_seriesname(modelsToBeShow)
-        let make_seriesconfig = (x) => { return assoc('data', nth(0, x), assoc('name', 'model group ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
+        console.log(series_name)
+        let getId = (x) => { return prop('model_id', x) }
+        let get_points = (x) => { return map(getId, x.series)}
+        const series_model_id = map(get_points, modelsToBeShow)
+        console.log(series_model_id)
+        const lists = [series_data, series_name, series_model_id]
+        let make_seriesconfig = (x) => { return assoc('data', nth(0, x),
+                                                  assoc('name', 'model group ' + nth(1, x),
+                                                        { 'type': 'line',
+                                                          'index': nth(2, x),
+                                                          'asOfDate':self.props.asOfDate }))
+                                        }
         let newConfig = self.state.config
         newConfig.yAxis.title.text = yAxis_title
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
+        console.log(newConfig.series)
         self.setState({
           config: newConfig,
           loading: false
