@@ -283,5 +283,12 @@ table.focus-highlight td:before {
     height: 100%;
 }
 
+.nopadding {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+
+
 .row.content {height: 850px}
 
