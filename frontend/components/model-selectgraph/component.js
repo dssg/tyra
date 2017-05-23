@@ -121,21 +121,22 @@ export default React.createClass({
       success: function(result) {
         const filteredModels = result.results
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
+
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x), nth(2, x)] }
         let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value', 'model_id'], x))}
         let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
         const series_data = map(make_timeseries, modelsToBeShow)
-        console.log(series_data)
+
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
+
         let getGroupId = (x) => { return prop('model_group_id', x) }
         let get_seriesname = (x) => { return map(getGroupId, x) }
         const series_name = get_seriesname(modelsToBeShow)
-        console.log(series_name)
+
         let getId = (x) => { return prop('model_id', x) }
         let get_points = (x) => { return map(getId, x.series)}
         const series_model_id = map(get_points, modelsToBeShow)
-        console.log(series_model_id)
-        const lists = [series_data, series_name, series_model_id]
+
         let make_seriesconfig = (x) => { return assoc('data', nth(0, x),
                                                   assoc('name', 'model group ' + nth(1, x),
                                                         { 'type': 'line',
@@ -145,7 +146,6 @@ export default React.createClass({
         let newConfig = self.state.config
         newConfig.yAxis.title.text = yAxis_title
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
-        console.log(newConfig.series)
         self.setState({
           config: newConfig,
           loading: false

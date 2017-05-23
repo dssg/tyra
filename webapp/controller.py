@@ -86,11 +86,8 @@ def search_models():
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
     output, test_end_date = query.get_models(query_arg)
-    #print(query.get_model_groups(query_arg))
-    #print(output)
     try:
         output = output.to_dict('records')
-        #return jsonify(results=(output))
         return jsonify(
             results=(output),
             evaluation_start_time=test_end_date.date().isoformat()

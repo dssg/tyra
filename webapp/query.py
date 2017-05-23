@@ -64,11 +64,9 @@ def get_model_groups(query_arg):
     FROM results.ranked_table
     ORDER BY avg DESC
     """
-    #print(query)
     ranked_result = pd.read_sql(lookup_query,
         params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@'},
         con=db.engine)
-    #print(ranked_result['model_group_id'].tolist())
 
     query = """
     SELECT
@@ -108,7 +106,6 @@ def get_models(query_arg):
         """.format(**args)
         for num, args in query_arg['metrics'].items()
     ])
-    print(query_arg)
     run_date_lookup_query = """
     with recent_prod_mg as (
         select model_group_id
