@@ -119,11 +119,25 @@ export default React.createClass({
       url: "/evaluations/search_model_groups/" + self.props.labelOfModelGroups,
       data: $.param(params),
       success: function(result) {
+<<<<<<< HEAD
         const filteredModels = result.results
         const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
         let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x), nth(2, x)] }
         let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value', 'model_id'], x))}
         let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
+=======
+        const minDataPoints = 5
+        function filterByNumOfData(item) {
+          if (Object.keys(values(item)[2]).length >= minDataPoints) {
+            return true
+          }
+          return false
+        }
+        const filteredModels = result.results.filter(filterByNumOfData)
+        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
+        let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
+        let make_timeseries = (x) => { return map(str2Date, toPairs(nth(2, values(x)))) }
+>>>>>>> master
         const series_data = map(make_timeseries, modelsToBeShow)
         console.log(series_data)
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']

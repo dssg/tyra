@@ -276,6 +276,7 @@ table.focus-highlight td:before {
     top:0;
     right:0;
 }
+<<<<<<< HEAD
 
 .sidenav {
     padding-top: 20px;
@@ -292,3 +293,5 @@ table.focus-highlight td:before {
 
 .row.content {height: 850px}
 
+=======
+>>>>>>> master
