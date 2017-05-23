@@ -89,9 +89,12 @@ def get_model_groups(query_arg):
     AND model_group_id in {0}
     AND model_comment = '{1}'
     GROUP BY model_group_id
-    """.format(tuple(ranked_result['model_group_id'].tolist()), query_arg['model_comment'])
+    """.format(tuple(ranked_result['model_group_id'].tolist()),
+               query_arg['model_comment'])
     df_models = pd.read_sql(query,
-        params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@', 'runtime': query_arg['timestamp']},
+        params={'parameter': query_dict['parameter'],
+                'metric': query_dict['metric']+'@',
+                'runtime': query_arg['timestamp']},
         con=db.engine)
 
     return df_models
@@ -248,7 +251,10 @@ def get_metrics_over_time(metrics, filter_string, filter_values, index):
 
     query = """
     select
-    model_group_id, evaluation_start_time::date::text as as_of_date, new_metric, max(value) as value
+    model_group_id,
+    evaluation_start_time::date::text as as_of_date,
+    new_metric,
+    max(value) as value
     from (
         select mg.model_group_id,
            evaluation_start_time,

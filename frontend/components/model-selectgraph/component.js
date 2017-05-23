@@ -1,5 +1,4 @@
 import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick, filter, flatten } from 'ramda'
-import * as R from "ramda"
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -30,8 +29,7 @@ export default React.createClass({
               events: {
                 click: function() {
                   let d = new Date(this.options.x)
-                  console.log(this.options)
-                  self.handleModelClick(this.series.name , d.toISOString().split('T')[0])
+                  self.handleModelClick(this.series.name, d.toISOString().split('T')[0])
                 }
               }
             }
@@ -135,14 +133,14 @@ export default React.createClass({
 
         let getId = (x) => { return prop('model_id', x) }
         let get_points = (x) => { return map(getId, x.series)}
-        const series_model_id = map(get_points, modelsToBeShow)
 
-        let make_seriesconfig = (x) => { return assoc('data', nth(0, x),
-                                                  assoc('name', 'model group ' + nth(1, x),
-                                                        { 'type': 'line',
-                                                          'index': nth(2, x),
-                                                          'asOfDate':self.props.asOfDate }))
-                                        }
+        let make_seriesconfig = (x) => {
+          return assoc('data',
+                       nth(0, x),
+                       assoc('name',
+                             'model group ' + nth(1, x),
+                             { 'type': 'line', 'index': nth(2, x),'asOfDate':self.props.asOfDate }))
+        }
         let newConfig = self.state.config
         newConfig.yAxis.title.text = yAxis_title
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))

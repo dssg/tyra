@@ -71,7 +71,7 @@ def flatten_metric_query(form):
     return flattened_query
 
 
-@app.route('/evaluations/search_models', methods=['GET','POST'])
+@app.route('/evaluations/search_models', methods=['GET', 'POST'])
 def search_models():
     f = request.form
     query_arg = {}
@@ -111,7 +111,8 @@ def convert(indata):
     return outdata
 
 
-@app.route('/evaluations/search_model_groups/<string:model_comment>', methods=['GET', 'POST'])
+@app.route('/evaluations/search_model_groups/<string:model_comment>',
+    methods=['GET', 'POST'])
 def get_model_groups(model_comment="sworn officers correct month 1m 6y"):
     f = request.form
     query_arg = {}
