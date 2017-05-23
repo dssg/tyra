@@ -65,7 +65,8 @@ def get_model_groups(query_arg):
     ORDER BY avg DESC
     """
     ranked_result = pd.read_sql(lookup_query,
-        params={'parameter': query_dict['parameter'], 'metric': query_dict['metric']+'@'},
+        params={'parameter': query_dict['parameter'],
+                'metric': query_dict['metric']+'@'},
         con=db.engine)
 
     query = """
@@ -92,10 +93,10 @@ def get_model_groups(query_arg):
     """.format(tuple(ranked_result['model_group_id'].tolist()),
                query_arg['model_comment'])
     df_models = pd.read_sql(query,
-        params={'parameter': query_dict['parameter'],
-                'metric': query_dict['metric']+'@',
-                'runtime': query_arg['timestamp']},
-        con=db.engine)
+                            params={'parameter': query_dict['parameter'],
+                                    'metric': query_dict['metric']+'@',
+                                    'runtime': query_arg['timestamp']},
+                            con=db.engine)
 
     return df_models
 

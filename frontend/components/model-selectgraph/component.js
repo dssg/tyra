@@ -1,4 +1,4 @@
-import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip, pick, filter, flatten } from 'ramda'
+import { addIndex, assoc, concat, filter, flatten, map, mergeAll, nth, pick, prop, values, zip } from 'ramda'
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -139,7 +139,7 @@ export default React.createClass({
                        nth(0, x),
                        assoc('name',
                              'model group ' + nth(1, x),
-                             { 'type': 'line', 'index': nth(2, x),'asOfDate':self.props.asOfDate }))
+                             { 'type': 'line', 'index': nth(2, x), 'asOfDate':self.props.asOfDate }))
         }
         let newConfig = self.state.config
         newConfig.yAxis.title.text = yAxis_title

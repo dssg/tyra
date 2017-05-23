@@ -24,7 +24,7 @@ export default React.createClass({
     this.setState({ numOfModelGroupsToShow: event.target.value })
   },
   handleLabelOfModelGroups: function(event) {
-    this.setState({ labelOfModelGroups: event.target.value})
+    this.setState({ labelOfModelGroups: event.target.value })
   },
   renderSelectGraph: function() {
     return (
@@ -49,8 +49,7 @@ export default React.createClass({
           <div className="row">
             <select
               value={this.state.numOfModelGroupsToShow}
-              onChange={this.handleNumOfModelGroupsToShow}
-            >
+              onChange={this.handleNumOfModelGroupsToShow}>
               {NUMLIST.map(function(num) {
                 return <option key={num} value={num}>{num}</option>
               })}
@@ -58,14 +57,13 @@ export default React.createClass({
             &nbsp; curve(s) to show
           </div>
           <div className="row">
-          model comment: <br />
+            model comment: <br />
           <select
             value={this.state.labelOfModelGroups}
-            onChange={this.handleLabelOfModelGroups}
-            >
-          {MODELCOMMENT.map(function(comment) {
-            return <option key={comment} value={comment}>{comment}</option>
-          })}
+            onChange={this.handleLabelOfModelGroups}>
+            {MODELCOMMENT.map(function(comment) {
+              return <option key={comment} value={comment}>{comment}</option>
+            })}
           </select>
           </div>
         </div>

@@ -111,8 +111,10 @@ def convert(indata):
     return outdata
 
 
-@app.route('/evaluations/search_model_groups/<string:model_comment>',
-    methods=['GET', 'POST'])
+@app.route(
+    '/evaluations/search_model_groups/<string:model_comment>',
+    methods=['GET', 'POST']
+    )
 def get_model_groups(model_comment="sworn officers correct month 1m 6y"):
     f = request.form
     query_arg = {}
@@ -146,7 +148,7 @@ def search_models_over_time():
     print(output)
     try:
         unranked = convert(output.to_dict('index'))
-        #ranked = ranked_models(unranked, 'mse')
+        ranked = ranked_models(unranked, 'mse')
         return jsonify(
             results=ranked,
         )
