@@ -1,4 +1,4 @@
-import { addIndex, assoc, concat, map, mergeAll, nth, pick, prop, values, zip } from 'ramda'
+import { addIndex, assoc, concat, map, mergeAll, nth, pick, prop, values, zip, zipObj } from 'ramda'
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -6,6 +6,7 @@ export default React.createClass({
   getInitialState: function() {
     let self = this
     return {
+      idDateLookup: null,
       loading: false,
       config: {
         title: {
@@ -28,8 +29,7 @@ export default React.createClass({
             point: {
               events: {
                 click: function() {
-                  let d = new Date(this.options.x)
-                  self.handleModelClick(this.series.name, d.toISOString().split('T')[0])
+                  self.handleModelClick(this.series.name, this.options.x)
                 }
               }
             }
@@ -94,10 +94,12 @@ export default React.createClass({
   },
   componentWillUnmount: function() {
   },
-  handleModelClick: function(modelId, asOfDate) {
+  handleModelClick: function(modelGroupId, asOfDate) {
     const self = this
-    self.props.setModelId(modelId.split(" ")[1])
-    self.props.setAsOfDate(asOfDate)
+    const groupId = modelGroupId.split(" ")[2]
+    let d = new Date(asOfDate)
+    self.props.setModelId(this.state.idDateLookup[groupId][asOfDate])
+    self.props.setAsOfDate(d.toISOString().split('T')[0])
   },
   ajax_call: function() {
     let self = this
@@ -131,8 +133,12 @@ export default React.createClass({
         let get_seriesname = (x) => { return map(getGroupId, x) }
         const series_name = get_seriesname(modelsToBeShow)
 
-        let getId = (x) => { return prop('model_id', x) }
-        let get_points = (x) => { return map(getId, x.series)}
+
+        let getId = (x) => { return nth(2, x) }
+        let getDate = (x) => { return nth(0, x) }
+        let make_dict = (x) => { return zipObj(map(getDate, x), map(getId, x)) }
+        const idDateLookup = zipObj(series_name, map(make_dict, series_data))
+
 
         let make_seriesconfig = (x) => {
           return assoc('data',
@@ -146,7 +152,8 @@ export default React.createClass({
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
         self.setState({
           config: newConfig,
-          loading: false
+          loading: false,
+          idDateLookup: idDateLookup
         })
       }
     })
