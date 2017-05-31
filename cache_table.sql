@@ -1,7 +1,4 @@
-drop view results.ranked_table_view;
-
-create or replace view
-  results.ranked_table_view
+create materialized view results.ranked_table
   as
     SELECT
       r_table.model_group_id,
@@ -27,8 +24,3 @@ create or replace view
     GROUP BY r_table.model_group_id, r_table.metric_parameter, r_table.model_comment
     ORDER BY avg DESC;
 
-drop table if exists results.ranked_table CASCADE;
-create table
-  results.ranked_table
-  as
-  select * from results.ranked_table_view;
