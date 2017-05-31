@@ -129,10 +129,8 @@ def get_model_groups(model_comment="all"):
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
     query_arg['model_comment'] = model_comment
-    #print(query_arg)
     output = query.get_model_groups(query_arg)
     output = output.to_dict('records')
-    #print(output)
     return jsonify(results=(output))
 
 
@@ -142,10 +140,8 @@ def get_model_groups(model_comment="all"):
     )
 def get_model_comments():
     f = request.form
-    print(f)
     output = query.get_model_comments(f['timestamp'])
     output = output['model_comment'].tolist()
-    print(output)
     return jsonify(results=(output))
 
 

@@ -30,7 +30,7 @@ export default React.createClass({
   },
   getModelComment: function() {
     let self = this
-    const params = {timestamp: self.props.startDate.format('YYYY-MM-DD')}
+    const params = { timestamp: self.props.startDate.format('YYYY-MM-DD') }
     $.ajax({
       type: "POST",
       url: "/evaluations/model_comments",
@@ -38,7 +38,7 @@ export default React.createClass({
       success: function(result) {
         const comment_list = result.results
         comment_list.unshift("all")
-        self.setState({labelList: comment_list})
+        self.setState({ labelList: comment_list })
       }
     })
   },
