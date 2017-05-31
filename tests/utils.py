@@ -44,7 +44,7 @@ def setup_data(engine, data):
         metric character varying,
         parameter character varying,
         value numeric,
-        as_of_date timestamp
+        evaluation_start_time timestamp
     )""")
     for row in data.get('evaluations', []):
         engine.execute(
@@ -58,7 +58,7 @@ def setup_data(engine, data):
         entity_id bigint,
         score numeric,
         label_value int,
-        as_of_date timestamp
+        evaluation_start_time timestamp
     )""")
 
     for row in data.get('predictions', []):

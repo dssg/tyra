@@ -31,11 +31,11 @@
         <div class="navbar-header">
         <a class="navbar-brand">
           <img class="pull-left" hspace="10px" src="{{ url_for('static', filename='favicon.ico') }}" height="25">
-          Evaluation Dashboard</a>
+          Tyra: Evaluation Dashboard</a>
         </div>
       </div>
     </nav>
-    <div class="container center-container">
+    <div class="container-fluid center-container nopadding">
       <!-- messages -->
       {% for category, message in get_flashed_messages(with_categories=true) %}
         <div class="alert alert-{{ category }} alert-dismissible" role="alert">

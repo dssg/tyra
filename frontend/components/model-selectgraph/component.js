@@ -1,4 +1,4 @@
-import { addIndex, assoc, concat, map, mergeAll, nth, prop, toPairs, values, zip } from 'ramda'
+import { addIndex, assoc, concat, map, mergeAll, nth, pick, prop, values, zip, zipObj } from 'ramda'
 import React from 'react'
 import ReactHighcharts from 'react-highcharts'
 
@@ -6,20 +6,20 @@ export default React.createClass({
   getInitialState: function() {
     let self = this
     return {
+      idDateLookup: null,
       loading: false,
       config: {
         title: {
-          text: 'Model Select',
+          text: 'Top Models',
           style: { "color": "#000000", "fontSize": "30px", "fontFamily": "Open Sans", "fontWeight": "300" }
         },
         chart: {
-          width: 650,
-          height: 500
+          height: 600
         },
         plotOptions: {
           series: {
             cursor: 'pointer',
-            marker: { enabled: false },
+            marker: { enabled: true },
             states: {
               hover: {
                 enabled: true,
@@ -29,8 +29,7 @@ export default React.createClass({
             point: {
               events: {
                 click: function() {
-                  let d = new Date(this.options.x)
-                  self.handleModelIdClick(this.series.name, d.toISOString().split('T')[0])
+                  self.handleModelClick(this.series.name, this.options.x)
                 }
               }
             }
@@ -75,7 +74,8 @@ export default React.createClass({
     const self = this
     if (this.state !== nextState ||
         self.props.searchId !== nextProps.searchId ||
-        self.props.numOfModelToShow !== nextProps.numOfModelToShow) {
+        self.props.numOfModelGroupsToShow !== nextProps.numOfModelGroupsToShow ||
+        self.props.labelOfModelGroups !== nextProps.labelOfModelGroups) {
       return true
     }
     return false
@@ -85,16 +85,21 @@ export default React.createClass({
     if(prevProps.searchId !== self.props.searchId) {
       this.ajax_call()
     }
-    if(prevProps.numOfModelToShow !== self.props.numOfModelToShow) {
+    if(prevProps.numOfModelGroupsToShow !== self.props.numOfModelGroupsToShow) {
+      this.ajax_call()
+    }
+    if(prevProps.labelOfModelGroups !== self.props.labelOfModelGroups) {
       this.ajax_call()
     }
   },
   componentWillUnmount: function() {
   },
-  handleModelIdClick: function(modelId, asOfDate) {
+  handleModelClick: function(modelGroupId, asOfDate) {
     const self = this
-    self.props.setModelId(modelId.split(" ")[1])
-    self.props.setAsOfDate(asOfDate)
+    const groupId = modelGroupId.split(" ")[2]
+    let d = new Date(asOfDate)
+    self.props.setModelId(this.state.idDateLookup[groupId][asOfDate])
+    self.props.setAsOfDate(d.toISOString().split('T')[0])
   },
   ajax_call: function() {
     let self = this
@@ -111,32 +116,44 @@ export default React.createClass({
     const params = mergeAll(concat([{ timestamp: self.props.startDate.format('YYYY-MM-DD') }], metricParams))
     $.ajax({
       type: "POST",
-      url: "/evaluations/search_models_over_time",
+      url: "/evaluations/search_model_groups/" + self.props.labelOfModelGroups,
       data: $.param(params),
       success: function(result) {
-        const minDataPoints = 5
-        function filterByNumOfData(item) {
-          if (Object.keys(values(item)[2]).length >= minDataPoints) {
-            return true
-          }
-          return false
-        }
-        const filteredModels = result.results.filter(filterByNumOfData)
-        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelToShow)
-        let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x)] }
-        let make_timeseries = (x) => { return map(str2Date, toPairs(nth(2, values(x)))) }
+        const filteredModels = result.results
+        const modelsToBeShow = filteredModels.slice(0, self.props.numOfModelGroupsToShow)
+
+        let str2Date = (x) => { return [Date.parse(nth(0, x)), nth(1, x), nth(2, x)] }
+        let model_schema = (x) => { return values(pick(['evaluation_start_time', 'value', 'model_id'], x))}
+        let make_timeseries = (x) => { return map(str2Date, map(model_schema, x.series))}
         const series_data = map(make_timeseries, modelsToBeShow)
+
         const yAxis_title = params['metric0'] + ' @ ' + params['parameter0']
-        let getId = (x) => { return prop('model_id', x) }
-        let get_seriesname = (x) => { return map(getId, x) }
+
+        let getGroupId = (x) => { return prop('model_group_id', x) }
+        let get_seriesname = (x) => { return map(getGroupId, x) }
         const series_name = get_seriesname(modelsToBeShow)
-        let make_seriesconfig = (x) => { return assoc('data', nth(0, x), assoc('name', 'model ' + nth(1, x), { 'type': 'line', 'asOfDate':self.props.asOfDate })) }
+
+
+        let getId = (x) => { return nth(2, x) }
+        let getDate = (x) => { return nth(0, x) }
+        let make_dict = (x) => { return zipObj(map(getDate, x), map(getId, x)) }
+        const idDateLookup = zipObj(series_name, map(make_dict, series_data))
+
+
+        let make_seriesconfig = (x) => {
+          return assoc('data',
+                       nth(0, x),
+                       assoc('name',
+                             'model group ' + nth(1, x),
+                             { 'type': 'line', 'index': nth(2, x), 'asOfDate':self.props.asOfDate }))
+        }
         let newConfig = self.state.config
         newConfig.yAxis.title.text = yAxis_title
         newConfig.series = map(make_seriesconfig, zip(series_data, series_name))
         self.setState({
           config: newConfig,
-          loading: false
+          loading: false,
+          idDateLookup: idDateLookup
         })
       }
     })

@@ -71,7 +71,7 @@ def flatten_metric_query(form):
     return flattened_query
 
 
-@app.route('/evaluations/search_models', methods=['POST'])
+@app.route('/evaluations/search_models', methods=['GET', 'POST'])
 def search_models():
     f = request.form
     query_arg = {}
@@ -90,7 +90,7 @@ def search_models():
         output = output.to_dict('records')
         return jsonify(
             results=(output),
-            as_of_date=test_end_date.date().isoformat()
+            evaluation_start_time=test_end_date.date().isoformat()
         )
     except:
         print('there are some problems')
@@ -101,14 +101,39 @@ def convert(indata):
     outdata = []
     model_lookup = defaultdict(lambda: defaultdict(dict))
     for key, metrics in indata.items():
-        model_id, as_of_date = key
+        model_group_id, train_end_time = key
         for metric, value in metrics.items():
-            model_lookup[model_id][metric][as_of_date] = value
+            model_lookup[model_group_id][metric][train_end_time] = value
     for model_id, metrics in model_lookup.items():
         entry = metrics
-        entry['model_id'] = model_id
+        entry['model_group_id'] = model_group_id
         outdata.append(entry)
     return outdata
+
+
+@app.route(
+    '/evaluations/search_model_groups/<string:model_comment>',
+    methods=['GET', 'POST']
+    )
+def get_model_groups(model_comment="sworn officers correct month 1m 6y"):
+    f = request.form
+    query_arg = {}
+    flattened_query = defaultdict(dict)
+    for key in f.keys():
+        if 'parameter' in key:
+            flattened_query[key.strip('parameter')]['parameter'] = \
+                dbify_metric_param(f[key])
+        elif 'metric' in key:
+            if f[key] in METRIC_WHITELIST:
+                flattened_query[key.strip('metric')]['metric'] = f[key]
+    query_arg['timestamp'] = f['timestamp']
+    query_arg['metrics'] = flattened_query
+    query_arg['model_comment'] = model_comment
+    print(query_arg)
+    output = query.get_model_groups(query_arg)
+    output = output.to_dict('records')
+    print(output)
+    return jsonify(results=(output))
 
 
 @app.route('/evaluations/search_models_over_time', methods=['POST'])
@@ -118,8 +143,9 @@ def search_models_over_time():
         flatten_metric_query(f),
         'run_time > %(ts)s',
         {'ts': f['timestamp']},
-        index=['model_id', 'as_of_date']
+        index=['model_group_id', 'as_of_date']
     )
+    print(output)
     try:
         unranked = convert(output.to_dict('index'))
         ranked = ranked_models(unranked, 'mse')

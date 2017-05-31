@@ -100,22 +100,22 @@ export default React.createClass({
       )
     } else {
       return (
-        <div className="container center-container">
+        <div className="container-fluid center-container">
           <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
-          <div className="col-lg-3">
-            <ModelSearcher
-              metrics={this.state.metrics}
-              startDate={this.state.startDate}
-              handleSearch={this.handleSearch}
-              metricOptions={this.props.metricOptions}
-              setMetrics={this.setMetrics}
-              setStartDate={this.setStartDate} />
+          <div className="col-lg-2 sidenav">
+            <div className="row content">
+              <ModelSearcher
+                metrics={this.state.metrics}
+                startDate={this.state.startDate}
+                handleSearch={this.handleSearch}
+                metricOptions={this.props.metricOptions}
+                setMetrics={this.setMetrics}
+                setStartDate={this.setStartDate} />
+            </div>
           </div>
-          <div className="col-lg-9">
-            <div className="row">
-              <div className="row">
-                { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null }
-              </div>
+          <div className="col-lg-10 nopadding">
+            <div className="container-fluid text-center nopadding">
+              { !isEmpty(this.state.searchId) ? this.renderModelBigGraph() : null }
             </div>
           </div>
         </div>

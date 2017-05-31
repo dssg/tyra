@@ -23,6 +23,7 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - run_time - timestamp
 - model_type - string
 - model_group_id - integer
+- train_end_time - timestamp
 - test - boolean
 
 ### model_groups
@@ -33,7 +34,7 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - metric - string (each value should be one of the Available Metrics below)
 - parameter - string
 - value - numeric
-- as_of_date - timestamp
+- evaluation_start_time - timestamp
 
 ### predictions
 - model_id - integer

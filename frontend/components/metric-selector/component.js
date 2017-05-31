@@ -64,13 +64,13 @@ export default React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className='container-fluid center-container'>
         <select value={this.props.metric.metric} onChange={this.handleMetricChange}>
           {this.availableMetrics().map(function(choice) {
             return <option key={choice} value={choice}>{choice}</option>
           })}
         </select>
-        <span style={{ margin: '0 0.5em 0 0.5em' }}>@</span>
+        <span style={{ margin: '0 0.2em 0 0.2em' }}>@</span>
         { this.state.showParameters ? this.renderParameterPicker() : null }
         &nbsp;
         {/*this.renderXButton()*/}
