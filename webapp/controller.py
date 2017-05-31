@@ -135,6 +135,7 @@ def get_model_groups(model_comment="all"):
     #print(output)
     return jsonify(results=(output))
 
+
 @app.route(
     '/evaluations/model_comments',
     methods=['GET', 'POST']
@@ -146,6 +147,7 @@ def get_model_comments():
     output = output['model_comment'].tolist()
     print(output)
     return jsonify(results=(output))
+
 
 @app.route('/evaluations/search_models_over_time', methods=['POST'])
 def search_models_over_time():

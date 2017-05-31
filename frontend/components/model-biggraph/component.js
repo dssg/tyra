@@ -80,7 +80,11 @@ export default React.createClass({
             <select
               value={this.state.labelOfModelGroups}
               onChange={this.handleLabelOfModelGroups}>
+<<<<<<< HEAD
               {this.state.labelList.map(function(comment) {
+=======
+              {MODELCOMMENT.map(function(comment) {
+>>>>>>> master
                 return <option key={comment} value={comment}>{comment}</option>
               })}
             </select>
