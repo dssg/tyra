@@ -117,7 +117,7 @@ In the `frontend` directory, install the package you want with `npm install --sa
 
 ### Screenshots
 
-![alt text](https://github.com/dssg/tyra/screenshots/login.png)
-![alt text](https://github.com/dssg/tyra/screenshots/dashboard.png)
-![alt text](https://github.com/dssg/tyra/screenshots/dashboard_biggraph.png)
-![alt text](https://github.com/dssg/tyra/screenshots/model_chart.png)
+![alt text](/screenshots/login.png)
+![alt text](/screenshots/dashboard.png)
+![alt text](/screenshots/dashboard_biggraph.png)
+![alt text](/screenshots/model_chart.png)
