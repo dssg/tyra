@@ -113,3 +113,11 @@ New components can be added in the `frontend/components` directory. There is a d
 
 ### Installing new modules
 In the `frontend` directory, install the package you want with `npm install --save <pkg-name>`. The --save option will persist this change to package.json.
+
+
+### Screenshots
+
+![alt text](/screenshots/login.png?raw=true)
+![alt text](/screenshots/dashboard.png?raw=true)
+![alt text](/screenshots/dashboard_biggraph.png?raw=true)
+![alt text](/screenshots/model_chart.png?raw=true)

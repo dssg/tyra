@@ -45,6 +45,18 @@ export default React.createClass({
   componentWillMount: function() {
     this.getModelComment()
   },
+  componentDidUpdate: function(prevProps) {
+    const self = this
+    if(prevProps.searchId !== self.props.searchId) {
+      this.getModelComment()
+    }
+    if(prevProps.numOfModelGroupsToShow !== self.props.numOfModelGroupsToShow) {
+      this.getModelComment()
+    }
+    if(prevProps.labelOfModelGroups !== self.props.labelOfModelGroups) {
+      this.getModelComment()
+    }
+  },
   renderSelectGraph: function() {
     return (
       <ModelSelectGraph
