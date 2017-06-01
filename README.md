@@ -113,3 +113,11 @@ New components can be added in the `frontend/components` directory. There is a d
 
 ### Installing new modules
 In the `frontend` directory, install the package you want with `npm install --save <pkg-name>`. The --save option will persist this change to package.json.
+
+
+### Screenshots
+
+![alt text](https://github.com/dssg/tyra/screenshots/login.png)
+![alt text](https://github.com/dssg/tyra/screenshots/dashboard.png)
+![alt text](https://github.com/dssg/tyra/screenshots/dashboard_biggraph.png)
+![alt text](https://github.com/dssg/tyra/screenshots/model_chart.png)
