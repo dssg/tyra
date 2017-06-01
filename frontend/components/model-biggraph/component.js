@@ -3,6 +3,7 @@ import React from 'react'
 
 const NUMLIST = [5, 10, 15, 20]
 const MODELCOMMENT = [
+  'all',
   'with accident as adverse',
   'without accident as adverse',
   'sworn officers correct month feature mix',
@@ -19,13 +20,30 @@ const MODELCOMMENT = [
 
 export default React.createClass({
   getInitialState: function() {
-    return { numOfModelGroupsToShow: 5, labelOfModelGroups: "sworn officers correct month 1m 3y" }
+    return { numOfModelGroupsToShow: 5, labelOfModelGroups: "all", labelList: [] }
   },
   handleNumOfModelGroupsToShow: function(event) {
     this.setState({ numOfModelGroupsToShow: event.target.value })
   },
   handleLabelOfModelGroups: function(event) {
     this.setState({ labelOfModelGroups: event.target.value })
+  },
+  getModelComment: function() {
+    let self = this
+    const params = { timestamp: self.props.startDate.format('YYYY-MM-DD') }
+    $.ajax({
+      type: "POST",
+      url: "/evaluations/model_comments",
+      data: $.param(params),
+      success: function(result) {
+        const comment_list = result.results
+        comment_list.unshift("all")
+        self.setState({ labelList: comment_list })
+      }
+    })
+  },
+  componentWillMount: function() {
+    this.getModelComment()
   },
   renderSelectGraph: function() {
     return (
@@ -62,7 +80,7 @@ export default React.createClass({
             <select
               value={this.state.labelOfModelGroups}
               onChange={this.handleLabelOfModelGroups}>
-              {MODELCOMMENT.map(function(comment) {
+              {this.state.labelList.map(function(comment) {
                 return <option key={comment} value={comment}>{comment}</option>
               })}
             </select>

@@ -69,29 +69,55 @@ def get_model_groups(query_arg):
                 'metric': query_dict['metric']+'@'},
         con=db.engine)
 
-    query = """
-    SELECT
-    model_group_id,
-    json_agg((select row_to_json(_)
-            from (select m.model_id,
-                         m.run_time::date,
-                         m.model_comment,
-                         e.value,
-                         e.evaluation_start_time::date)
-                         as _)
-            ORDER BY e.evaluation_start_time
-          ) as series
-    FROM results.models as m
-    JOIN results.evaluations e using(model_id)
-    WHERE evaluation_start_time = train_end_time::timestamp
-    AND parameter = %(parameter)s
-    AND metric = %(metric)s
-    AND run_time >= %(runtime)s
-    AND model_group_id in {0}
-    AND model_comment = '{1}'
-    GROUP BY model_group_id
-    """.format(tuple(ranked_result['model_group_id'].tolist()),
-               query_arg['model_comment'])
+    if query_arg['model_comment'] == 'all':
+        print(query_arg['model_comment'])
+        query = """
+        SELECT
+        model_group_id,
+        json_agg((select row_to_json(_)
+                from (select m.model_id,
+                             m.run_time::date,
+                             m.model_comment,
+                             e.value,
+                             e.evaluation_start_time::date)
+                             as _)
+                ORDER BY e.evaluation_start_time
+              ) as series
+        FROM results.models as m
+        JOIN results.evaluations e using(model_id)
+        WHERE evaluation_start_time = train_end_time::timestamp
+        AND parameter = %(parameter)s
+        AND metric = %(metric)s
+        AND run_time >= %(runtime)s
+        AND model_group_id in {0}
+        GROUP BY model_group_id
+        """.format(tuple(ranked_result['model_group_id'].tolist()))
+
+    else:
+        query = """
+        SELECT
+        model_group_id,
+        json_agg((select row_to_json(_)
+                from (select m.model_id,
+                             m.run_time::date,
+                             m.model_comment,
+                             e.value,
+                             e.evaluation_start_time::date)
+                             as _)
+                ORDER BY e.evaluation_start_time
+              ) as series
+        FROM results.models as m
+        JOIN results.evaluations e using(model_id)
+        WHERE evaluation_start_time = train_end_time::timestamp
+        AND parameter = %(parameter)s
+        AND metric = %(metric)s
+        AND run_time >= %(runtime)s
+        AND model_group_id in {0}
+        AND model_comment = '{1}'
+        GROUP BY model_group_id
+        """.format(tuple(ranked_result['model_group_id'].tolist()),
+                   query_arg['model_comment'])
+
     df_models = pd.read_sql(query,
                             params={'parameter': query_dict['parameter'],
                                     'metric': query_dict['metric']+'@',
