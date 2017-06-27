@@ -266,46 +266,71 @@ def get_recall(query_arg):
     return output
 
 
-def get_metrics_over_time(metrics, filter_string, filter_values, index):
-    metric_string = ' union '.join([
-        """
-        select
-            '{metric}@'::varchar metric,
-            '{parameter}'::varchar parameter
-        """.format(**args)
-        for num, args in metrics.items()
-    ])
+def get_metrics_over_time(query_arg):
+    for num, args in query_arg['metrics'].items():
+        print(num, args)
 
+    query_dict = list(query_arg['metrics'].items())[0][1]
+    print('TESTTT: ', query_dict)
     query = """
-    select
-    model_group_id,
-    evaluation_start_time::date::text as as_of_date,
-    new_metric,
-    max(value) as value
-    from (
-        select mg.model_group_id,
-           evaluation_start_time,
-           metric || parameter as new_metric,
-           value
-        from
-        ({metric_string}) input_metrics
-        join results.evaluations e using(metric, parameter)
-        join results.models m using (model_id)
-        join results.model_groups mg using (model_group_id)
-        where {filter_string}
-        and evaluation_start_time = m.train_end_time::timestamp
-        and evaluation_start_time < %(evaluation_cutoff)s
-    ) ungrouped
-    group by model_group_id, evaluation_start_time, new_metric
-    """.format(metric_string=metric_string, filter_string=filter_string)
+    SELECT
+    evaluation_start_time::date::text AS as_of_date,
+    value
+    FROM results.evaluations
+    where model_id = %(model_id)s
+    AND parameter = %(parameter)s
+    AND metric = %(metric)s
+    """
+    df = pd.read_sql(
+        query,
+        params={
+            'model_id': query_arg['model_id'],
+            'parameter': query_dict['parameter'],
+            'metric': query_dict['metric']+'@'
+        },
+        con=db.engine)
+    return df
 
-    params = filter_values.copy()
-    params['evaluation_cutoff'] = evaluation_cutoff_date()
-    df_metrics_overtime = pd.read_sql(query, params=params, con=db.engine)
+# def get_metrics_over_time(metrics, filter_string, filter_values, index):
+#     metric_string = ' union '.join([
+#         """
+#         select
+#             '{metric}@'::varchar metric,
+#             '{parameter}'::varchar parameter
+#         """.format(**args)
+#         for num, args in metrics.items()
+#     ])
 
-    output = df_metrics_overtime.pivot_table(
-        index=index,
-        columns='new_metric',
-        values='value'
-    )
-    return output
+#     query = """
+#     select
+#     model_group_id,
+#     evaluation_start_time::date::text as as_of_date,
+#     new_metric,
+#     max(value) as value
+#     from (
+#         select mg.model_group_id,
+#            evaluation_start_time,
+#            metric || parameter as new_metric,
+#            value
+#         from
+#         ({metric_string}) input_metrics
+#         join results.evaluations e using(metric, parameter)
+#         join results.models m using (model_id)
+#         join results.model_groups mg using (model_group_id)
+#         where {filter_string}
+#         and evaluation_start_time = m.train_end_time::timestamp
+#         and evaluation_start_time < %(evaluation_cutoff)s
+#     ) ungrouped
+#     group by model_group_id, evaluation_start_time, new_metric
+#     """.format(metric_string=metric_string, filter_string=filter_string)
+
+#     params = filter_values.copy()
+#     params['evaluation_cutoff'] = evaluation_cutoff_date()
+#     df_metrics_overtime = pd.read_sql(query, params=params, con=db.engine)
+
+#     output = df_metrics_overtime.pivot_table(
+#         index=index,
+#         columns='new_metric',
+#         values='value'
+#     )
+#     return output
