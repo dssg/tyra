@@ -2,7 +2,6 @@ from flask import render_template, request, jsonify, redirect, url_for, flash
 import flask_login
 from webapp import app
 from webapp import query
-from webapp.model_ranking import ranked_models
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
@@ -143,27 +142,6 @@ def get_model_comments():
     output = query.get_model_comments(f['timestamp'])
     output = output['model_comment'].tolist()
     return jsonify(results=(output))
-
-
-@app.route('/evaluations/search_models_over_time', methods=['POST'])
-def search_models_over_time():
-    f = request.form
-    output = query.get_metrics_over_time(
-        flatten_metric_query(f),
-        'run_time > %(ts)s',
-        {'ts': f['timestamp']},
-        index=['model_group_id', 'as_of_date']
-    )
-    print(output)
-    try:
-        unranked = convert(output.to_dict('index'))
-        ranked = ranked_models(unranked, 'mse')
-        return jsonify(
-            results=ranked,
-        )
-    except Exception as e:
-        print(e)
-        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
 @app.route(
