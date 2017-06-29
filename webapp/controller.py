@@ -124,7 +124,8 @@ def get_model_comments():
     methods=['GET', 'POST']
 )
 def get_model_result(model_id, evaluation_start_time):
-    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
+    query_arg = {'model_id': model_id,
+                 'evaluation_start_time': evaluation_start_time}
     output = query.get_model_prediction(query_arg)
     try:
         output = output.to_dict('records')
@@ -216,7 +217,7 @@ def get_roc(model_id, as_of_date):
 )
 def get_metric_over_time(model_id):
     f = request.form
-    query_arg ={}
+    query_arg = {}
     flattened_query = defaultdict(dict)
 
     for key in f.keys():
@@ -232,15 +233,16 @@ def get_metric_over_time(model_id):
     df = query.get_metrics_over_time(query_arg)
     if len(flattened_query.keys()) == 1:
         metric_params = flattened_query[list(flattened_query.keys())[0]]
-        key_in_data = metric_params['metric'] + '@' + metric_params['parameter']
+        data_key = metric_params['metric'] + '@' + metric_params['parameter']
     else:
         print('There are more than 1 metric-parameter pairs!')
-    print(key_in_data)
     data = sorted([
         {
-            'key': key_in_data,
-            'values': sorted(list(zip(df['evaluation_start_time'], df['value'])))
-        }])
+            'key': data_key,
+            'values': sorted(list(zip(df['evaluation_start_time'],
+                                      df['value'])))
+        }
+        ])
     try:
         return jsonify(results=data)
     except Exception as e:

@@ -74,6 +74,7 @@ data = {
     'evaluations': evaluations_data
 }
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_search_models():
     with rig_test_client(data) as test_app:

@@ -53,6 +53,7 @@ data = {
     'evaluations': evaluations_data
 }
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_convert():
     indata = {(1, date(2014, 4, 1)): {'recall@5.0_pct': 40.0}, (3, date(2015, 4, 1)): {'recall@5.0_pct': 45.0}, (3, date(2013, 4, 1)): {'recall@5.0_pct': 46.0}, (1, date(2012, 4, 1)): {'recall@5.0_pct': 46.0}, (3, date(2014, 4, 1)): {'recall@5.0_pct': 41.0}, (1, date(2015, 4, 1)): {'recall@5.0_pct': 44.0}, (3, date(2012, 4, 1)): {'recall@5.0_pct': 47.0}, (1, date(2013, 4, 1)): {'recall@5.0_pct': 45.0}}

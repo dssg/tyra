@@ -197,7 +197,6 @@ def get_metrics_over_time(query_arg):
         print(num, args)
 
     query_dict = list(query_arg['metrics'].items())[0][1]
-    print('TESTTT: ', query_dict)
     query = """
     SELECT
     evaluation_start_time::date::text,

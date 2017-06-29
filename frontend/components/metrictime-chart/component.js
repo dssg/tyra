@@ -25,13 +25,11 @@ export default React.createClass({
       values(self.props.metrics)
     )
     const params = mergeAll(metricParams)
-    console.log(params)
     $.ajax({
       type: "POST",
       url: "/evaluations/" + this.props.modelId + "/metric_overtime",
       data: $.param(params),
       success: function(result) {
-        console.log(result.results)
         self.setState({
           data: result.results,
           loading: false
@@ -62,7 +60,6 @@ export default React.createClass({
               x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
               y: function(d) { return d[1] },
               options:{
-                margin: {right: 100},
                 showDistX: true,
                 showDistY: true,
                 duration: 500,
