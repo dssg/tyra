@@ -154,12 +154,12 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/threshold_precision_recall/<as_of_date>',
+    '/evaluations/<int:model_id>/threshold_precision_recall/<evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_threshold_precision_recall(model_id, as_of_date):
-    as_of_date = datetime.datetime.strptime(as_of_date, "%Y-%m-%d").date()
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_threshold_precision_recall(model_id, evaluation_start_time):
+    as_of_date = datetime.datetime.strptime(evaluation_start_time, "%Y-%m-%d").date()
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     precision = query.get_precision(query_arg)
     recall = query.get_recall(query_arg)
     try:
