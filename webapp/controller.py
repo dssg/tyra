@@ -195,11 +195,11 @@ def get_simple_precision_recall(model_id, as_of_date):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/roc/<as_of_date>',
+    '/evaluations/<int:model_id>/roc/<string:evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_roc(model_id, as_of_date):
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_roc(model_id, evaluation_start_time):
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     pred = query.get_model_prediction(query_arg)
     fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
     output = [{'key': 'roc', 'values': list(zip(fpr, tpr))},
