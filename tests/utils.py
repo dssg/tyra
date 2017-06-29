@@ -67,6 +67,19 @@ def setup_data(engine, data):
             row
         )
 
+    engine.execute("""
+        create table results.feature_importances (
+            model_id int,
+            feature character varying,
+            feature_importance numeric
+        )""")
+
+    for row in data.get('feature_importances', []):
+        engine.execute(
+            'insert into results.feature_importances values (%s, %s, %s)',
+            row
+        )
+
 
 @contextlib.contextmanager
 def rig_test_client(data):
