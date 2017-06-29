@@ -41,17 +41,14 @@ data = {
 }
 
 
-@patch.dict('os.environ', {'EVALUATION_CUTOFF': '2015-09-01'})
 def test_metric_overtime():
     with rig_test_client(data) as test_app:
         route = '/evaluations/1/metric_overtime'
         response = test_app.post(
             route,
             data=dict(
-                metric1='recall',
-                parameter1='top 5.0%',
-                metric2='precision',
-                parameter2='top 100'
+                metric1='precision',
+                parameter1='top 100',
             )
         )
         assert response.status_code == 200

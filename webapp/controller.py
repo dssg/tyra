@@ -103,9 +103,10 @@ def convert(indata):
         model_group_id, train_end_time = key
         for metric, value in metrics.items():
             model_lookup[model_group_id][metric][train_end_time] = value
+
     for model_id, metrics in model_lookup.items():
         entry = metrics
-        entry['model_group_id'] = model_group_id
+        entry['model_id'] = model_id
         outdata.append(entry)
     return outdata
 
@@ -143,26 +144,26 @@ def get_model_comments():
     output = output['model_comment'].tolist()
     return jsonify(results=(output))
 
-
-@app.route('/evaluations/search_models_over_time', methods=['POST'])
-def search_models_over_time():
-    f = request.form
-    output = query.get_metrics_over_time(
-        flatten_metric_query(f),
-        'run_time > %(ts)s',
-        {'ts': f['timestamp']},
-        index=['model_group_id', 'as_of_date']
-    )
-    print(output)
-    try:
-        unranked = convert(output.to_dict('index'))
-        ranked = ranked_models(unranked, 'mse')
-        return jsonify(
-            results=ranked,
-        )
-    except Exception as e:
-        print(e)
-        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+# Need to be deleted
+# @app.route('/evaluations/search_models_over_time', methods=['POST'])
+# def search_models_over_time():
+#     f = request.form
+#     output = query.get_metrics_over_time(
+#         flatten_metric_query(f),
+#         'run_time > %(ts)s',
+#         {'ts': f['timestamp']},
+#         index=['model_group_id', 'as_of_date']
+#     )
+#     print(output)
+#     try:
+#         unranked = convert(output.to_dict('index'))
+#         ranked = ranked_models(unranked, 'mse')
+#         return jsonify(
+#             results=ranked,
+#         )
+#     except Exception as e:
+#         print(e)
+#         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
 @app.route(
@@ -276,13 +277,17 @@ def get_metric_over_time(model_id):
     query_arg['metrics'] = flattened_query
     query_arg['model_id'] = model_id
     df = query.get_metrics_over_time(query_arg)
-    print(query_arg)
+    if len(flattened_query.keys()) == 1:
+        metric_params = flattened_query[list(flattened_query.keys())[0]]
+        key_in_data = metric_params['metric'] + '@' + metric_params['parameter']
+    else:
+        print('There are more than 1 metric-parameter pairs!')
+    print(key_in_data)
     data = sorted([
         {
-            'key': 'precision@top 100',
-            'values': sorted(list(zip(df['as_of_date'], df['value'])))
+            'key': key_in_data,
+            'values': sorted(list(zip(df['evaluation_start_time'], df['value'])))
         }])
-    print(data)
     try:
         return jsonify(results=data)
     except Exception as e:

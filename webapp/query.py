@@ -274,7 +274,7 @@ def get_metrics_over_time(query_arg):
     print('TESTTT: ', query_dict)
     query = """
     SELECT
-    evaluation_start_time::date::text AS as_of_date,
+    evaluation_start_time::date::text,
     value
     FROM results.evaluations
     where model_id = %(model_id)s
