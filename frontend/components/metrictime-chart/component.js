@@ -54,6 +54,8 @@ export default React.createClass({
             React.createElement(NVD3Chart, {
               type:"lineChart",
               datum: this.state.data,
+              width: "700px",
+              height: "500px",
               containerStyle:{ width: "700px", height: "500px" },
               x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
               y: function(d) { return d[1] },
@@ -66,6 +68,7 @@ export default React.createClass({
                   axisLabel: 'Test Date',
                   tickFormat: function(d) { return d3.time.format("%Y-%m-%d")(new Date(d)) }
                 },
+                xScale: d3.time.scale(),
                 yAxis: { axisLabel: 'Metric' },
                 yDomain: [0, 1.05],
                 color: d3.scale.category10().range()

@@ -28,14 +28,14 @@ def get_model_prediction(query_arg):
         label_value
     FROM results.predictions
     WHERE model_id = %(model_id)s
-    AND as_of_date = %(as_of_date)s
+    AND evaluation_start_time = %(evaluation_start_time)s
     ORDER BY score DESC
     """
     df_models = pd.read_sql(
         query,
         params={
             'model_id': query_arg['model_id'],
-            'as_of_date': query_arg['as_of_date']
+            'evaluation_start_time': query_arg['evaluation_start_time']
         },
         con=db.engine
     )
@@ -127,80 +127,6 @@ def get_model_groups(query_arg):
     return df_models
 
 
-def get_models(query_arg):
-    metric_string = ' union '.join([
-        """
-        select
-            '{metric}@'::varchar metric,
-            '{parameter}'::varchar parameter
-        """.format(**args)
-        for num, args in query_arg['metrics'].items()
-    ])
-    run_date_lookup_query = """
-    with recent_prod_mg as (
-        select model_group_id
-        from results.models
-        join results.evaluations using (model_id)
-        where run_time >= %(runtime)s
-        and {}
-        order by run_time desc limit 1
-    )
-    select distinct(e.evaluation_start_time)
-    from results.models
-    join recent_prod_mg using (model_group_id)
-    join results.evaluations e using (model_id)
-    where e.evaluation_start_time < %(evaluation_cutoff)s
-    order by e.evaluation_start_time desc limit 1
-    """.format(TEST_CLAUSE)
-    print(run_date_lookup_query)
-    try:
-        results = [row for row in db.engine.execute(
-            run_date_lookup_query,
-            runtime=query_arg['timestamp'],
-            evaluation_cutoff=evaluation_cutoff_date()
-        )]
-        if results:
-            test_end_date = results[-1][0]
-        else:
-            return pd.DataFrame(), datetime.now()
-    except Exception as e:
-        logging.warning(e)
-        raise
-    query = """
-    select
-        e.model_id,
-        e.metric || e.parameter as new_metric,
-        value
-    from
-    ({}) input_metrics
-    join results.evaluations e using (metric, parameter)
-    join results.models m using (model_id)
-    where e.evaluation_start_time = %(test_end_date)s
-    and {}
-    and run_time >= %(runtime)s
-    """.format(metric_string, TEST_CLAUSE)
-    print(query)
-    try:
-        df_models = pd.read_sql(
-            query,
-            params={
-                'runtime': query_arg['timestamp'],
-                'test_end_date': test_end_date
-            },
-            con=db.engine
-        )
-    except Exception as e:
-        logging.warning(e)
-        raise
-    output = df_models.pivot(
-        index='model_id',
-        columns='new_metric',
-        values='value'
-    )
-    output.reset_index(level=0, inplace=True)
-    return output, test_end_date
-
-
 def get_feature_importance(query_arg):
     query = """
     select feature as label, feature_importance as value
@@ -266,46 +192,27 @@ def get_recall(query_arg):
     return output
 
 
-def get_metrics_over_time(metrics, filter_string, filter_values, index):
-    metric_string = ' union '.join([
-        """
-        select
-            '{metric}@'::varchar metric,
-            '{parameter}'::varchar parameter
-        """.format(**args)
-        for num, args in metrics.items()
-    ])
+def get_metrics_over_time(query_arg):
+    for num, args in query_arg['metrics'].items():
+        print(num, args)
 
+    query_dict = list(query_arg['metrics'].items())[0][1]
     query = """
-    select
-    model_group_id,
-    evaluation_start_time::date::text as as_of_date,
-    new_metric,
-    max(value) as value
-    from (
-        select mg.model_group_id,
-           evaluation_start_time,
-           metric || parameter as new_metric,
-           value
-        from
-        ({metric_string}) input_metrics
-        join results.evaluations e using(metric, parameter)
-        join results.models m using (model_id)
-        join results.model_groups mg using (model_group_id)
-        where {filter_string}
-        and evaluation_start_time = m.train_end_time::timestamp
-        and evaluation_start_time < %(evaluation_cutoff)s
-    ) ungrouped
-    group by model_group_id, evaluation_start_time, new_metric
-    """.format(metric_string=metric_string, filter_string=filter_string)
+    SELECT
+    evaluation_start_time::date::text,
+    value
+    FROM results.evaluations
+    where model_id = %(model_id)s
+    AND parameter = %(parameter)s
+    AND metric = %(metric)s
+    """
+    df = pd.read_sql(
+        query,
+        params={
+            'model_id': query_arg['model_id'],
+            'parameter': query_dict['parameter'],
+            'metric': query_dict['metric']+'@'
+        },
+        con=db.engine)
+    return df
 
-    params = filter_values.copy()
-    params['evaluation_cutoff'] = evaluation_cutoff_date()
-    df_metrics_overtime = pd.read_sql(query, params=params, con=db.engine)
-
-    output = df_metrics_overtime.pivot_table(
-        index=index,
-        columns='new_metric',
-        values='value'
-    )
-    return output
