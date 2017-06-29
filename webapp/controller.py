@@ -70,32 +70,6 @@ def flatten_metric_query(form):
     return flattened_query
 
 
-@app.route('/evaluations/search_models', methods=['GET', 'POST'])
-def search_models():
-    f = request.form
-    query_arg = {}
-    flattened_query = defaultdict(dict)
-    for key in f.keys():
-        if 'parameter' in key:
-            flattened_query[key.strip('parameter')]['parameter'] = \
-                dbify_metric_param(f[key])
-        elif 'metric' in key:
-            if f[key] in METRIC_WHITELIST:
-                flattened_query[key.strip('metric')]['metric'] = f[key]
-    query_arg['timestamp'] = f['timestamp']
-    query_arg['metrics'] = flattened_query
-    output, test_end_date = query.get_models(query_arg)
-    try:
-        output = output.to_dict('records')
-        return jsonify(
-            results=(output),
-            evaluation_start_time=test_end_date.date().isoformat()
-        )
-    except:
-        print('there are some problems')
-        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
-
-
 def convert(indata):
     outdata = []
     model_lookup = defaultdict(lambda: defaultdict(dict))
@@ -144,34 +118,13 @@ def get_model_comments():
     output = output['model_comment'].tolist()
     return jsonify(results=(output))
 
-# Need to be deleted
-# @app.route('/evaluations/search_models_over_time', methods=['POST'])
-# def search_models_over_time():
-#     f = request.form
-#     output = query.get_metrics_over_time(
-#         flatten_metric_query(f),
-#         'run_time > %(ts)s',
-#         {'ts': f['timestamp']},
-#         index=['model_group_id', 'as_of_date']
-#     )
-#     print(output)
-#     try:
-#         unranked = convert(output.to_dict('index'))
-#         ranked = ranked_models(unranked, 'mse')
-#         return jsonify(
-#             results=ranked,
-#         )
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
-
 
 @app.route(
-    '/evaluations/<int:model_id>/model_result/<as_of_date>',
+    '/evaluations/<int:model_id>/model_result/<string:evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_model_result(model_id, as_of_date):
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_model_result(model_id, evaluation_start_time):
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     output = query.get_model_prediction(query_arg)
     try:
         output = output.to_dict('records')
@@ -294,39 +247,6 @@ def get_metric_over_time(model_id):
         print(e)
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-# @app.route(
-#     '/evaluations/<int:model_id>/metric_overtime',
-#     methods=['GET', 'POST']
-# )
-# def get_metric_over_time(model_id):
-#     f = request.form
-#     metric_query = flatten_metric_query(f)
-#     df = query.get_metrics_over_time(
-#         metric_query,
-#         'model_id = %(model_id)s',
-#         {'model_id': model_id},
-#         'as_of_date'
-#     )
-#     output = df.to_dict()
-#     data = sorted([
-#         {
-#             'key': prettify_metric(key),
-#             'values': sorted([
-#                 (str(dt), value)
-#                 for dt, value in series.items()
-#             ])
-#         }
-#         for key, series in output.items() if key != 'model_id'
-#     ], key=lambda series: series['key'])
-#     data.append({'key': 'model ' + str(model_id),
-#                  'values': [(data[0]['values'][-1][0], 0.0),
-#                             (data[0]['values'][-1][0], int(model_id))]})
-#     print(data)
-#     try:
-#         return jsonify(results=data)
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
 # Login functions
