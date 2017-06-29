@@ -30,26 +30,26 @@ models_data = [
 ]
 
 evaluations_data = [
-    # model_id, metric, parameter, value, as_of_date
+    # model_id, metric, parameter, value, evaluation_start_time
     (1, 'recall@', '5.0_pct', 0.46, FOUR),
     (1, 'recall@', '5.0_pct', 0.45, THREE),
     (1, 'recall@', '5.0_pct', 0.40, TWO),
     (1, 'recall@', '5.0_pct', 0.44, ONE),
     (1, 'recall@', '5.0_pct', 0.30, TOO_NEW),
-    (2, 'recall@', '5.0_pct', 0.55, FOUR),
-    (2, 'recall@', '5.0_pct', 0.56, THREE),
-    (2, 'recall@', '5.0_pct', 0.55, TWO),
-    (2, 'recall@', '5.0_pct', 0.56, ONE),
-    (3, 'recall@', '5.0_pct', 0.47, FOUR),
-    (3, 'recall@', '5.0_pct', 0.46, THREE),
-    (3, 'recall@', '5.0_pct', 0.41, TWO),
-    (3, 'recall@', '5.0_pct', 0.45, ONE),
-    (3, 'recall@', '5.0_pct', 0.31, TOO_NEW),
+    # (2, 'recall@', '5.0_pct', 0.55, FOUR),
+    # (2, 'recall@', '5.0_pct', 0.56, THREE),
+    # (2, 'recall@', '5.0_pct', 0.55, TWO),
+    # (2, 'recall@', '5.0_pct', 0.56, ONE),
+    # (3, 'recall@', '5.0_pct', 0.47, FOUR),
+    # (3, 'recall@', '5.0_pct', 0.46, THREE),
+    # (3, 'recall@', '5.0_pct', 0.41, TWO),
+    # (3, 'recall@', '5.0_pct', 0.45, ONE),
+    # (3, 'recall@', '5.0_pct', 0.31, TOO_NEW),
 ]
 
 data = {
-    'model_groups': model_groups_data,
-    'models': models_data,
+    # 'model_groups': model_groups_data,
+    # 'models': models_data,
     'evaluations': evaluations_data
 }
 
