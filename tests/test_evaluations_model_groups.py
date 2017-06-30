@@ -52,6 +52,7 @@ data = {
     'evaluations': evaluations_data
 }
 
+
 def test_model_groups():
     with rig_test_client(data) as test_app:
         route = '/evaluations/search_model_groups/all'

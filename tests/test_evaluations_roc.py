@@ -20,6 +20,7 @@ data = {
     'predictions': predictions_data
 }
 
+
 def test_roc():
     with rig_test_client(data) as test_app:
         url = '/evaluations/1/roc/{}'.format(EVALUATION_START_TIME)
