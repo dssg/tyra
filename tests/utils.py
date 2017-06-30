@@ -58,7 +58,7 @@ def setup_data(engine, data):
         entity_id bigint,
         score numeric,
         label_value int,
-        evaluation_start_time timestamp
+        as_of_date timestamp
     )""")
 
     for row in data.get('predictions', []):
