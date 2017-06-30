@@ -30,11 +30,13 @@ def setup_data(engine, data):
         run_time timestamp,
         model_type varchar,
         model_group_id int,
-        test bool
+        test bool,
+        model_comment character varying,
+        train_end_time timestamp
     )""")
     for model in data.get('models', []):
         engine.execute(
-            'insert into results.models values (%s, %s, %s, %s, %s)',
+            'insert into results.models values (%s, %s, %s, %s, %s, %s, %s)',
             model
         )
 

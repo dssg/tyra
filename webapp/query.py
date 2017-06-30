@@ -68,9 +68,7 @@ def get_model_groups(query_arg):
         params={'parameter': query_dict['parameter'],
                 'metric': query_dict['metric']+'@'},
         con=db.engine)
-
     if query_arg['model_comment'] == 'all':
-        print(query_arg['model_comment'])
         query = """
         SELECT
         model_group_id,
@@ -123,7 +121,6 @@ def get_model_groups(query_arg):
                                     'metric': query_dict['metric']+'@',
                                     'runtime': query_arg['timestamp']},
                             con=db.engine)
-
     return df_models
 
 

@@ -1,0 +1,51 @@
+{
+  "results": [
+    {
+      "model_group_id": 5678,
+      "series": [
+        {
+          "evaluation_start_time": "2015-05-01",
+          "model_comment": "two feature block",
+          "model_id": 1,
+          "run_time": "2017-05-10",
+          "value": 0.4122
+        },
+        {
+          "evaluation_start_time": "2015-06-01",
+          "model_comment": "two feature block",
+          "model_id": 2,
+          "run_time": "2017-05-10",
+          "value": 0.3722
+        },
+        {
+          "evaluation_start_time": "2015-07-01",
+          "model_comment": "two feature block",
+          "model_id": 3,
+          "run_time": "2017-05-10",
+          "value": 0.4222
+        },
+        {
+          "evaluation_start_time": "2015-08-01",
+          "model_comment": "two feature block",
+          "model_id": 4,
+          "run_time": "2017-05-10",
+          "value": 0.3622
+        },
+        {
+          "evaluation_start_time": "2015-09-01",
+          "model_comment": "two feature block",
+          "model_id": 5,
+          "run_time": "2017-05-10",
+          "value": 0.4222
+        },
+        {
+          "evaluation_start_time": "2015-10-01",
+          "model_comment": "two feature block",
+          "model_id": 6,
+          "run_time": "2017-05-10",
+          "value": 0.3522
+        }
+      ]
+    }
+  ]
+}

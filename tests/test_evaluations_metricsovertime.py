@@ -17,8 +17,8 @@ model_groups_data = [
 ]
 
 models_data = [
-    # model_id, run_time, model_type, model_group_id, testing
-    (1, EARLIER, 'a_model_type', 1, False),
+    # model_id, run_time, model_type, model_group_id, testing, model_comment, train_end_time
+    (1, EARLIER, 'a_model_type', 1, False, 'two feature block', '2015-04-01'),
 
 ]
 
