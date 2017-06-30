@@ -71,15 +71,31 @@ def setup_data(engine, data):
         create table results.feature_importances (
             model_id int,
             feature character varying,
-            feature_importance numeric
+            feature_importance numeric,
+            rank_abs int,
+            rank_pct numeric
         )""")
 
     for row in data.get('feature_importances', []):
         engine.execute(
-            'insert into results.feature_importances values (%s, %s, %s)',
+            'insert into results.feature_importances values (%s, %s, %s, %s, %s)',
             row
         )
 
+    engine.execute("""
+        create table results.ranked_table (
+            model_group_id int,
+            metric_parameter character varying,
+            avg numeric,
+            run_time timestamp,
+            model_comment character varying
+        )""")
+
+    for row in data.get('ranked_table', []):
+        engine.execute(
+            'insert into results.ranked_table values (%s, %s, %s, %s, %s)',
+            row
+        )
 
 @contextlib.contextmanager
 def rig_test_client(data):
