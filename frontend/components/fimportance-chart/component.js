@@ -1,8 +1,6 @@
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
-import {VictoryChart, VictoryBar, VictoryGroup, VictoryTheme} from 'victory'
-
 
 export default React.createClass({
   getInitialState: function() {
@@ -66,7 +64,7 @@ export default React.createClass({
                   tickformat: function() {return d3.format('.3f')}
                 },
                 yAxis: {
-                  tickformat: function() {return de.format('.3f')}
+                  tickformat: function() {return d3.format('.3f')}
                 }
               }
             })
