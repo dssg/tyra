@@ -56,15 +56,13 @@ export default React.createClass({
               y: function(d) { return d.value },
               containerStyle: { width: "800px", height: "500px" },
               options:{
+                stacked: true,
                 showValues: true,
                 showControls: true,
                 duration: 500,
                 tooltip: { enabled: true },
-                xAxis: {
-                  tickformat: function() {return d3.format('.3f')}
-                },
                 yAxis: {
-                  tickformat: function() {return d3.format('.3f')}
+                  tickFormat: d3.format('.4f')
                 }
               }
             })

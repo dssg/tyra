@@ -7,11 +7,9 @@ import React from 'react'
 export default React.createClass({
   render: function() {
     return (
-    <div className='container-fluid'>
       <ModelDashboard
         metricOptions={this.props.parameters}
         chartsClass={ModelCharts} />
-    </div>
     )
   }
 })

@@ -92,13 +92,9 @@
 	  displayName: 'component',
 
 	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'container-fluid' },
-	      _react2.default.createElement(_component2.default, {
-	        metricOptions: this.props.parameters,
-	        chartsClass: _component4.default })
-	    );
+	    return _react2.default.createElement(_component2.default, {
+	      metricOptions: this.props.parameters,
+	      chartsClass: _component4.default });
 	  }
 	}); //import LogIn from 'components/login/component'
 
@@ -63460,19 +63456,13 @@
 	          },
 	          containerStyle: { width: "800px", height: "500px" },
 	          options: {
+	            stacked: true,
 	            showValues: true,
 	            showControls: true,
 	            duration: 500,
 	            tooltip: { enabled: true },
-	            xAxis: {
-	              tickformat: function tickformat() {
-	                return _d2.default.format('.3f');
-	              }
-	            },
 	            yAxis: {
-	              tickformat: function tickformat() {
-	                return _d2.default.format('.3f');
-	              }
+	              tickFormat: _d2.default.format('.4f')
 	            }
 	          }
 	        })
