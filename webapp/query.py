@@ -28,7 +28,7 @@ def get_model_prediction(query_arg):
         label_value
     FROM results.predictions
     WHERE model_id = %(model_id)s
-    AND evaluation_start_time = %(evaluation_start_time)s
+    AND as_of_date = %(evaluation_start_time)s
     ORDER BY score DESC
     """
     df_models = pd.read_sql(
@@ -68,9 +68,7 @@ def get_model_groups(query_arg):
         params={'parameter': query_dict['parameter'],
                 'metric': query_dict['metric']+'@'},
         con=db.engine)
-
     if query_arg['model_comment'] == 'all':
-        print(query_arg['model_comment'])
         query = """
         SELECT
         model_group_id,
@@ -123,7 +121,6 @@ def get_model_groups(query_arg):
                                     'metric': query_dict['metric']+'@',
                                     'runtime': query_arg['timestamp']},
                             con=db.engine)
-
     return df_models
 
 
@@ -150,7 +147,7 @@ def get_precision(query_arg):
     from results.evaluations
     where metric= 'precision@'
     and model_id = %(model_id)s
-    and evaluation_start_time = %(as_of_date)s
+    and evaluation_start_time = %(evaluation_start_time)s
     and parameter like '%%_pct'
     order by parameter;
     """
@@ -158,12 +155,10 @@ def get_precision(query_arg):
         query,
         params={
             'model_id': query_arg['model_id'],
-            'as_of_date': query_arg['as_of_date'],
+            'evaluation_start_time': query_arg['evaluation_start_time'],
         },
         con=db.engine
         )
-    print('precision')
-    print(df_precision)
     output = df_precision
     return output
 
@@ -174,7 +169,7 @@ def get_recall(query_arg):
     from results.evaluations
     where metric= 'recall@'
     and model_id = %(model_id)s
-    and evaluation_start_time = %(as_of_date)s
+    and evaluation_start_time = %(evaluation_start_time)s
     and parameter like '%%_pct'
     order by parameter;
     """
@@ -182,7 +177,7 @@ def get_recall(query_arg):
         query,
         params={
             'model_id': query_arg['model_id'],
-            'as_of_date': query_arg['as_of_date'],
+            'evaluation_start_time': query_arg['evaluation_start_time'],
         },
         con=db.engine
     )

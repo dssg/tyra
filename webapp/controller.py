@@ -154,12 +154,12 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/threshold_precision_recall/<as_of_date>',
+    '/evaluations/<int:model_id>/threshold_precision_recall/<evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_threshold_precision_recall(model_id, as_of_date):
-    as_of_date = datetime.datetime.strptime(as_of_date, "%Y-%m-%d").date()
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_threshold_precision_recall(model_id, evaluation_start_time):
+    evaluation_start_time = datetime.datetime.strptime(evaluation_start_time, "%Y-%m-%d").date()
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     precision = query.get_precision(query_arg)
     recall = query.get_recall(query_arg)
     try:
@@ -177,11 +177,11 @@ def get_threshold_precision_recall(model_id, as_of_date):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/simple_precision_recall/<as_of_date>',
+    '/evaluations/<int:model_id>/simple_precision_recall/<string:evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_simple_precision_recall(model_id, as_of_date):
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_simple_precision_recall(model_id, evaluation_start_time):
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     pred = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
@@ -195,11 +195,11 @@ def get_simple_precision_recall(model_id, as_of_date):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/roc/<as_of_date>',
+    '/evaluations/<int:model_id>/roc/<string:evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_roc(model_id, as_of_date):
-    query_arg = {'model_id': model_id, 'as_of_date': as_of_date}
+def get_roc(model_id, evaluation_start_time):
+    query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     pred = query.get_model_prediction(query_arg)
     fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
     output = [{'key': 'roc', 'values': list(zip(fpr, tpr))},

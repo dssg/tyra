@@ -1,0 +1,50 @@
+{
+  "results": [
+    {
+      "color": "#d67777",
+      "key": "Model1",
+      "values": [
+        {
+          "label": "dispatch_id_1w_dispatchtype_traffic_sum",
+          "value": 0.011405498
+        },
+        {
+          "label": "dispatch_id_1y_dispatchtype_other_sum",
+          "value": 0.011025116
+        },
+        {
+          "label": "ir_id_1y_suspensionsoftype_active_sum",
+          "value": 0.010820865
+        },
+        {
+          "label": "dispatch_id_1w_dispatchtype_other_sum",
+          "value": 0.009838615
+        },
+        {
+          "label": "ts_id_1y_trafficstopsbystopresult_arrest_sum",
+          "value": 0.009159316
+        },
+        {
+          "label": "dispatch_id_5y_dispatchtype_domestic_disturb_sum",
+          "value": 0.009125374
+        },
+        {
+          "label": "dispatch_id_1y_dispatchtype_intoxicated_sum",
+          "value": 0.008902633
+        },
+        {
+          "label": "dispatch_id_1y_dispatchtype_disorder_sum",
+          "value": 0.008782622
+        },
+        {
+          "label": "ir_id_1y_interventionsoftype_suspension_sum",
+          "value": 0.008699743
+        },
+        {
+          "label": "dispatch_id_1w_dispatchinitiatiationtype_ci_sum",
+          "value": 0.008677285
+        }
+      ]
+    }
+  ]
+}

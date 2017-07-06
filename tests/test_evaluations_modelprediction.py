@@ -5,10 +5,10 @@ EVALUATION_START_TIME = '2015-01-01'
 
 predictions_data = [
     # model_id, entity_id, unit_score, label_value, evaluation_start_time
-    (1, 1234, 5.0, 1, EVALUATION_START_TIME),
-    (1, 2345, 5.0, 2, EVALUATION_START_TIME),
-    (1, 3456, 7.0, 3, EVALUATION_START_TIME),
-    (1, 4567, 8.0, 4, EVALUATION_START_TIME),
+    (1, 1234, 0.5, 1, EVALUATION_START_TIME),
+    (1, 2345, 0.5, 2, EVALUATION_START_TIME),
+    (1, 3456, 0.7, 3, EVALUATION_START_TIME),
+    (1, 4567, 0.8, 4, EVALUATION_START_TIME),
 ]
 
 data = {

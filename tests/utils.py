@@ -30,11 +30,13 @@ def setup_data(engine, data):
         run_time timestamp,
         model_type varchar,
         model_group_id int,
-        test bool
+        test bool,
+        model_comment character varying,
+        train_end_time timestamp
     )""")
     for model in data.get('models', []):
         engine.execute(
-            'insert into results.models values (%s, %s, %s, %s, %s)',
+            'insert into results.models values (%s, %s, %s, %s, %s, %s, %s)',
             model
         )
 
@@ -58,7 +60,7 @@ def setup_data(engine, data):
         entity_id bigint,
         score numeric,
         label_value int,
-        evaluation_start_time timestamp
+        as_of_date timestamp
     )""")
 
     for row in data.get('predictions', []):
@@ -67,6 +69,35 @@ def setup_data(engine, data):
             row
         )
 
+    engine.execute("""
+        create table results.feature_importances (
+            model_id int,
+            feature character varying,
+            feature_importance numeric,
+            rank_abs int,
+            rank_pct numeric
+        )""")
+
+    for row in data.get('feature_importances', []):
+        engine.execute(
+            'insert into results.feature_importances values (%s, %s, %s, %s, %s)',
+            row
+        )
+
+    engine.execute("""
+        create table results.ranked_table (
+            model_group_id int,
+            metric_parameter character varying,
+            avg numeric,
+            run_time timestamp,
+            model_comment character varying
+        )""")
+
+    for row in data.get('ranked_table', []):
+        engine.execute(
+            'insert into results.ranked_table values (%s, %s, %s, %s, %s)',
+            row
+        )
 
 @contextlib.contextmanager
 def rig_test_client(data):
