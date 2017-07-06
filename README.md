@@ -85,11 +85,11 @@ Since Tyra is built to look at different project databases, being able to run mu
 
 `PROFILE=/path/to/second/profile.yaml PORT=5002 python3 run_webapp.py`
 
-## Front-end setup
+## Dev Front-end setup
 
 Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies.
 
-### Initial setup
+### Initial setup (If you don't see output.js in /webapp/static/)
 1. Install NodeJS (https://nodejs.org/en/)
 
 2. `cd frontend`
