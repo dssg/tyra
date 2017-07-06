@@ -49,7 +49,7 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - feature - string
 - feature_importance - numeric
 
-### ranked_table
+### ranked_table ([cache_table.sql](https://github.com/dssg/tyra/blob/readme/cache_table.sql) is an example for creating a ranked table)
 - model_group_id - integer
 - metric_parameter - string
 - avg - numeric
