@@ -1,6 +1,8 @@
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
+import {VictoryChart, VictoryBar, VictoryGroup, VictoryTheme} from 'victory'
+
 
 export default React.createClass({
   getInitialState: function() {
@@ -45,6 +47,36 @@ export default React.createClass({
       )
     } else {
       return (
+      <div>
+        <div style={divStyle}>
+        <VictoryChart
+          theme={VictoryTheme.material}
+          domain={{y: [0.5, 5.5]}}
+        >
+            <VictoryGroup horizontal
+              offset={10}
+              colorScale={
+                ["tomato"]
+              }>
+              <VictoryBar
+                data={[
+                  {x: 1, y: 1},
+                  {x: 2, y: 2},
+                  {x: 3, y: 3},
+                  {x: 4, y: 4},
+                  {x: 5, y: 4}
+                ]} />
+          </VictoryGroup>
+        </VictoryChart>
+        </div>
+      </div>
+      )
+    }
+  }
+})
+
+var divStyle = {width: "700px", height: "500px"};
+/*
         <div>
           <h4>Feature Importance</h4>
           <button onClick={this.handleSort}>{this.state.button_value}</button>
@@ -60,16 +92,14 @@ export default React.createClass({
                 showControls: true,
                 duration: 500,
                 tooltip: { enabled: true },
+                xAxis: {
+                  tickformat: function() {return d3.format('.3f')}
+                },
                 yAxis: {
-                  tickformat: function() {return d3.format('.4f')}
+                  tickformat: function() {return de.format('.3f')}
                 }
               }
             })
           }
         </div>
-      )
-    }
-  }
-})
-
-
+*/
