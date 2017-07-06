@@ -63442,58 +63442,46 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'div',
-	          { style: divStyle },
-	          _react2.default.createElement(
-	            _victory.VictoryChart,
-	            {
-	              theme: _victory.VictoryTheme.material,
-	              domain: { y: [0.5, 5.5] }
+	          'h4',
+	          null,
+	          'Feature Importance'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.handleSort },
+	          this.state.button_value
+	        ),
+	        _react2.default.createElement(_reactNvd2.default, {
+	          type: "multiBarHorizontalChart",
+	          datum: this.state.data,
+	          x: function x(d) {
+	            return d.label;
+	          },
+	          y: function y(d) {
+	            return d.value;
+	          },
+	          containerStyle: { width: "800px", height: "500px" },
+	          options: {
+	            showValues: true,
+	            showControls: true,
+	            duration: 500,
+	            tooltip: { enabled: true },
+	            xAxis: {
+	              tickformat: function tickformat() {
+	                return _d2.default.format('.3f');
+	              }
 	            },
-	            _react2.default.createElement(
-	              _victory.VictoryGroup,
-	              { horizontal: true,
-	                offset: 10,
-	                colorScale: ["tomato"] },
-	              _react2.default.createElement(_victory.VictoryBar, {
-	                data: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }, { x: 5, y: 4 }] })
-	            )
-	          )
-	        )
+	            yAxis: {
+	              tickformat: function tickformat() {
+	                return de.format('.3f');
+	              }
+	            }
+	          }
+	        })
 	      );
 	    }
 	  }
 	});
-
-
-	var divStyle = { width: "700px", height: "500px" };
-	/*
-	        <div>
-	          <h4>Feature Importance</h4>
-	          <button onClick={this.handleSort}>{this.state.button_value}</button>
-	          {
-	            React.createElement(NVD3Chart, {
-	              type:"multiBarHorizontalChart",
-	              datum: this.state.data,
-	              x: function(d) { return d.label },
-	              y: function(d) { return d.value },
-	              containerStyle: { width: "800px", height: "500px" },
-	              options:{
-	                showValues: true,
-	                showControls: true,
-	                duration: 500,
-	                tooltip: { enabled: true },
-	                xAxis: {
-	                  tickformat: function() {return d3.format('.3f')}
-	                },
-	                yAxis: {
-	                  tickformat: function() {return de.format('.3f')}
-	                }
-	              }
-	            })
-	          }
-	        </div>
-	*/
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
