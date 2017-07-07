@@ -28,7 +28,7 @@ export default React.createClass({
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/feature_importance/",
+      url: "/evaluations/" + this.props.modelId + "/feature_importance",
       success: function(result) {
         self.setState({
           data: result.results.map(d => ({x: d.value, y: d.label}))
