@@ -45,12 +45,16 @@ export default React.createClass({
         </TabPanel>
         <TabPanel>
           <ModelInfo modelId={this.props.modelId}></ModelInfo>
-          <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
-            <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
-          </MetricTimeChart>
-          <FeatureImportanceChart modelId={this.props.modelId}>
-            <svg style={{ height: '400px', width: '800px' }}></svg>
-          </FeatureImportanceChart>
+          <div className="col-md-6">
+            <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
+              <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
+            </MetricTimeChart>
+          </div>
+          <div className="col-md-6">
+            <FeatureImportanceChart modelId={this.props.modelId}>
+              <svg style={{ height: '400px', width: '800px' }}></svg>
+            </FeatureImportanceChart>
+          </div>
         </TabPanel>
       </Tabs>
     )
