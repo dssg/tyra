@@ -63424,7 +63424,7 @@
 	    self.setState({ loading: true });
 	    $.ajax({
 	      type: "GET",
-	      url: "/evaluations/" + this.props.modelId + "/feature_importance/",
+	      url: "/evaluations/" + this.props.modelId + "/feature_importance",
 	      success: function success(result) {
 	        self.setState({
 	          data: result.results.map(function (d) {
