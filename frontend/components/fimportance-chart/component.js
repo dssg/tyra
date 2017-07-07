@@ -1,6 +1,10 @@
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
+import {XYPlot, XAxis, YAxis, HorizontalGridLines, Hint, HorizontalBarSeries} from 'react-vis'
+import map from 'ramda'
+
+const NUMLIST = [5, 10, 15, 20]
 
 export default React.createClass({
   getInitialState: function() {
@@ -8,34 +12,38 @@ export default React.createClass({
       data: [],
       loading: false,
       sortflag: true,
-      button_value: 'Sort by Name'
+      button_value: 'Sort by Name',
+      value: null,
+      numOfFeatures: 10,
     }
+  },
+  _rememberValue: function(value) {
+    this.setState({value: value})
+  },
+  _forgetValue: function() {
+    this.setState({value: null})
   },
   componentDidMount: function() {
     const self = this
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/feature_importance",
+      url: "/evaluations/" + this.props.modelId + "/feature_importance/",
       success: function(result) {
         self.setState({
-          data: result.results,
+          data: result.results.map(d => ({x: d.value, y: d.label}))
+                              .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
       }
     })
   },
-  handleSort: function() {
-    const newdata = this.state.data
-    if (!this.state.sortflag) {
-      newdata[0].values.sort(function(x, y) {return d3.descending(x.value, y.value)})
-      this.setState({ data: newdata, sortflag: true, button_value: 'Sort by Name' })
-    } else {
-      newdata[0].values.sort(function(x, y) {return d3.ascending(x.label, y.label)})
-      this.setState({ data: newdata, sortflag: false, button_value: 'Sort by Importance' })
-    }
+  handleChangeNumOfFeatures: function(event) {
+    this.setState({ numOfFeatures: event.target.value })
   },
+
   render: function() {
+    const {value} = this.state;
     if(this.state.loading) {
       return (
         <div>
@@ -47,14 +55,46 @@ export default React.createClass({
       return (
         <div>
           <h4>Feature Importance</h4>
+          <div className="row">
+            <select
+              value={this.state.numOfFeatures}
+              onChange={this.handleChangeNumOfFeatures}>
+              {NUMLIST.map(function(num) {
+                return <option key={num} value={num}>{num}</option>
+              })}
+            </select>
+            &nbsp; curve(s) to show
+          </div>
+          <XYPlot
+            margin={{left: 300}}
+            width={800}
+            height={500}
+            yType="ordinal">
+            <XAxis />
+            <YAxis />
+            <HorizontalGridLines />
+            <HorizontalBarSeries
+              onValueMouseOver={this._rememberValue}
+              onValueMouseOut={this._forgetValue}
+              data={this.state.data} />
+            { value ? <Hint value={value}/> : null }
+          </XYPlot>
+        </div>
+      )
+    }
+  }
+})
+/*
+          <h4>Feature Importance</h4>
           <button onClick={this.handleSort}>{this.state.button_value}</button>
           {
             React.createElement(NVD3Chart, {
               type:"multiBarHorizontalChart",
               datum: this.state.data,
+              height: 500,
+              margin: { left: 500 },
               x: function(d) { return d.label },
               y: function(d) { return d.value },
-              containerStyle: { width: "800px", height: "500px" },
               options:{
                 stacked: true,
                 showValues: true,
@@ -62,13 +102,9 @@ export default React.createClass({
                 duration: 500,
                 tooltip: { enabled: true },
                 yAxis: {
-                  tickformat: function() {return d3.format('.4f')}
+                  tickFormat: d3.format('.4f')
                 }
               }
             })
           }
-        </div>
-      )
-    }
-  }
-})
+*/
