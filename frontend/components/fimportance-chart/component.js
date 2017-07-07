@@ -56,6 +56,7 @@ export default React.createClass({
               y: function(d) { return d.value },
               containerStyle: { width: "800px", height: "500px" },
               options:{
+                stacked: true,
                 showValues: true,
                 showControls: true,
                 duration: 500,
@@ -71,5 +72,3 @@ export default React.createClass({
     }
   }
 })
-
-

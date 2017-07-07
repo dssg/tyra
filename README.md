@@ -23,8 +23,9 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - run_time - timestamp
 - model_type - string
 - model_group_id - integer
-- train_end_time - timestamp
 - test - boolean
+- model_comment - string
+- train_end_time - timestamp
 
 ### model_groups
 - model_group_id - integer
@@ -39,7 +40,7 @@ Tyra is designed to work on different data science projects, but to accomplish t
 ### predictions
 - model_id - integer
 - entity_id - bigint
-- score - numeric
+- unit_score - numeric
 - label_value - int
 - as_of_date - timestamp
 
@@ -47,6 +48,13 @@ Tyra is designed to work on different data science projects, but to accomplish t
 - model_id - integer
 - feature - string
 - feature_importance - numeric
+
+### ranked_table ([cache_table.sql](https://github.com/dssg/tyra/blob/readme/cache_table.sql) is an example for creating a ranked table)
+- model_group_id - integer
+- metric_parameter - string
+- avg - numeric
+- run_time - teimstamp
+- model_comment - string
 
 Whether or not the `model_id` and `as_of_date` columns in `predictions` and `evaluations` are defined as a foreign key, they should act as one as the tables are joined using it.
 
@@ -77,11 +85,11 @@ Since Tyra is built to look at different project databases, being able to run mu
 
 `PROFILE=/path/to/second/profile.yaml PORT=5002 python3 run_webapp.py`
 
-## Front-end setup
+## Dev Front-end setup
 
 Tyra uses NodeJS and Webpack to organize and bundle frontend dependencies.
 
-### Initial setup
+### Initial setup (If you don't see output.js in /webapp/static/)
 1. Install NodeJS (https://nodejs.org/en/)
 
 2. `cd frontend`

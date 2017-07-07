@@ -96,7 +96,7 @@ default_profile.yaml
 node_modules/
 
 # Webpack bundle
-webapp/static/output.js
+#webapp/static/output.js
 
 # Users info
 users.json
