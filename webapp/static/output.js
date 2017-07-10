@@ -62442,21 +62442,13 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-5' },
-	          _react2.default.createElement(
-	            _component14.default,
-	            { modelId: this.props.modelId, asOfDate: this.props.asOfDate },
-	            _react2.default.createElement('svg', { style: { height: '700px', width: '500px' } })
-	          )
+	          _react2.default.createElement(_component14.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate })
 	        ),
 	        _react2.default.createElement('div', { className: 'col-md-2' }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-5' },
-	          _react2.default.createElement(
-	            _component12.default,
-	            { modelId: this.props.modelId, asOfDate: this.props.asOfDate },
-	            _react2.default.createElement('svg', { style: { height: '700px', width: '500px' } })
-	          )
+	          _react2.default.createElement(_component12.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate })
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -63407,8 +63399,6 @@
 	    return {
 	      data: [],
 	      loading: false,
-	      sortflag: true,
-	      button_value: 'Sort by Name',
 	      value: null,
 	      numOfFeatures: 10
 	    };
@@ -63420,11 +63410,14 @@
 	    this.setState({ value: null });
 	  },
 	  componentDidMount: function componentDidMount() {
+	    this.ajax_call();
+	  },
+	  ajax_call: function ajax_call() {
 	    var self = this;
 	    self.setState({ loading: true });
 	    $.ajax({
 	      type: "GET",
-	      url: "/evaluations/" + this.props.modelId + "/feature_importance",
+	      url: "/evaluations/" + this.props.modelId + "/feature_importance/" + self.state.numOfFeatures,
 	      success: function success(result) {
 	        self.setState({
 	          data: result.results.map(function (d) {
@@ -63440,7 +63433,13 @@
 	  handleChangeNumOfFeatures: function handleChangeNumOfFeatures(event) {
 	    this.setState({ numOfFeatures: event.target.value });
 	  },
-
+	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	    var self = this;
+	    if (self.state.numOfFeatures !== prevState.numOfFeatures) {
+	      this.ajax_call();
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {},
 	  render: function render() {
 	    var value = this.state.value;
 
@@ -63486,8 +63485,9 @@
 	          _reactVis.XYPlot,
 	          {
 	            margin: { left: 300 },
-	            width: 800,
-	            height: 500,
+	            width: 600,
+	            height: 400,
+	            color: '#1f77b4',
 	            yType: 'ordinal' },
 	          _react2.default.createElement(_reactVis.XAxis, null),
 	          _react2.default.createElement(_reactVis.YAxis, null),
@@ -123862,9 +123862,8 @@
 	        _react2.default.createElement(_reactNvd2.default, {
 	          type: "lineChart",
 	          datum: this.state.data,
-	          width: "700px",
-	          height: "500px",
-	          containerStyle: { width: "700px", height: "500px" },
+	          height: "400px",
+	          containerStyle: { height: "400px" },
 	          x: function x(d) {
 	            return _d2.default.time.format("%Y-%m-%d").parse(d[0]);
 	          },
