@@ -1,8 +1,9 @@
 import d3 from 'd3'
+import map from 'ramda'
+import {XYPlot, XAxis, YAxis, HorizontalGridLines, Hint, HorizontalBarSeries} from 'react-vis'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
-import {XYPlot, XAxis, YAxis, HorizontalGridLines, Hint, HorizontalBarSeries} from 'react-vis'
-import map from 'ramda'
+
 
 const NUMLIST = [5, 10, 15, 20]
 
@@ -48,8 +49,6 @@ export default React.createClass({
       this.ajax_call()
     }
   },
-  componentWillUnmount: function() {
-  },
   render: function() {
     const {value} = this.state;
     if(this.state.loading) {
@@ -93,27 +92,3 @@ export default React.createClass({
     }
   }
 })
-/*
-          <h4>Feature Importance</h4>
-          <button onClick={this.handleSort}>{this.state.button_value}</button>
-          {
-            React.createElement(NVD3Chart, {
-              type:"multiBarHorizontalChart",
-              datum: this.state.data,
-              height: 500,
-              margin: { left: 500 },
-              x: function(d) { return d.label },
-              y: function(d) { return d.value },
-              options:{
-                stacked: true,
-                showValues: true,
-                showControls: true,
-                duration: 500,
-                tooltip: { enabled: true },
-                yAxis: {
-                  tickFormat: d3.format('.4f')
-                }
-              }
-            })
-          }
-*/
