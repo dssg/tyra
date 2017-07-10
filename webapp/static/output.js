@@ -63370,8 +63370,6 @@
 	  value: true
 	});
 
-	var _ramda = __webpack_require__(4);
-
 	var _reactVis = __webpack_require__(648);
 
 	var _react = __webpack_require__(315);

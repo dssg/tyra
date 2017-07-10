@@ -1,5 +1,4 @@
-import {map} from 'ramda'
-import {XYPlot, XAxis, YAxis, HorizontalGridLines, Hint, HorizontalBarSeries} from 'react-vis'
+import { Hint, HorizontalBarSeries, HorizontalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import React from 'react'
 
 const NUMLIST = [5, 10, 15, 20]
@@ -30,7 +29,7 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/feature_importance/" + self.state.numOfFeatures,
       success: function(result) {
         self.setState({
-          data: result.results.map(d => ({ x: d.value, y: d.label }))
+          data: result.results.map((d) => ({ x: d.value, y: d.label }))
                               .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
@@ -81,7 +80,7 @@ export default React.createClass({
               onValueMouseOver={this._rememberValue}
               onValueMouseOut={this._forgetValue}
               data={this.state.data} />
-            { this.state.value ? <Hint value={ this.state.value }/> : null }
+            { this.state.value ? <Hint value={this.state.value} /> : null }
           </XYPlot>
         </div>
       )
