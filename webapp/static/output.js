@@ -63478,7 +63478,7 @@
 	              );
 	            })
 	          ),
-	          '\xA0 curve(s) to show'
+	          '\xA0 features to show'
 	        ),
 	        _react2.default.createElement(
 	          _reactVis.XYPlot,

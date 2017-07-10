@@ -70,7 +70,7 @@ export default React.createClass({
                 return <option key={num} value={num}>{num}</option>
               })}
             </select>
-            &nbsp; curve(s) to show
+            &nbsp; features to show
           </div>
           <XYPlot
             margin={{left: 300}}
