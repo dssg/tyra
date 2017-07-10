@@ -136,7 +136,7 @@ def get_model_result(model_id, evaluation_start_time):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_importance',
+    '/evaluations/<int:model_id>/feature_importance/<int:num>',
     methods=['GET', 'POST']
 )
 def feature_importance(model_id, num=10):

@@ -11,8 +11,6 @@ export default React.createClass({
     return {
       data: [],
       loading: false,
-      sortflag: true,
-      button_value: 'Sort by Name',
       value: null,
       numOfFeatures: 10,
     }
@@ -24,11 +22,14 @@ export default React.createClass({
     this.setState({value: null})
   },
   componentDidMount: function() {
+    this.ajax_call()
+  },
+  ajax_call: function() {
     const self = this
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + "/feature_importance",
+      url: "/evaluations/" + this.props.modelId + "/feature_importance/" + self.state.numOfFeatures,
       success: function(result) {
         self.setState({
           data: result.results.map(d => ({x: d.value, y: d.label}))
@@ -41,7 +42,14 @@ export default React.createClass({
   handleChangeNumOfFeatures: function(event) {
     this.setState({ numOfFeatures: event.target.value })
   },
-
+  componentDidUpdate: function(prevProps, prevState) {
+    const self = this
+    if (self.state.numOfFeatures !== prevState.numOfFeatures) {
+      this.ajax_call()
+    }
+  },
+  componentWillUnmount: function() {
+  },
   render: function() {
     const {value} = this.state;
     if(this.state.loading) {
@@ -67,8 +75,9 @@ export default React.createClass({
           </div>
           <XYPlot
             margin={{left: 300}}
-            width={800}
-            height={500}
+            width={600}
+            height={400}
+            color="#1f77b4"
             yType="ordinal">
             <XAxis />
             <YAxis />
