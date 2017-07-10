@@ -21,13 +21,11 @@ export default React.createClass({
           <ModelInfo modelId={this.props.modelId} asOfDate={this.props.asOfDate}></ModelInfo>
           <div className="col-md-5">
             <ThresholdPrecisionRecallCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
-              <svg style={{ height:'700px', width: '500px' }}></svg>
             </ThresholdPrecisionRecallCurve>
           </div>
           <div className="col-md-2"></div>
           <div className="col-md-5">
             <SimplePrecisionRecallCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
-              <svg style={{ height:'700px', width: '500px' }}></svg>
             </SimplePrecisionRecallCurve>
           </div>
           <div className="col-md-12">
