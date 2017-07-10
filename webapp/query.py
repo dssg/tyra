@@ -211,3 +211,48 @@ def get_metrics_over_time(query_arg):
         con=db.engine)
     return df
 
+def get_all_features(model_group_id=3131):
+    query = """
+    SELECT feature_list FROM results.model_groups WHERE model_group_id={}
+    """.format(model_group_id)
+    df = pd.read_sql(
+        query,
+        con=db.engine)
+
+    feature_list = df['feature_list'].tolist()[0]
+    print(len(feature_list))
+    return feature_list
+
+def get_feature_distributino(
+        model_id=193385,
+        feature="arrests_id_P1M_ArrestsCrimeType_rape_related_avg"):
+    query = """
+    SELECT table_schema, table_name FROM information_schema.columns
+    WHERE column_name='{}'
+    """.format(feature)
+
+    df_lookup = pd.read_sql(
+        query,
+        con=db.engine)
+
+    lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
+
+    query = """
+    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id={}
+    """.format(model_id)
+
+    as_of_date = pd.read_sql(query, con=db.engine)['as_of_date'].tolist()[0]
+
+    query = """
+    SELECT "{0}" FROM {1}.{2} f
+    JOIN results.predictions p on f.officer_id=p.entity_id and p.as_of_date=f.as_of_date
+    where model_id={3} and p.as_of_date='{4}';
+    """.format(feature, lookup['table_schema'][1], lookup['table_name'][1], model_id, as_of_date)
+
+    df = pd.read_sql(
+        query,
+        con=db.engine)
+
+    return df
+
+
