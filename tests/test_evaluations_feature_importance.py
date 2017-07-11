@@ -21,7 +21,7 @@ data = {
 
 def test_feature_importance():
     with rig_test_client(data) as test_app:
-        url = '/evaluations/1/feature_importance'
+        url = '/evaluations/1/feature_importance/10'
         response = test_app.get(url)
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
