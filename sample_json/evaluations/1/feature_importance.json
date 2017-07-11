@@ -1,9 +1,5 @@
 {
   "results": [
-    {
-      "color": "#d67777",
-      "key": "Model1",
-      "values": [
         {
           "label": "dispatch_id_1w_dispatchtype_traffic_sum",
           "value": 0.011405498
@@ -45,6 +41,4 @@
           "value": 0.008677285
         }
       ]
-    }
-  ]
 }

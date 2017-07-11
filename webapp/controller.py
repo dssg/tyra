@@ -136,7 +136,7 @@ def get_model_result(model_id, evaluation_start_time):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_importance',
+    '/evaluations/<int:model_id>/feature_importance/<int:num>',
     methods=['GET', 'POST']
 )
 def feature_importance(model_id, num=10):
@@ -144,9 +144,7 @@ def feature_importance(model_id, num=10):
     f_importance = query.get_feature_importance(query_arg)
     try:
         f_importance = f_importance.to_dict('records')
-        output = [{'key': 'Model'+str(model_id),
-                   'color': '#d67777',
-                   'values': f_importance}]
+        output = f_importance
         return jsonify(results=output)
     except:
         print('there are some problems')
