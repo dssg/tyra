@@ -138,6 +138,7 @@ def get_feature_importance(query_arg):
         con=db.engine
     )
     output = df_fimportance
+    print(df_fimportance)
     return output
 
 
@@ -223,31 +224,37 @@ def get_all_features(model_group_id=3131):
     print(len(feature_list))
     return feature_list
 
-def get_feature_distributino(
-        model_id=193385,
-        feature="arrests_id_P1M_ArrestsCrimeType_rape_related_avg"):
+def get_feature_distributino(query_arg):
+
     query = """
-    SELECT table_schema, table_name FROM information_schema.columns
-    WHERE column_name='{}'
-    """.format(feature)
+    SELECT column_name, table_schema, table_name FROM information_schema.columns
+    WHERE LOWER(column_name) = LOWER(%(feature)s)
+    """
 
     df_lookup = pd.read_sql(
         query,
+        params={'feature': query_arg['feature']},
         con=db.engine)
 
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
-
     query = """
-    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id={}
-    """.format(model_id)
-
-    as_of_date = pd.read_sql(query, con=db.engine)['as_of_date'].tolist()[0]
-
+    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
+    """
+    as_of_date = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)['as_of_date'].tolist()[0]
     query = """
-    SELECT "{0}" FROM {1}.{2} f
+    SELECT "{0}", officer_id, label_value
+    FROM "{1}"."{2}" f
     JOIN results.predictions p on f.officer_id=p.entity_id and p.as_of_date=f.as_of_date
     where model_id={3} and p.as_of_date='{4}';
-    """.format(feature, lookup['table_schema'][1], lookup['table_name'][1], model_id, as_of_date)
+    """.format(
+        lookup['column_name'].tolist()[0],
+        "historical_features_daily_month",
+        lookup['table_name'].tolist()[0],
+        query_arg['model_id'],
+        as_of_date)
 
     df = pd.read_sql(
         query,

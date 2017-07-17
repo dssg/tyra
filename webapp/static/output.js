@@ -62412,6 +62412,10 @@
 
 	var _component14 = _interopRequireDefault(_component13);
 
+	var _component15 = __webpack_require__(783);
+
+	var _component16 = _interopRequireDefault(_component15);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
@@ -62480,13 +62484,9 @@
 	        null,
 	        _react2.default.createElement(_component6.default, { modelId: this.props.modelId }),
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          _react2.default.createElement(
-	            _component4.default,
-	            { modelId: this.props.modelId, metrics: this.props.metrics },
-	            _react2.default.createElement('svg', { style: { height: '400px', width: '800px', 'margin-left': 0 } })
-	          )
+	          _component4.default,
+	          { modelId: this.props.modelId, metrics: this.props.metrics },
+	          _react2.default.createElement('svg', { style: { height: '400px', width: '800px', 'margin-left': 0 } })
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -62496,6 +62496,11 @@
 	            { modelId: this.props.modelId },
 	            _react2.default.createElement('svg', { style: { height: '400px', width: '800px' } })
 	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-md-6' },
+	          _react2.default.createElement(_component16.default, null)
 	        )
 	      )
 	    );
@@ -126275,16 +126280,27 @@
 	  displayName: 'component',
 
 	  getInitialState: function getInitialState() {
-	    return { data: poissonData(2, 20) };
+	    return {
+	      data: poissonData(2, 20),
+	      loading: false };
 	  },
 	  handleGenerate: function handleGenerate() {
-	    //console.log(this.state.data);
+	    console.log(this.state.data);
 	    this.setState({ data: poissonData(2, 20) });
+	  },
+	  ajax_call: function ajax_call() {
+	    var self = this;
+	    self.setState({ loading: true });
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
+	      _react2.default.createElement(
+	        'h4',
+	        null,
+	        'Feature Distribution'
+	      ),
 	      _react2.default.createElement(
 	        'button',
 	        { onClick: this.handleGenerate },

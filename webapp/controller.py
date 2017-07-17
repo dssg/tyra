@@ -7,6 +7,7 @@ from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
 import datetime
 from webapp import users, login_manager
+import numpy as np
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -145,7 +146,30 @@ def feature_importance(model_id, num=10):
     try:
         f_importance = f_importance.to_dict('records')
         output = f_importance
+        print(output)
         return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route(
+    '/evaluations/<int:model_id>/feature_dist/<string:feature>',
+    methods=['GET', 'POST']
+)
+def get_feature_dist(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
+    query_arg = {'model_id': model_id, 'feature': feature}
+    f_dist = query.get_feature_distributino(query_arg).fillna(value=0)
+    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value']==0]
+    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value']==1]
+    hist0 = np.histogram(dist0, bins=20)
+    hist1 = np.histogram(dist1, bins=hist0[1])
+    try:
+        #output = f_dist.to_dict('records')
+        output = {'hist0': [[int(x), float(y)] for x, y in zip(hist0[0], hist0[1][1:])],
+                  'hist1': [[int(x), float(y)] for x, y in zip(hist1[0], hist1[1][1:])]
+                  }
+        return jsonify(results=output, feature=feature)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
