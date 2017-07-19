@@ -54,8 +54,8 @@ export default React.createClass({
             React.createElement(NVD3Chart, {
               type:"lineChart",
               datum: this.state.data,
-              height: "400px",
-              containerStyle:{ height: "400px" },
+              height: "250px",
+              containerStyle:{ height: "250px" },
               x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
               y: function(d) { return d[1] },
               options:{
