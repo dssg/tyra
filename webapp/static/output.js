@@ -63467,10 +63467,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component = __webpack_require__(756);
-
-	var _component2 = _interopRequireDefault(_component);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var NUMLIST = [5, 10, 15, 20];
@@ -63488,7 +63484,7 @@
 	    };
 	  },
 
-	  _rememberValue: function _rememberValue(datapoint, event) {
+	  _rememberValue: function _rememberValue(datapoint) {
 	    this.setState({ value: datapoint, style: { 'cursor': 'pointer' } });
 	  },
 
@@ -91029,7 +91025,7 @@
 	    });
 	  },
 
-	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    var self = this;
 	    if (self.props.featureSelected !== prevProps.featureSelected) {
 	      this.ajax_call();

@@ -160,12 +160,11 @@ def feature_importance(model_id, num=10):
 def get_feature_dist(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
     query_arg = {'model_id': model_id, 'feature': feature}
     f_dist = query.get_feature_distributino(query_arg).fillna(value=0)
-    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value']==0]
-    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value']==1]
+    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
+    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
     hist0 = np.histogram(dist0, bins=20, normed=True)
     hist1 = np.histogram(dist1, bins=hist0[1], normed=True)
     try:
-        #output = f_dist.to_dict('records')
         output = [
                   {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0[0], hist0[1][1:])]},
                   {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1[0], hist1[1][1:])]}

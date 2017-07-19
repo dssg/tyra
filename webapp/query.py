@@ -212,6 +212,7 @@ def get_metrics_over_time(query_arg):
         con=db.engine)
     return df
 
+
 def get_all_features(model_group_id=3131):
     query = """
     SELECT feature_list FROM results.model_groups WHERE model_group_id={}
@@ -223,6 +224,7 @@ def get_all_features(model_group_id=3131):
     feature_list = df['feature_list'].tolist()[0]
     print(len(feature_list))
     return feature_list
+
 
 def get_feature_distributino(query_arg):
 
@@ -261,5 +263,3 @@ def get_feature_distributino(query_arg):
         con=db.engine)
 
     return df
-
-

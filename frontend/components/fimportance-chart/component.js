@@ -1,6 +1,5 @@
 import { Hint, HorizontalBarSeries, HorizontalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import React from 'react'
-import FeatureDist from 'components/featuredist-chart/component'
 
 const NUMLIST = [5, 10, 15, 20]
 
@@ -15,12 +14,12 @@ export default React.createClass({
     }
   },
 
-  _rememberValue: function(datapoint, event) {
-    this.setState({ value: datapoint, style: {'cursor': 'pointer'} })
+  _rememberValue: function(datapoint) {
+    this.setState({ value: datapoint, style: { 'cursor': 'pointer' } })
   },
 
   _forgetValue: function() {
-    this.setState({ value: null, style: null})
+    this.setState({ value: null, style: null })
   },
 
   componentDidMount: function() {
