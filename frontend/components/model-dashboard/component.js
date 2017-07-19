@@ -93,11 +93,9 @@ export default React.createClass({
       return (
         <div className="container-fluid center-container">
           <div className="col-lg-1">
+            <button onClick={this.removeModelId} id="GoBack" className="btn btn-xs">Back to Search</button>
           </div>
           <div className="col-lg-10">
-            <div className="row">
-              <button onClick={this.removeModelId} id="GoBack" className="btn btn-primary">Back to Search</button>
-            </div>
             { this.renderModelCharts() }
           </div>
           <div className="col-lg-1">
