@@ -6,7 +6,7 @@ export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      loading: false };
+      loading: false }
   },
 
   componentDidMount: function() {

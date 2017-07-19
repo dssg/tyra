@@ -1,6 +1,4 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-// import FeatureImportanceChart from 'components/fimportance-chart/component'
-// import FeatureDist from 'components/featuredist-chart/component'
 import FeatureBlock from 'components/feature-block/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import ModelInfo from 'components/model-info/component'

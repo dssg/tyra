@@ -114,7 +114,7 @@
 	        chartsClass: _component4.default })
 	    );
 	  }
-	}); //import LogIn from 'components/login/component'
+	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
@@ -62430,8 +62430,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import FeatureImportanceChart from 'components/fimportance-chart/component'
-	// import FeatureDist from 'components/featuredist-chart/component'
 	exports.default = _react2.default.createClass({
 	  displayName: 'component',
 
@@ -63376,11 +63374,11 @@
 	  value: true
 	});
 
-	var _component = __webpack_require__(648);
+	var _component = __webpack_require__(756);
 
 	var _component2 = _interopRequireDefault(_component);
 
-	var _component3 = __webpack_require__(756);
+	var _component3 = __webpack_require__(648);
 
 	var _component4 = _interopRequireDefault(_component3);
 
@@ -63403,12 +63401,11 @@
 	    this.setState({ featureSelected: feature });
 	  },
 
-	  handleOnValueClick: function handleOnValueClick(datapoint, event) {
+	  handleOnValueClick: function handleOnValueClick(datapoint) {
 	    this.setState({ featureSelected: datapoint.y });
 	  },
 
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    var self = this;
+	  shouldComponentUpdate: function shouldComponentUpdate(nextState) {
 	    if (this.state !== nextState) {
 	      return true;
 	    }
@@ -63423,14 +63420,14 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          _react2.default.createElement(_component2.default, {
+	          _react2.default.createElement(_component4.default, {
 	            modelId: this.props.modelId,
 	            onValueClick: this.handleOnValueClick })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          _react2.default.createElement(_component4.default, {
+	          _react2.default.createElement(_component2.default, {
 	            modelId: this.props.modelId,
 	            featureSelected: this.state.featureSelected })
 	        )
@@ -63442,7 +63439,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'col-md-6' },
-	        _react2.default.createElement(_component2.default, {
+	        _react2.default.createElement(_component4.default, {
 	          modelId: this.props.modelId,
 	          onValueClick: this.handleOnValueClick,
 	          handleDefaultFeatureSelected: this.handleDefaultFeatureSelected })

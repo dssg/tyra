@@ -1,4 +1,3 @@
-//import LogIn from 'components/login/component'
 import ModelDashboard from 'components/model-dashboard/component'
 import ModelCharts from 'components/model-charts/component'
 import React from 'react'
@@ -17,10 +16,10 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-      <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
-      <ModelDashboard
-        metricOptions={this.props.parameters}
-        chartsClass={ModelCharts} />
+        <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
+        <ModelDashboard
+          metricOptions={this.props.parameters}
+          chartsClass={ModelCharts} />
       </div>
     )
   }

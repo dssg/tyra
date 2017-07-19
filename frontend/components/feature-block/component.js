@@ -1,5 +1,5 @@
-import FeatureImportanceChart from 'components/fimportance-chart/component'
 import FeatureDist from 'components/featuredist-chart/component'
+import FeatureImportanceChart from 'components/fimportance-chart/component'
 import React from 'react'
 
 export default React.createClass({
@@ -13,12 +13,11 @@ export default React.createClass({
     this.setState({ featureSelected: feature })
   },
 
-  handleOnValueClick: function(datapoint, event) {
+  handleOnValueClick: function(datapoint) {
     this.setState({ featureSelected: datapoint.y })
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
-    const self = this
+  shouldComponentUpdate: function(nextState) {
     if (this.state !== nextState) {
       return true
     }
