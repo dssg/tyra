@@ -22,12 +22,15 @@ export default React.createClass({
   getInitialState: function() {
     return { numOfModelGroupsToShow: 5, labelOfModelGroups: "all", labelList: [] }
   },
+
   handleNumOfModelGroupsToShow: function(event) {
     this.setState({ numOfModelGroupsToShow: event.target.value })
   },
+
   handleLabelOfModelGroups: function(event) {
     this.setState({ labelOfModelGroups: event.target.value })
   },
+
   getModelComment: function() {
     let self = this
     const params = { timestamp: self.props.startDate.format('YYYY-MM-DD') }
@@ -42,9 +45,11 @@ export default React.createClass({
       }
     })
   },
+
   componentWillMount: function() {
     this.getModelComment()
   },
+
   componentDidUpdate: function(prevProps) {
     const self = this
     if(prevProps.searchId !== self.props.searchId) {
@@ -57,6 +62,7 @@ export default React.createClass({
       this.getModelComment()
     }
   },
+
   renderSelectGraph: function() {
     return (
       <ModelSelectGraph
@@ -70,6 +76,7 @@ export default React.createClass({
         labelOfModelGroups={this.state.labelOfModelGroups} />
     )
   },
+
   render: function() {
     return (
       <div>
