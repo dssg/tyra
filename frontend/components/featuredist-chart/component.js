@@ -8,14 +8,11 @@ export default React.createClass({
       data: [],
       loading: false };
   },
-  handleGenerate: function() {
-    //console.log(this.state.data);
-    //this.setState({ data: poissonData(2,20)});
-    this.ajax_call()
-  },
+
   componentDidMount: function() {
   this.ajax_call()
   },
+
   ajax_call: function() {
     const self = this
     self.setState({ loading: true })
@@ -30,12 +27,14 @@ export default React.createClass({
       }
     })
   },
+
   componentDidUpdate: function(prevProps, prevState) {
     const self = this
     if (self.props.featureSelected !== prevProps.featureSelected) {
       this.ajax_call()
     }
   },
+
   render: function() {
       if(this.state.loading) {
         return (

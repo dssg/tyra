@@ -68,7 +68,7 @@
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -91,18 +91,37 @@
 	exports.default = _react2.default.createClass({
 	  displayName: 'component',
 
+	  handleLogout: function handleLogout() {
+	    $.ajax({
+	      url: "/logout",
+	      success: function success() {
+	        window.location = '/login';
+	      }
+	    });
+	  },
+
 	  render: function render() {
-	    return _react2.default.createElement(_component2.default, {
-	      metricOptions: this.props.parameters,
-	      chartsClass: _component4.default });
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'button',
+	        { onClick: this.handleLogout, id: 'logOutButton', className: 'btn btn-xs' },
+	        'Log Out'
+	      ),
+	      _react2.default.createElement(_component2.default, {
+	        metricOptions: this.props.parameters,
+	        chartsClass: _component4.default })
+	    );
 	  }
 	}); //import LogIn from 'components/login/component'
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -158,14 +177,6 @@
 	    this.setState({ searchId: newSearchId });
 	  },
 
-	  handleLogout: function handleLogout() {
-	    $.ajax({
-	      url: "/logout",
-	      success: function success() {
-	        window.location = '/login';
-	      }
-	    });
-	  },
 	  setMetrics: function setMetrics(newMetrics) {
 	    this.setState({ metrics: newMetrics });
 	  },
@@ -238,11 +249,6 @@
 	        'div',
 	        { className: 'container-fluid center-container' },
 	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleLogout, id: 'logOutButton', className: 'btn btn-xs' },
-	          'Log Out'
-	        ),
-	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-lg-2 sidenav' },
 	          _react2.default.createElement(
@@ -270,7 +276,6 @@
 	    }
 	  }
 	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 3 */
@@ -22236,12 +22241,15 @@
 	  getInitialState: function getInitialState() {
 	    return { numOfModelGroupsToShow: 5, labelOfModelGroups: "all", labelList: [] };
 	  },
+
 	  handleNumOfModelGroupsToShow: function handleNumOfModelGroupsToShow(event) {
 	    this.setState({ numOfModelGroupsToShow: event.target.value });
 	  },
+
 	  handleLabelOfModelGroups: function handleLabelOfModelGroups(event) {
 	    this.setState({ labelOfModelGroups: event.target.value });
 	  },
+
 	  getModelComment: function getModelComment() {
 	    var self = this;
 	    var params = { timestamp: self.props.startDate.format('YYYY-MM-DD') };
@@ -22256,9 +22264,11 @@
 	      }
 	    });
 	  },
+
 	  componentWillMount: function componentWillMount() {
 	    this.getModelComment();
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    var self = this;
 	    if (prevProps.searchId !== self.props.searchId) {
@@ -22271,6 +22281,7 @@
 	      this.getModelComment();
 	    }
 	  },
+
 	  renderSelectGraph: function renderSelectGraph() {
 	    return _react2.default.createElement(_component2.default, {
 	      setModelId: this.props.setModelId,
@@ -22282,6 +22293,7 @@
 	      numOfModelGroupsToShow: this.state.numOfModelGroupsToShow,
 	      labelOfModelGroups: this.state.labelOfModelGroups });
 	  },
+
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
@@ -22426,9 +22438,11 @@
 	      }
 	    };
 	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
 	    var self = this;
 	    if (this.state !== nextState || self.props.searchId !== nextProps.searchId || self.props.numOfModelGroupsToShow !== nextProps.numOfModelGroupsToShow || self.props.labelOfModelGroups !== nextProps.labelOfModelGroups) {
@@ -22436,6 +22450,7 @@
 	    }
 	    return false;
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    var self = this;
 	    if (prevProps.searchId !== self.props.searchId) {
@@ -22448,7 +22463,7 @@
 	      this.ajax_call();
 	    }
 	  },
-	  componentWillUnmount: function componentWillUnmount() {},
+
 	  handleModelClick: function handleModelClick(modelGroupId, asOfDate) {
 	    var self = this;
 	    var groupId = modelGroupId.split(" ")[2];
@@ -22456,6 +22471,7 @@
 	    self.props.setModelId(this.state.idDateLookup[groupId][asOfDate]);
 	    self.props.setAsOfDate(d.toISOString().split('T')[0]);
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
 	    self.setState({ loading: true });
@@ -22520,6 +22536,7 @@
 	      }
 	    });
 	  },
+
 	  render: function render() {
 	    if (this.state.loading) {
 	      return _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' });
@@ -63381,12 +63398,15 @@
 	      featureSelected: null
 	    };
 	  },
+
 	  handleDefaultFeatureSelected: function handleDefaultFeatureSelected(feature) {
 	    this.setState({ featureSelected: feature });
 	  },
+
 	  handleOnValueClick: function handleOnValueClick(datapoint, event) {
 	    this.setState({ featureSelected: datapoint.y });
 	  },
+
 	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
 	    var self = this;
 	    if (this.state !== nextState) {
@@ -63394,6 +63414,7 @@
 	    }
 	    return false;
 	  },
+
 	  render: function render() {
 	    if (this.state.featureSelected) {
 	      return _react2.default.createElement(
@@ -63463,19 +63484,22 @@
 	      loading: false,
 	      value: null,
 	      style: null,
-	      numOfFeatures: 10,
-	      featureSelected: null
+	      numOfFeatures: 10
 	    };
 	  },
+
 	  _rememberValue: function _rememberValue(datapoint, event) {
 	    this.setState({ value: datapoint, style: { 'cursor': 'pointer' } });
 	  },
+
 	  _forgetValue: function _forgetValue() {
 	    this.setState({ value: null, style: null });
 	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
 	    self.setState({ loading: true });
@@ -63495,15 +63519,18 @@
 	      }
 	    });
 	  },
+
 	  handleChangeNumOfFeatures: function handleChangeNumOfFeatures(event) {
 	    this.setState({ numOfFeatures: event.target.value });
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
 	    var self = this;
 	    if (self.state.numOfFeatures !== prevState.numOfFeatures) {
 	      this.ajax_call();
 	    }
 	  },
+
 	  render: function render() {
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
@@ -90982,14 +91009,11 @@
 	      data: [],
 	      loading: false };
 	  },
-	  handleGenerate: function handleGenerate() {
-	    //console.log(this.state.data);
-	    //this.setState({ data: poissonData(2,20)});
-	    this.ajax_call();
-	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
 	    self.setState({ loading: true });
@@ -91004,12 +91028,14 @@
 	      }
 	    });
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
 	    var self = this;
 	    if (self.props.featureSelected !== prevProps.featureSelected) {
 	      this.ajax_call();
 	    }
 	  },
+
 	  render: function render() {
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
@@ -126118,14 +126144,17 @@
 	      loading: false
 	    };
 	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    if (prevProps.asOfDate !== this.props.asOfDate) {
 	      this.ajax_call();
 	    }
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
 	    self.setState({ loading: true });
@@ -126142,6 +126171,7 @@
 	      });
 	    }
 	  },
+
 	  render: function render() {
 	    if (this.state.loading) {
 	      return _react2.default.createElement(

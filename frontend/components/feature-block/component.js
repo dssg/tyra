@@ -8,12 +8,15 @@ export default React.createClass({
       featureSelected: null
     }
   },
+
   handleDefaultFeatureSelected: function(feature) {
     this.setState({ featureSelected: feature })
   },
+
   handleOnValueClick: function(datapoint, event) {
     this.setState({ featureSelected: datapoint.y })
   },
+
   shouldComponentUpdate: function(nextProps, nextState) {
     const self = this
     if (this.state !== nextState) {
@@ -21,6 +24,7 @@ export default React.createClass({
     }
     return false
   },
+
   render: function() {
     if(this.state.featureSelected) {
       return (

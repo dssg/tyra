@@ -12,18 +12,21 @@ export default React.createClass({
       value: null,
       style: null,
       numOfFeatures: 10,
-      featureSelected: null,
     }
   },
+
   _rememberValue: function(datapoint, event) {
     this.setState({ value: datapoint, style: {'cursor': 'pointer'} })
   },
+
   _forgetValue: function() {
     this.setState({ value: null, style: null})
   },
+
   componentDidMount: function() {
     this.ajax_call()
   },
+
   ajax_call: function() {
     const self = this
     self.setState({ loading: true })
@@ -40,9 +43,11 @@ export default React.createClass({
       }
     })
   },
+
   handleChangeNumOfFeatures: function(event) {
     this.setState({ numOfFeatures: event.target.value })
   },
+
   componentDidUpdate: function(prevProps, prevState) {
     const self = this
     if (self.state.numOfFeatures !== prevState.numOfFeatures) {
@@ -50,6 +55,7 @@ export default React.createClass({
 
     }
   },
+
   render: function() {
     if(this.state.loading) {
       return (
