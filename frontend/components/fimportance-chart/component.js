@@ -1,5 +1,6 @@
 import { Hint, HorizontalBarSeries, HorizontalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import React from 'react'
+import FeatureDist from 'components/featuredist-chart/component'
 
 const NUMLIST = [5, 10, 15, 20]
 
@@ -9,14 +10,16 @@ export default React.createClass({
       data: [],
       loading: false,
       value: null,
+      style: null,
       numOfFeatures: 10,
+      featureSelected: null,
     }
   },
-  _rememberValue: function(value) {
-    this.setState({ value: value })
+  _rememberValue: function(datapoint, event) {
+    this.setState({ value: datapoint, style: {'cursor': 'pointer'} })
   },
   _forgetValue: function() {
-    this.setState({ value: null })
+    this.setState({ value: null, style: null})
   },
   componentDidMount: function() {
     this.ajax_call()
@@ -33,6 +36,7 @@ export default React.createClass({
                               .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
+        self.props.handleDefaultFeatureSelected(self.state.data.slice(-1)[0].y)
       }
     })
   },
@@ -43,6 +47,7 @@ export default React.createClass({
     const self = this
     if (self.state.numOfFeatures !== prevState.numOfFeatures) {
       this.ajax_call()
+
     }
   },
   render: function() {
@@ -79,6 +84,8 @@ export default React.createClass({
             <HorizontalBarSeries
               onValueMouseOver={this._rememberValue}
               onValueMouseOut={this._forgetValue}
+              onValueClick={this.props.onValueClick}
+              style={this.state.style}
               data={this.state.data} />
             { this.state.value ? <Hint value={this.state.value} /> : null }
           </XYPlot>

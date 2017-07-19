@@ -1,5 +1,7 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import FeatureImportanceChart from 'components/fimportance-chart/component'
+// import FeatureImportanceChart from 'components/fimportance-chart/component'
+// import FeatureDist from 'components/featuredist-chart/component'
+import FeatureBlock from 'components/feature-block/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import ModelInfo from 'components/model-info/component'
 import PredictionsTable from 'components/predictions-table/component'
@@ -7,7 +9,6 @@ import RocCurve from 'components/roc-chart/component'
 import React from 'react'
 import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
 import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/component'
-
 
 export default React.createClass({
   render: function() {
@@ -43,16 +44,10 @@ export default React.createClass({
         </TabPanel>
         <TabPanel>
           <ModelInfo modelId={this.props.modelId}></ModelInfo>
-          <div className="col-md-6">
-            <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
-              <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
-            </MetricTimeChart>
-          </div>
-          <div className="col-md-6">
-            <FeatureImportanceChart modelId={this.props.modelId}>
-              <svg style={{ height: '400px', width: '800px' }}></svg>
-            </FeatureImportanceChart>
-          </div>
+          <MetricTimeChart modelId={this.props.modelId} metrics={this.props.metrics}>
+            <svg style={{ height: '400px', width: '800px', 'margin-left': 0 }}></svg>
+          </MetricTimeChart>
+          <FeatureBlock modelId={this.props.modelId} />
         </TabPanel>
       </Tabs>
     )
