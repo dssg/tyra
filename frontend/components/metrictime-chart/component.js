@@ -19,10 +19,6 @@ export default React.createClass({
     this.get_metric()
   },
 
-  handleOnClick: function() {
-    console.log("Click!!")
-  },
-
   get_metric: function() {
     let self = this
     self.setState({ loading: true })

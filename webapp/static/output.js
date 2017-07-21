@@ -124110,10 +124110,6 @@
 	    this.get_metric();
 	  },
 
-	  handleOnClick: function handleOnClick() {
-	    console.log("Click!!");
-	  },
-
 	  get_metric: function get_metric() {
 	    var self = this;
 	    self.setState({ loading: true });
