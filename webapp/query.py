@@ -241,41 +241,62 @@ def get_test_feature_distribution(query_arg):
         con=db.engine)
 
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
+
     query = """
     SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
     """
+    # Showing the first test date for now
     as_of_date = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id']},
         con=db.engine)['as_of_date'].tolist()[0]
-    query = """
-    SELECT "{0}", officer_id, label_value
-    FROM "{1}"."{2}" f
-    JOIN results.predictions p on f.officer_id=p.entity_id and p.as_of_date=f.as_of_date
-    where model_id={3} and p.as_of_date='{4}';
-    """.format(
-        lookup['column_name'].tolist()[0],
-        "historical_features_daily_month",
-        lookup['table_name'].tolist()[0],
-        query_arg['model_id'],
-        as_of_date)
 
-    df = pd.read_sql(
-        query,
-        con=db.engine)
+    try:
+        query = """
+        SELECT "{0}", officer_id, label_value
+        FROM "{1}"."{2}" f
+        JOIN results.predictions p on f.officer_id=p.entity_id and p.as_of_date=f.as_of_date
+        where model_id={3} and p.as_of_date='{4}';
+        """.format(
+            lookup['column_name'].tolist()[0],
+            "historical_features_daily_month",
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date)
+
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+    except:
+        query = """
+        SELECT "{0}", officer_id, label_value
+        FROM "{1}"."{2}" f
+        JOIN results.predictions p on f.officer_id=p.entity_id
+        where model_id={3} and p.as_of_date='{4}';
+        """.format(
+            lookup['column_name'].tolist()[0],
+            "historical_features_daily_month",
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date)
+
+        df = pd.read_sql(
+            query,
+            con=db.engine)
 
     return df
 
+
 def get_train_feature_distribution(query_arg):
     query = """
-    SELECT config FROM results.models WHERE model_id=%(model_id)s
+    SELECT config ->> 'train_metadata' as train_metadata FROM results.models WHERE model_id=%(model_id)s
     """
-    config = pd.read_sql(
+    train_metadata = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id']},
         con=db.engine)
+    training_time = json.loads(train_metadata['train_metadata'][0])['feature_as_of_dates']
 
-    training_time = json.loads(json.loads(config['config'][0])['train_metadata'])['feature_as_of_dates']
     query = """
     SELECT column_name, table_schema, table_name FROM information_schema.columns
     WHERE LOWER(column_name) = LOWER(%(feature)s)
