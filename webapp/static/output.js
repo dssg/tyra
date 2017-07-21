@@ -124193,7 +124193,7 @@
 	              var index = _ref.index;
 	              return _this.setState({ index: index });
 	            },
-	            onValueClick: function onValueClick(datapoint, event) {
+	            onValueClick: function onValueClick(datapoint) {
 	              console.log(datapoint);
 	            },
 	            data: data })

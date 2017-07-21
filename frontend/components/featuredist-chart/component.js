@@ -13,7 +13,7 @@ export default React.createClass({
 
   handleTestSet: function() {
     this.ajax_call_test()
-    this.setState({test_button: true})
+    this.setState({ test_button: true })
   },
 
   handleTrainingSet: function() {
@@ -71,10 +71,10 @@ export default React.createClass({
     if (this.state.test_button) {
       return (
         <div>
-            <h4>Feature Distribution - Test Set</h4>
-            <p>{this.props.featureSelected}
-              <button onClick={this.handleTrainingSet} id="SetButton" className="btn btn-xs float-right" >Toggle to Training Set</button>
-            </p>
+          <h4>Feature Distribution - Test Set</h4>
+          <p>{this.props.featureSelected}
+            <button onClick={this.handleTrainingSet} id="SetButton" className="btn btn-xs float-right" >Toggle to Training Set</button>
+          </p>
         </div>
       )
     } else {

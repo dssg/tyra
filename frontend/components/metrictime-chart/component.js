@@ -7,12 +7,12 @@ import React from 'react'
 export default React.createClass({
   getInitialState: function() {
     return {
-              data: [],
-              loading: false,
-              metric: null,
-              index: 0,
-              heldValue: false,
-            }
+      data: [],
+      loading: false,
+      metric: null,
+      index: 0,
+      heldValue: false,
+    }
   },
 
   componentDidMount: function() {
@@ -39,7 +39,7 @@ export default React.createClass({
       success: function(result) {
         self.setState({
           metric: result.results[0].key,
-          data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1]})),
+          data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] })),
           loading: false
         })
       }
@@ -48,8 +48,8 @@ export default React.createClass({
 
   render: function() {
     const FlexibleWidth = makeWidthFlexible(XYPlot)
-    const {index, heldValue} = this.state
-    const data = this.state.data.map((d, i) => ({...d, color: i === index ? 2 : 1, size: i === index ? 10 : 5}))
+    const { index, heldValue } = this.state
+    const data = this.state.data.map((d, i) => ({ ...d, color: i === index ? 2 : 1, size: i === index ? 10 : 5 }))
     if(this.state.loading) {
       return (
         <div>
@@ -69,16 +69,16 @@ export default React.createClass({
             xType="time">
             <XAxis
               title={"Test Date"}
-              tickFormat={d => d3.time.format("%Y-%m-%d")(new Date(d))}
-              tickValues = {this.state.data.map((v) => v.x)}/>
+              tickFormat={(d) => d3.time.format("%Y-%m-%d")(new Date(d))}
+              tickValues={this.state.data.map((v) => v.x)} />
             <YAxis
-              title={this.state.metric}/>
+              title={this.state.metric} />
             <HorizontalGridLines />
             <LineMarkSeries
               sizeRange={[5, 15]}
-              style={{mark:{strokeWidth:2}, stroke:"#1f77b4"}}
+              style={{ mark:{strokeWidth:2}, stroke:"#1f77b4" }}
               onNearestXY={(datapoint, {index}) => this.setState({index})}
-              onValueClick={(datapoint, event) => { console.log(datapoint) }}
+              onValueClick={(datapoint) => { console.log(datapoint) }}
               data={data} />
           </FlexibleWidth>
         </div>
