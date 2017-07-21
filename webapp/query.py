@@ -2,7 +2,6 @@ import pandas as pd
 from webapp import db
 import logging
 import json
-from ast import literal_eval
 import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
@@ -55,11 +54,7 @@ def get_model_comments(run_time):
 
 
 def get_model_groups(query_arg):
-    for num, args in query_arg['metrics'].items():
-        print(num, args)
-
     query_dict = list(query_arg['metrics'].items())[0][1]
-    print(query_dict)
     lookup_query = """
     SELECT
     model_group_id
@@ -140,7 +135,6 @@ def get_feature_importance(query_arg):
         con=db.engine
     )
     output = df_fimportance
-    print(df_fimportance)
     return output
 
 
@@ -184,16 +178,11 @@ def get_recall(query_arg):
         },
         con=db.engine
     )
-    print('recall')
-    print(df_precision)
     output = df_precision
     return output
 
 
 def get_metrics_over_time(query_arg):
-    for num, args in query_arg['metrics'].items():
-        print(num, args)
-
     query_dict = list(query_arg['metrics'].items())[0][1]
     query = """
     SELECT
@@ -224,7 +213,6 @@ def get_all_features(model_group_id=3131):
         con=db.engine)
 
     feature_list = df['feature_list'].tolist()[0]
-    print(len(feature_list))
     return feature_list
 
 
