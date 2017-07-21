@@ -62494,7 +62494,7 @@
 	      _react2.default.createElement(
 	        _reactTabs.TabPanel,
 	        null,
-	        _react2.default.createElement(_component6.default, { modelId: this.props.modelId }),
+	        _react2.default.createElement(_component6.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate }),
 	        _react2.default.createElement(
 	          _component4.default,
 	          { modelId: this.props.modelId, metrics: this.props.metrics },
@@ -91000,46 +91000,86 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: [],
+	      test_button: true,
+	      bins: 20,
 	      loading: false };
 	  },
 
-	  componentDidMount: function componentDidMount() {
-	    this.ajax_call();
+	  handleTestSet: function handleTestSet() {
+	    this.ajax_call_test();
+	    this.setState({ test_button: true });
 	  },
 
-	  ajax_call: function ajax_call() {
+	  handleTrainingSet: function handleTrainingSet() {
+	    this.ajax_call_train();
+	    this.setState({ test_button: false });
+	  },
+
+	  ajax_call_test: function ajax_call_test() {
 	    var self = this;
 	    self.setState({ loading: true });
 	    $.ajax({
 	      type: "GET",
-	      url: "/evaluations/" + this.props.modelId + "/feature_dist/" + this.props.featureSelected,
+	      url: "/evaluations/" + this.props.modelId + "/feature_dist_test/" + this.props.featureSelected + "/" + this.state.bins,
 	      success: function success(result) {
 	        self.setState({
-	          data: result.results,
+	          data: result.results.series,
 	          loading: false
 	        });
 	      }
 	    });
 	  },
 
+	  ajax_call_train: function ajax_call_train() {
+	    var self = this;
+	    self.setState({ loading: true });
+	    $.ajax({
+	      type: "GET",
+	      url: "/evaluations/" + this.props.modelId + "/feature_dist_train/" + this.props.featureSelected + "/" + this.state.bins,
+	      success: function success(result) {
+	        self.setState({
+	          data: result.results.series,
+	          loading: false
+	        });
+	      }
+	    });
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.ajax_call_test();
+	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    var self = this;
 	    if (self.props.featureSelected !== prevProps.featureSelected) {
-	      this.ajax_call();
+	      if (this.state.test_button) {
+	        this.ajax_call_test();
+	      } else {
+	        this.ajax_call_train();
+	      }
 	    }
 	  },
 
-	  render: function render() {
-	    if (this.state.loading) {
+	  renderTrainTestButton: function renderTrainTestButton() {
+	    if (this.state.test_button) {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
 	          'h4',
 	          null,
-	          'Feature Distribution'
+	          'Feature Distribution - Test Set'
 	        ),
-	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          this.props.featureSelected,
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.handleTrainingSet, id: 'SetButton', className: 'btn btn-xs float-right' },
+	            'Toggle to Training Set'
+	          )
+	        )
 	      );
 	    } else {
 	      return _react2.default.createElement(
@@ -91048,17 +91088,39 @@
 	        _react2.default.createElement(
 	          'h4',
 	          null,
-	          'Feature Distribution'
+	          'Feature Distribution - Training Set'
 	        ),
 	        _react2.default.createElement(
-	          'h5',
+	          'p',
 	          null,
-	          this.props.featureSelected
-	        ),
+	          this.props.featureSelected,
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.handleTestSet, id: 'SetButton', className: 'btn btn-xs float-right' },
+	            'Toggle to Test Set'
+	          )
+	        )
+	      );
+	    }
+	  },
+
+	  render: function render() {
+	    if (this.state.loading) {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.renderTrainTestButton(),
+	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
+	      );
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.renderTrainTestButton(),
 	        _react2.default.createElement(_reactNvd2.default, {
 	          type: "lineChart",
 	          datum: this.state.data,
-	          containerStyle: { width: "600px", height: "400px" },
+	          containerStyle: { width: "650px", height: "400px" },
 	          x: function x(d) {
 	            return d[0];
 	          },
@@ -91066,11 +91128,13 @@
 	            return d[1];
 	          },
 	          options: {
+	            showValues: true,
+	            showControls: true,
 	            showDistX: true,
 	            showDistY: true,
 	            useInteractiveGuideline: true,
 	            duration: 500,
-	            xAxis: { tickFormat: _d2.default.format('.01f'), axisLabel: 'Feature Value' },
+	            xAxis: { tickFormat: _d2.default.format('.02f'), axisLabel: 'Feature Value' },
 	            yAxis: { tickFormat: _d2.default.format('.02f'), axisLabel: 'P(X|Y=Label)' },
 	            color: _d2.default.scale.category10().range()
 	          }
@@ -124009,7 +124073,11 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _ramda = __webpack_require__(4);
+
+	var _reactVis = __webpack_require__(649);
 
 	var _d = __webpack_require__(757);
 
@@ -124029,11 +124097,21 @@
 	  displayName: 'component',
 
 	  getInitialState: function getInitialState() {
-	    return { data: [], loading: false };
+	    return {
+	      data: [],
+	      loading: false,
+	      metric: null,
+	      index: 0,
+	      heldValue: false
+	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
 	    this.get_metric();
+	  },
+
+	  handleOnClick: function handleOnClick() {
+	    console.log("Click!!");
 	  },
 
 	  get_metric: function get_metric() {
@@ -124052,7 +124130,10 @@
 	      data: $.param(params),
 	      success: function success(result) {
 	        self.setState({
-	          data: result.results,
+	          metric: result.results[0].key,
+	          data: result.results[0].values.map(function (d) {
+	            return { x: _d2.default.time.format("%Y-%m-%d").parse(d[0]), y: d[1] };
+	          }),
 	          loading: false
 	        });
 	      }
@@ -124060,6 +124141,16 @@
 	  },
 
 	  render: function render() {
+	    var _this = this;
+
+	    var FlexibleWidth = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
+	    var _state = this.state,
+	        index = _state.index,
+	        heldValue = _state.heldValue;
+
+	    var data = this.state.data.map(function (d, i) {
+	      return _extends({}, d, { color: i === index ? 2 : 1, size: i === index ? 10 : 5 });
+	    });
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
 	        'div',
@@ -124080,34 +124171,37 @@
 	          null,
 	          'Metrics Over Time'
 	        ),
-	        _react2.default.createElement(_reactNvd2.default, {
-	          type: "lineChart",
-	          datum: this.state.data,
-	          height: "250px",
-	          containerStyle: { height: "250px" },
-	          x: function x(d) {
-	            return _d2.default.time.format("%Y-%m-%d").parse(d[0]);
-	          },
-	          y: function y(d) {
-	            return d[1];
-	          },
-	          options: {
-	            showDistX: true,
-	            showDistY: true,
-	            duration: 500,
-	            useInteractiveGuideline: true,
-	            xAxis: {
-	              axisLabel: 'Test Date',
-	              tickFormat: function tickFormat(d) {
-	                return _d2.default.time.format("%Y-%m-%d")(new Date(d));
-	              }
+	        _react2.default.createElement(
+	          FlexibleWidth,
+	          {
+	            height: 250,
+	            colorDomain: [0, 1, 2],
+	            margin: { left: 50, right: 30, top: 20, bottom: 40 },
+	            yType: 'linear',
+	            xType: 'time' },
+	          _react2.default.createElement(_reactVis.XAxis, {
+	            title: "Test Date",
+	            tickFormat: function tickFormat(d) {
+	              return _d2.default.time.format("%Y-%m-%d")(new Date(d));
 	            },
-	            xScale: _d2.default.time.scale(),
-	            yAxis: { axisLabel: 'Metric' },
-	            yDomain: [0, 1.05],
-	            color: _d2.default.scale.category10().range()
-	          }
-	        })
+	            tickValues: this.state.data.map(function (v) {
+	              return v.x;
+	            }) }),
+	          _react2.default.createElement(_reactVis.YAxis, {
+	            title: this.state.metric }),
+	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
+	          _react2.default.createElement(_reactVis.LineMarkSeries, {
+	            sizeRange: [5, 15],
+	            style: { mark: { strokeWidth: 2 }, stroke: "#1f77b4" },
+	            onNearestXY: function onNearestXY(datapoint, _ref) {
+	              var index = _ref.index;
+	              return _this.setState({ index: index });
+	            },
+	            onValueClick: function onValueClick(datapoint, event) {
+	              console.log(datapoint);
+	            },
+	            data: data })
+	        )
 	      );
 	    }
 	  }
@@ -124146,7 +124240,7 @@
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'h3',
+	        'h4',
 	        null,
 	        _react2.default.createElement(
 	          'strong',
