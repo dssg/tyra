@@ -1,6 +1,8 @@
 import pandas as pd
 from webapp import db
 import logging
+import json
+from ast import literal_eval
 import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
@@ -226,7 +228,7 @@ def get_all_features(model_group_id=3131):
     return feature_list
 
 
-def get_feature_distributino(query_arg):
+def get_test_feature_distribution(query_arg):
 
     query = """
     SELECT column_name, table_schema, table_name FROM information_schema.columns
@@ -261,5 +263,74 @@ def get_feature_distributino(query_arg):
     df = pd.read_sql(
         query,
         con=db.engine)
+
+    return df
+
+def get_train_feature_distribution(query_arg):
+    query = """
+    SELECT config FROM results.models WHERE model_id=%(model_id)s
+    """
+    config = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)
+
+    training_time = json.loads(json.loads(config['config'][0])['train_metadata'])['feature_as_of_dates']
+    query = """
+    SELECT column_name, table_schema, table_name FROM information_schema.columns
+    WHERE LOWER(column_name) = LOWER(%(feature)s)
+    """
+
+    df_lookup = pd.read_sql(
+        query,
+        params={'feature': query_arg['feature']},
+        con=db.engine)
+
+    lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
+
+    query = """
+    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
+    """
+    as_of_date = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)['as_of_date'].tolist()[0]
+
+    try:
+        query = """
+        SELECT "{0}", officer_id, label_value
+        FROM "{1}"."{2}" f
+        JOIN results.predictions p on f.officer_id=p.entity_id
+        WHERE model_id={3}
+        AND p.as_of_date='{4}'
+        AND f.as_of_date in {5}
+        """.format(
+            lookup['column_name'].tolist()[0],
+            "historical_features_daily_month",
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date,
+            tuple(training_time)
+            )
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+    except:
+        query = """
+        SELECT "{0}", officer_id, label_value
+        FROM "{1}"."{2}" f
+        JOIN results.predictions p on f.officer_id=p.entity_id
+        WHERE model_id={3}
+        AND p.as_of_date='{4}'
+        """.format(
+            lookup['column_name'].tolist()[0],
+            "historical_features_daily_month",
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date,
+            )
+        df = pd.read_sql(
+            query,
+            con=db.engine)
 
     return df

@@ -154,26 +154,52 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist/<string:feature>',
+    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>',
     methods=['GET', 'POST']
 )
-def get_feature_dist(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
+def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
     query_arg = {'model_id': model_id, 'feature': feature}
-    f_dist = query.get_feature_distributino(query_arg).fillna(value=0)
+    f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
-    hist0 = np.histogram(dist0, bins=20, normed=True)
-    hist1 = np.histogram(dist1, bins=hist0[1], normed=True)
+    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
         output = [
-                  {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0[0], hist0[1][1:])]},
-                  {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1[0], hist1[1][1:])]}
+                  {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                  {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
                   ]
         return jsonify(results=output, feature=feature)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+
+@app.route(
+    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>',
+    methods=['GET', 'POST']
+)
+def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
+    query_arg = {'model_id': model_id, 'feature': feature}
+    f_dist = query.get_train_feature_distribution(query_arg)#fillna(value=0)
+    print(f_dist.shape)
+    f_dist = f_dist.dropna()
+    print(f_dist.shape)
+    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
+    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
+    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist1, bin1 = np.histogram(dist1, bins=bin0)
+    print(hist0)
+    print(hist1)
+    try:
+        output = [
+                  {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                  {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
+                  ]
+        return jsonify(results=output, feature=feature)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route(
     '/evaluations/<int:model_id>/threshold_precision_recall/<evaluation_start_time>',
@@ -266,6 +292,7 @@ def get_metric_over_time(model_id):
         }
         ])
     try:
+        print(data)
         return jsonify(results=data)
     except Exception as e:
         print(e)
