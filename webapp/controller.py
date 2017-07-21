@@ -158,6 +158,7 @@ def feature_importance(model_id, num=10):
 )
 def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
     query_arg = {'model_id': model_id, 'feature': feature}
+    # Not sure should dropna or fillna
     f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
@@ -183,8 +184,9 @@ def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinit
 )
 def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
     query_arg = {'model_id': model_id, 'feature': feature}
-    f_dist = query.get_train_feature_distribution(query_arg)  #fillna(value=0)
-    f_dist = f_dist.dropna()
+    f_dist = query.get_train_feature_distribution(query_arg)
+    # Not sure should dropna or fillna
+    f_dist = f_dist.fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
     hist0, bin0 = np.histogram(dist0, bins=bins)

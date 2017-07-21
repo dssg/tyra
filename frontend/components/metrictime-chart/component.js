@@ -1,5 +1,5 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
-import { Crosshair, FlexibleWidth, LineMarkSeries, HorizontalGridLines, onMouseDown, onNearestX, onMouseLeave, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
+import { LineMarkSeries, HorizontalGridLines, onNearestXY, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
@@ -11,7 +11,6 @@ export default React.createClass({
       loading: false,
       metric: null,
       index: 0,
-      heldValue: false,
     }
   },
 
@@ -48,7 +47,7 @@ export default React.createClass({
 
   render: function() {
     const FlexibleWidth = makeWidthFlexible(XYPlot)
-    const { index, heldValue } = this.state
+    const { index } = this.state
     const data = this.state.data.map((d, i) => ({ ...d, color: i === index ? 2 : 1, size: i === index ? 10 : 5 }))
     if(this.state.loading) {
       return (
@@ -76,9 +75,8 @@ export default React.createClass({
             <HorizontalGridLines />
             <LineMarkSeries
               sizeRange={[5, 15]}
-              style={{ mark:{strokeWidth:2}, stroke:"#1f77b4" }}
-              onNearestXY={(datapoint, {index}) => this.setState({index})}
-              onValueClick={(datapoint) => { console.log(datapoint) }}
+              style={{ mark:{ strokeWidth: 2 }, stroke:"#1f77b4" }}
+              onNearestXY={ (datapoint, {index}) => this.setState({index}) }
               data={data} />
           </FlexibleWidth>
         </div>

@@ -124101,8 +124101,7 @@
 	      data: [],
 	      loading: false,
 	      metric: null,
-	      index: 0,
-	      heldValue: false
+	      index: 0
 	    };
 	  },
 
@@ -124140,9 +124139,7 @@
 	    var _this = this;
 
 	    var FlexibleWidth = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
-	    var _state = this.state,
-	        index = _state.index,
-	        heldValue = _state.heldValue;
+	    var index = this.state.index;
 
 	    var data = this.state.data.map(function (d, i) {
 	      return _extends({}, d, { color: i === index ? 2 : 1, size: i === index ? 10 : 5 });
@@ -124192,9 +124189,6 @@
 	            onNearestXY: function onNearestXY(datapoint, _ref) {
 	              var index = _ref.index;
 	              return _this.setState({ index: index });
-	            },
-	            onValueClick: function onValueClick(datapoint) {
-	              console.log(datapoint);
 	            },
 	            data: data })
 	        )
