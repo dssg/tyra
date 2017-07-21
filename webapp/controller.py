@@ -154,7 +154,7 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>',
+    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>/<int:bins>',
     methods=['GET', 'POST']
 )
 def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
@@ -165,18 +165,21 @@ def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinit
     hist0, bin0 = np.histogram(dist0, bins=bins)
     hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
-        output = [
-                  {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
-                  {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
-                  ]
-        return jsonify(results=output, feature=feature)
+        output = {
+                    "feature": feature,
+                    "series": [
+                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
+                        ]
+                  }
+        return jsonify(results=output)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>',
+    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>/<int:bins>',
     methods=['GET', 'POST']
 )
 def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
@@ -192,11 +195,14 @@ def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchini
     print(hist0)
     print(hist1)
     try:
-        output = [
-                  {'key': 'Label 0', 'values': [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
-                  {'key': 'Label 1', 'values': [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
-                  ]
-        return jsonify(results=output, feature=feature)
+        output = {
+                    "feature": feature,
+                    "series": [
+                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
+                        ]
+                  }
+        return jsonify(results=output)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
