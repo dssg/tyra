@@ -1,5 +1,5 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
-import { LineMarkSeries, HorizontalGridLines, onNearestXY, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
+import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
@@ -75,7 +75,7 @@ export default React.createClass({
             <HorizontalGridLines />
             <LineMarkSeries
               sizeRange={[5, 15]}
-              style={{ mark:{ strokeWidth: 2 }, stroke:"#1f77b4" }}
+              style={{ mark:{strokeWidth: 2}, stroke:"#1f77b4" }}
               onNearestXY={ (datapoint, {index}) => this.setState({index}) }
               data={data} />
           </FlexibleWidth>
