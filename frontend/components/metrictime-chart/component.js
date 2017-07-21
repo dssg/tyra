@@ -75,7 +75,7 @@ export default React.createClass({
             <HorizontalGridLines />
             <LineMarkSeries
               sizeRange={[5, 15]}
-              style={{ mark:{strokeWidth: 2}, stroke:"#1f77b4" }}
+              style={{ mark:{ strokeWidth: 2 }, stroke: "#1f77b4" }}
               onNearestXY={ (datapoint, {index}) => this.setState({index}) }
               data={data} />
           </FlexibleWidth>
