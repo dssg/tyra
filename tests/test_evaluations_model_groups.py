@@ -18,18 +18,20 @@ ranked_table_data = [
     (1011, 'precision@100_abs', 0.3099, '2017-05-12', 'sworn officers correct month mix 1m 3y')
 ]
 
+config = json.dumps({"train_metadata": {"feature_as_of_dates": ["2014-04-24", "2015-04-24"]}})
+
 models_data = [
-    # model_id, run_time, model_type, model_group_id, test, model_comment, train_end_time
-    (1, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-05-01'),
-    (2, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-06-01'),
-    (3, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-07-01'),
-    (4, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-08-01'),
-    (5, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-09-01'),
-    (6, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-10-01'),
-    (7, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-05-01'),
-    (8, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-06-01'),
-    (9, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-07-01'),
-    (10, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-08-01')
+    # model_id, run_time, model_type, model_group_id, test, model_comment, train_end_time, config
+    (1, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-05-01', config),
+    (2, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-06-01', config),
+    (3, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-07-01', config),
+    (4, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-08-01', config),
+    (5, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-09-01', config),
+    (6, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-10-01', config),
+    (7, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-05-01', config),
+    (8, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-06-01', config),
+    (9, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-07-01', config),
+    (10, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-08-01', config)
 ]
 
 evaluations_data = [
