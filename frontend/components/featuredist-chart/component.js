@@ -18,7 +18,7 @@ export default React.createClass({
 
   handleTrainingSet: function() {
     this.ajax_call_train()
-    this.setState({test_button: false})
+    this.setState({ test_button: false })
   },
 
   ajax_call_test: function() {
