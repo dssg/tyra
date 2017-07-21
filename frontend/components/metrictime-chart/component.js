@@ -1,15 +1,26 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
+import { Crosshair, FlexibleWidth, LineMarkSeries, HorizontalGridLines, onMouseDown, onNearestX, onMouseLeave, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
-    return { data: [], loading: false }
+    return {
+              data: [],
+              loading: false,
+              metric: null,
+              index: 0,
+              heldValue: false,
+            }
   },
 
   componentDidMount: function() {
     this.get_metric()
+  },
+
+  handleOnClick: function() {
+    console.log("Click!!")
   },
 
   get_metric: function() {
@@ -31,7 +42,8 @@ export default React.createClass({
       data: $.param(params),
       success: function(result) {
         self.setState({
-          data: result.results,
+          metric: result.results[0].key,
+          data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1]})),
           loading: false
         })
       }
@@ -39,6 +51,9 @@ export default React.createClass({
   },
 
   render: function() {
+    const FlexibleWidth = makeWidthFlexible(XYPlot)
+    const {index, heldValue} = this.state
+    const data = this.state.data.map((d, i) => ({...d, color: i === index ? 2 : 1, size: i === index ? 10 : 5}))
     if(this.state.loading) {
       return (
         <div>
@@ -50,30 +65,26 @@ export default React.createClass({
       return (
         <div>
           <h4>Metrics Over Time</h4>
-          {
-            React.createElement(NVD3Chart, {
-              type:"lineChart",
-              datum: this.state.data,
-              height: "250px",
-              containerStyle:{ height: "250px" },
-              x: function(d) { return d3.time.format("%Y-%m-%d").parse(d[0]) },
-              y: function(d) { return d[1] },
-              options:{
-                showDistX: true,
-                showDistY: true,
-                duration: 500,
-                useInteractiveGuideline: true,
-                xAxis: {
-                  axisLabel: 'Test Date',
-                  tickFormat: function(d) { return d3.time.format("%Y-%m-%d")(new Date(d)) }
-                },
-                xScale: d3.time.scale(),
-                yAxis: { axisLabel: 'Metric' },
-                yDomain: [0, 1.05],
-                color: d3.scale.category10().range()
-              }
-            })
-          }
+          <FlexibleWidth
+            height={250}
+            colorDomain={[0, 1, 2]}
+            margin={{ left: 50, right: 30, top: 20, bottom: 40 }}
+            yType="linear"
+            xType="time">
+            <XAxis
+              title={"Test Date"}
+              tickFormat={d => d3.time.format("%Y-%m-%d")(new Date(d))}
+              tickValues = {this.state.data.map((v) => v.x)}/>
+            <YAxis
+              title={this.state.metric}/>
+            <HorizontalGridLines />
+            <LineMarkSeries
+              sizeRange={[5, 15]}
+              style={{mark:{strokeWidth:2}, stroke:"#1f77b4"}}
+              onNearestXY={(datapoint, {index}) => this.setState({index})}
+              onValueClick={(datapoint, event) => { console.log(datapoint) }}
+              data={data} />
+          </FlexibleWidth>
         </div>
       )
     }
