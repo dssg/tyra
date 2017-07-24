@@ -1,12 +1,28 @@
 import d3 from 'd3'
-import NVD3Chart from 'react-nvd3'
+import {
+  Crosshair,
+  XYPlot,
+  XAxis,
+  YAxis,
+  HorizontalGridLines,
+  makeWidthFlexible,
+  LineSeries,
+  DiscreteColorLegend
+} from 'react-vis'
 import React from 'react'
+
+import Highlight from 'components/highlight-area/component'
+
+const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+const style = {"vertical-align": "middle"}
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      loading: false
+      lastDrawLocation: null,
+      loading: false,
+      crosshairValues: []
     }
   },
 
@@ -18,6 +34,14 @@ export default React.createClass({
     if(prevProps.asOfDate !== this.props.asOfDate) {
       this.ajax_call()
     }
+  },
+
+  handleOnNearestX: function(value, {index}) {
+    this.setState({crosshairValues: this.state.data.map((s) => s.data[index])})
+  },
+
+  handleOnMouseLeave: function() {
+    this.setState({crosshairValues: []})
   },
 
   ajax_call: function() {
@@ -38,6 +62,7 @@ export default React.createClass({
   },
 
   render: function() {
+    const {data, lastDrawLocation} = this.state
     if(this.state.loading) {
       return (
         <div>
@@ -49,26 +74,49 @@ export default React.createClass({
       return (
         <div>
           <h4>Top-K Percent Precision and Recall by Threshold</h4>
-          {
-            React.createElement(NVD3Chart, {
-              type:"lineChart",
-              datum: this.state.data,
-              x: function(d) { return d[0] },
-              y: function(d) { return d[1] },
-              containerStyle:{ height: "400px", width: "500px" },
-              options:{
-                showValues: true,
-                showControls: true,
-                duration: 500,
-                useInteractiveGuideline: true,
-                xDomain: [0, 105],
-                yDomain: [0, 1.05],
-                xAxis: { axisLabel: 'Top K(%)' },
-                yAxis: { axisLabel: 'Metric' },
-                color: d3.scale.category10().range()
-              }
-            })
-          }
+          <div className="row">
+          <div className="legend">
+          <div className="col-lg-6">
+            <button style={style} className="btn btn-xs" onClick={() => {
+              this.setState({lastDrawLocation: null});
+            }}>
+              Reset Zoom
+            </button>
+          </div>
+
+            <DiscreteColorLegend
+              orientation="horizontal"
+              width={120}
+              items={data}/>
+          </div>
+          </div>
+          <FlexibleXYPlot
+            animation
+            onMouseLeave={this.handleOnMouseLeave}
+            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+            height={300}>
+          <HorizontalGridLines />
+          <YAxis
+            title={"Metric"} />
+          <XAxis
+            title={"Top K(%)"} />
+
+          <Highlight onBrushEnd={(area) => {
+            this.setState({
+              lastDrawLocation: area
+              });
+            }} />
+
+          {data.map(entry => (
+              <LineSeries
+                key={entry.title}
+                data={entry.data}
+                color={entry.color}
+                onNearestX={this.handleOnNearestX} />
+            ))}
+          {console.log()}
+          <Crosshair values={this.state.crosshairValues} />
+          </FlexibleXYPlot>
         </div>
       )
     }
