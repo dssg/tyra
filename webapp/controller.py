@@ -217,10 +217,10 @@ def get_threshold_precision_recall(model_id, evaluation_start_time):
     try:
         precision = precision.to_dict('records')
         recall = recall.to_dict('records')
-        precision = [[p['parameter'], p['value']] for p in precision]
-        recall = [[r['parameter'], r['value']] for r in recall]
-        output = [{'key': 'Precision', 'values': precision},
-                  {'key': 'Recall', 'values': recall}]
+        precision = [{'x': p['parameter'], 'y': p['value']} for p in precision]
+        recall = [{'x': r['parameter'], 'y': r['value']} for r in recall]
+        output = [{'title': 'Precision', 'color': '#1f77b4', 'data': precision},
+                  {'title': 'Recall', 'color': '#ff7f0e', 'data': recall}]
         return jsonify(results=output)
     except:
         print('there are some problems')
