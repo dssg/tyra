@@ -73,20 +73,20 @@ export default React.createClass({
         <div>
           <h4>Top-K Percent Precision and Recall by Threshold</h4>
           <div className="row">
-          <div className="legend">
-          <div className="col-lg-6">
-            <button style={style} className="btn btn-xs" onClick={() => {
-              this.setState({lastDrawLocation: null});
-            }}>
-              Reset Zoom
-            </button>
-          </div>
+            <div className="legend">
+              <div className="col-lg-6">
+                <button style={style} className="btn btn-xs" onClick={() => {
+                  this.setState({lastDrawLocation: null});
+                }}>
+                  Reset Zoom
+                </button>
+              </div>
 
-            <DiscreteColorLegend
-              orientation="horizontal"
-              width={120}
-              items={data}/>
-          </div>
+              <DiscreteColorLegend
+                orientation="horizontal"
+                width={120}
+                items={data}/>
+            </div>
           </div>
           <FlexibleXYPlot
             animation
