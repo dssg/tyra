@@ -1,7 +1,7 @@
 from flask import Flask
 from webapp.flask_util_js import FlaskUtilJs
 from flask_sqlalchemy import SQLAlchemy
-from config import dburl
+from config import dburl, dbschema
 import flask_login
 import json
 

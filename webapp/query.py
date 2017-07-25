@@ -1,6 +1,5 @@
 import pandas as pd
-from webapp import db
-from config import dbschema
+from webapp import db, dbschema
 import logging
 import json
 import os
