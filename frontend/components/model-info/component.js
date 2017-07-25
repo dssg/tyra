@@ -7,7 +7,7 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <h3><strong>Model {this.props.modelId}</strong> {this.props.asOfDate ? this.showAsOfDate() : null}</h3>
+        <h4><strong>Model {this.props.modelId}</strong> {this.props.asOfDate ? this.showAsOfDate() : null}</h4>
       </div>
     )
   }

@@ -67,9 +67,11 @@ export default React.createClass({
       }
     }
   },
+
   componentDidMount: function() {
     this.ajax_call()
   },
+
   shouldComponentUpdate: function(nextProps, nextState) {
     const self = this
     if (this.state !== nextState ||
@@ -80,6 +82,7 @@ export default React.createClass({
     }
     return false
   },
+
   componentDidUpdate: function(prevProps) {
     const self = this
     if(prevProps.searchId !== self.props.searchId) {
@@ -92,8 +95,7 @@ export default React.createClass({
       this.ajax_call()
     }
   },
-  componentWillUnmount: function() {
-  },
+
   handleModelClick: function(modelGroupId, asOfDate) {
     const self = this
     const groupId = modelGroupId.split(" ")[2]
@@ -101,6 +103,7 @@ export default React.createClass({
     self.props.setModelId(this.state.idDateLookup[groupId][asOfDate])
     self.props.setAsOfDate(d.toISOString().split('T')[0])
   },
+
   ajax_call: function() {
     let self = this
     self.setState({ loading: true })
@@ -158,6 +161,7 @@ export default React.createClass({
       }
     })
   },
+
   render: function() {
     if(this.state.loading) {
       return (

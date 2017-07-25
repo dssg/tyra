@@ -9,18 +9,23 @@ export default React.createClass({
       data: [],
       loading: false,
       value: null,
+      style: null,
       numOfFeatures: 10,
     }
   },
-  _rememberValue: function(value) {
-    this.setState({ value: value })
+
+  _rememberValue: function(datapoint) {
+    this.setState({ value: datapoint, style: { 'cursor': 'pointer' } })
   },
+
   _forgetValue: function() {
-    this.setState({ value: null })
+    this.setState({ value: null, style: null })
   },
-  componentDidMount: function() {
-    this.ajax_call()
+
+  handleChangeNumOfFeatures: function(event) {
+    this.setState({ numOfFeatures: event.target.value })
   },
+
   ajax_call: function() {
     const self = this
     self.setState({ loading: true })
@@ -33,18 +38,23 @@ export default React.createClass({
                               .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
+        self.props.onValueClick(self.state.data.slice(-1)[0])
       }
     })
   },
-  handleChangeNumOfFeatures: function(event) {
-    this.setState({ numOfFeatures: event.target.value })
+
+  componentDidMount: function() {
+    this.ajax_call()
   },
+
   componentDidUpdate: function(prevProps, prevState) {
     const self = this
     if (self.state.numOfFeatures !== prevState.numOfFeatures) {
       this.ajax_call()
+
     }
   },
+
   render: function() {
     if(this.state.loading) {
       return (
@@ -79,6 +89,8 @@ export default React.createClass({
             <HorizontalBarSeries
               onValueMouseOver={this._rememberValue}
               onValueMouseOut={this._forgetValue}
+              onValueClick={this.props.onValueClick}
+              style={this.state.style}
               data={this.state.data} />
             { this.state.value ? <Hint value={this.state.value} /> : null }
           </XYPlot>

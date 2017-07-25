@@ -27,14 +27,6 @@ export default React.createClass({
     this.setState({ searchId: newSearchId })
   },
 
-  handleLogout: function() {
-    $.ajax({
-      url: "/logout",
-      success: function() {
-        window.location = '/login'
-      }
-    })
-  },
   setMetrics: function(newMetrics) {
     this.setState({ metrics: newMetrics })
   },
@@ -93,11 +85,9 @@ export default React.createClass({
       return (
         <div className="container-fluid center-container">
           <div className="col-lg-1">
+            <button onClick={this.removeModelId} id="GoBack" className="btn btn-xs">Back to Search</button>
           </div>
           <div className="col-lg-10">
-            <div className="row">
-              <button onClick={this.removeModelId} id="GoBack" className="btn btn-primary">Back to Search</button>
-            </div>
             { this.renderModelCharts() }
           </div>
           <div className="col-lg-1">
@@ -107,7 +97,6 @@ export default React.createClass({
     } else {
       return (
         <div className="container-fluid center-container">
-          <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
           <div className="col-lg-2 sidenav">
             <div className="row content">
               <ModelSearcher

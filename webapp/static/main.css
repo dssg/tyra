@@ -277,6 +277,13 @@ table.focus-highlight td:before {
     right:0;
 }
 
+#SetButton {
+	position: relative;
+	margin-right: 5px;
+	margin-left: 5px;
+	right:0;
+}
+
 .sidenav {
     padding-top: 20px;
     background-color: #f1f1f1;

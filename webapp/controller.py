@@ -7,6 +7,7 @@ from sklearn.metrics import precision_recall_curve, roc_curve
 import yaml
 import datetime
 from webapp import users, login_manager
+import numpy as np
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -152,6 +153,59 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
+    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>/<int:bins>',
+    methods=['GET', 'POST']
+)
+def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
+    query_arg = {'model_id': model_id, 'feature': feature}
+    # Not sure should dropna or fillna
+    f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
+    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
+    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
+    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist1, bin1 = np.histogram(dist1, bins=bin0)
+    try:
+        output = {
+                    "feature": feature,
+                    "series": [
+                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
+                        ]
+                  }
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route(
+    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>/<int:bins>',
+    methods=['GET', 'POST']
+)
+def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
+    query_arg = {'model_id': model_id, 'feature': feature}
+    f_dist = query.get_train_feature_distribution(query_arg)
+    # Not sure should dropna or fillna
+    f_dist = f_dist.fillna(value=0)
+    dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
+    dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
+    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist1, bin1 = np.histogram(dist1, bins=bin0)
+    try:
+        output = {
+                    "feature": feature,
+                    "series": [
+                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
+                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
+                        ]
+                  }
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route(
     '/evaluations/<int:model_id>/threshold_precision_recall/<evaluation_start_time>',
     methods=['GET', 'POST']
 )
@@ -165,7 +219,6 @@ def get_threshold_precision_recall(model_id, evaluation_start_time):
         recall = recall.to_dict('records')
         precision = [[p['parameter'], p['value']] for p in precision]
         recall = [[r['parameter'], r['value']] for r in recall]
-        print(precision)
         output = [{'key': 'Precision', 'values': precision},
                   {'key': 'Recall', 'values': recall}]
         return jsonify(results=output)
@@ -244,7 +297,6 @@ def get_metric_over_time(model_id):
     try:
         return jsonify(results=data)
     except Exception as e:
-        print(e)
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 

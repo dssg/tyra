@@ -1,6 +1,8 @@
 import pandas as pd
 from webapp import db
+from config import dbschema
 import logging
+import json
 import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
@@ -53,11 +55,7 @@ def get_model_comments(run_time):
 
 
 def get_model_groups(query_arg):
-    for num, args in query_arg['metrics'].items():
-        print(num, args)
-
     query_dict = list(query_arg['metrics'].items())[0][1]
-    print(query_dict)
     lookup_query = """
     SELECT
     model_group_id
@@ -181,16 +179,11 @@ def get_recall(query_arg):
         },
         con=db.engine
     )
-    print('recall')
-    print(df_precision)
     output = df_precision
     return output
 
 
 def get_metrics_over_time(query_arg):
-    for num, args in query_arg['metrics'].items():
-        print(num, args)
-
     query_dict = list(query_arg['metrics'].items())[0][1]
     query = """
     SELECT
@@ -211,3 +204,147 @@ def get_metrics_over_time(query_arg):
         con=db.engine)
     return df
 
+
+def get_all_features(model_group_id=3131):
+    query = """
+    SELECT feature_list FROM results.model_groups WHERE model_group_id={}
+    """.format(model_group_id)
+    df = pd.read_sql(
+        query,
+        con=db.engine)
+
+    feature_list = df['feature_list'].tolist()[0]
+    return feature_list
+
+
+def get_test_feature_distribution(query_arg):
+
+    query = """
+    SELECT column_name, table_schema, table_name FROM information_schema.columns
+    WHERE LOWER(column_name) = LOWER(%(feature)s)
+    """
+
+    df_lookup = pd.read_sql(
+        query,
+        params={'feature': query_arg['feature']},
+        con=db.engine)
+
+    lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
+
+    query = """
+    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
+    """
+    # Showing the first test date for now
+    as_of_date = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)['as_of_date'].tolist()[0]
+
+    try:
+        query = """
+        SELECT "{0}", {1}, label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id and p.as_of_date=f.as_of_date
+        where model_id={4} and p.as_of_date='{5}';
+        """.format(
+            lookup['column_name'].tolist()[0],
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date)
+
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+    except:
+        query = """
+        SELECT "{0}", "{1}", label_value
+        FROM "{1}"."{2}" f
+        JOIN results.predictions p on f.{1}=p.entity_id
+        where model_id={3} and p.as_of_date='{4}';
+        """.format(
+            lookup['column_name'].tolist()[0],
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date)
+
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+
+    return df
+
+
+def get_train_feature_distribution(query_arg):
+    query = """
+    SELECT config ->> 'train_metadata' as train_metadata FROM results.models WHERE model_id=%(model_id)s
+    """
+    train_metadata = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)
+    training_time = json.loads(train_metadata['train_metadata'][0])['feature_as_of_dates']
+
+    query = """
+    SELECT column_name, table_schema, table_name FROM information_schema.columns
+    WHERE LOWER(column_name) = LOWER(%(feature)s)
+    """
+
+    df_lookup = pd.read_sql(
+        query,
+        params={'feature': query_arg['feature']},
+        con=db.engine)
+
+    lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
+
+    query = """
+    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
+    """
+    as_of_date = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id']},
+        con=db.engine)['as_of_date'].tolist()[0]
+
+    try:
+        query = """
+        SELECT "{0}", {1}, label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id
+        WHERE model_id={4}
+        AND p.as_of_date='{5}'
+        AND f.as_of_date in {6}
+        """.format(
+            lookup['column_name'].tolist()[0],
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date,
+            tuple(training_time)
+            )
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+    except:
+        query = """
+        SELECT "{0}", "{1}", label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id
+        WHERE model_id={4}
+        AND p.as_of_date='{5}'
+        """.format(
+            lookup['column_name'].tolist()[0],
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
+            lookup['table_name'].tolist()[0],
+            query_arg['model_id'],
+            as_of_date,
+            )
+        df = pd.read_sql(
+            query,
+            con=db.engine)
+
+    return df

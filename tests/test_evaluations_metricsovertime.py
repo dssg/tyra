@@ -16,9 +16,11 @@ model_groups_data = [
     (1,),
 ]
 
+config = json.dumps({"train_metadata": {"feature_as_of_dates": ["2014-04-24", "2015-04-24"]}})
+
 models_data = [
-    # model_id, run_time, model_type, model_group_id, testing, model_comment, train_end_time
-    (1, EARLIER, 'a_model_type', 1, False, 'two feature block', '2015-04-01'),
+    # model_id, run_time, model_type, model_group_id, testing, model_comment, train_end_time, config
+    (1, EARLIER, 'a_model_type', 1, False, 'two feature block', '2015-04-01', config),
 
 ]
 

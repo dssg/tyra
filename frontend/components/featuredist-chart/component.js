@@ -1,78 +1,74 @@
+import d3 from 'd3'
 import NVD3Chart from 'react-nvd3'
 import React from 'react'
-import d3 from 'd3'
 
 export default React.createClass({
-    getInitialState: function() {
-      return { data: poissonData(2,20) };
-    },
-    handleGenerate: function() {
-      //console.log(this.state.data);
-      this.setState({ data: poissonData(2,20)});
-    },
-    render: function() {
+  getInitialState: function() {
+    return {
+      data: [],
+      bins: 20,
+      loading: false }
+  },
+
+  ajax_call: function() {
+    const self = this
+    self.setState({ loading: true })
+    $.ajax({
+      type: "GET",
+      url: "/evaluations/" + this.props.modelId + this.props.testOrTrain + this.props.featureSelected + "/" + this.state.bins,
+      success: function(result) {
+        self.setState({
+          data: result.results.series,
+          loading: false
+        })
+      }
+    })
+  },
+
+  componentDidMount: function() {
+    this.ajax_call()
+  },
+
+  componentDidUpdate: function(prevProps) {
+    const self = this
+    if (self.props.featureSelected !== prevProps.featureSelected ||
+        self.props.testOrTrain !== prevProps.testOrTrain) {
+      this.ajax_call()
+    }
+  },
+
+  render: function() {
+    if(this.state.loading) {
       return (
         <div>
-          <button onClick={this.handleGenerate}>Generate</button>
+          <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
+        </div>
+      )
+    } else {
+      return (
+        <div>
           {
           React.createElement(NVD3Chart, {
             type:"lineChart",
             datum: this.state.data,
-            containerStyle:{ width: "700px", height: "500px" },
+            containerStyle:{ width: "650px", height: "400px" },
             x: function(d) { return d[0] },
             y: function(d) { return d[1] },
             options:{
+              showValues: true,
+              showControls: true,
               showDistX: true,
               showDistY: true,
               useInteractiveGuideline: true,
               duration: 500,
-              xAxis: { tickFormat: d3.format('.01f'), axisLabel: 'Feature Value' },
+              xAxis: { tickFormat: d3.format('.02f'), axisLabel: 'Feature Value' },
               yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'P(X|Y=Label)' },
               color: d3.scale.category10().range()
             }
           })
-        }
+          }
         </div>
       )
     }
-});
-
-
-function poisson(k, landa) {
-    var exponential = 2.718281828;
-    var numerator, denominator;
-    var exponentialPower = Math.pow(exponential, -landa); // negative power k
-    var landaPowerK = Math.pow(landa, k); // Landa elevated k
-    numerator = exponentialPower * landaPowerK;
-    denominator = fact(k); // factorial of k.
-
-    return (numerator / denominator);
-}
-
-function fact(x) {
-   if(x==0) {
-      return 1;
-   }
-   return x * fact(x-1);
-}
-
-function poissonData(groups, points) { //# groups,# points per group
-  var data = [],
-      random = d3.random.normal(5,2);
-  for (var i = 0; i < groups; i++) {
-    data.push({
-      key: 'Label ' + i,
-      values: []
-    });
-    var landa = random();
-    var g =[];
-    for (var j = 0; j < points; j+=1) {
-      data[i].values.push([j, poisson(j,landa)]);
-    }
   }
-  var current_unit = d3.random.normal(6,4)();
-  data.push({key: 'unit', values: [[current_unit,0],[current_unit,0.3]]});
-
-  return data;
-}
-
+})

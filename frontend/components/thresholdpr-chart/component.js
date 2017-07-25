@@ -9,14 +9,17 @@ export default React.createClass({
       loading: false
     }
   },
+
   componentDidMount: function() {
     this.ajax_call()
   },
+
   componentDidUpdate: function(prevProps) {
     if(prevProps.asOfDate !== this.props.asOfDate) {
       this.ajax_call()
     }
   },
+
   ajax_call: function() {
     const self = this
     self.setState({ loading: true })
@@ -33,6 +36,7 @@ export default React.createClass({
       })
     }
   },
+
   render: function() {
     if(this.state.loading) {
       return (
