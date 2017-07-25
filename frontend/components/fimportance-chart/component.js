@@ -22,8 +22,8 @@ export default React.createClass({
     this.setState({ value: null, style: null })
   },
 
-  componentDidMount: function() {
-    this.ajax_call()
+  handleChangeNumOfFeatures: function(event) {
+    this.setState({ numOfFeatures: event.target.value })
   },
 
   ajax_call: function() {
@@ -43,8 +43,8 @@ export default React.createClass({
     })
   },
 
-  handleChangeNumOfFeatures: function(event) {
-    this.setState({ numOfFeatures: event.target.value })
+  componentDidMount: function() {
+    this.ajax_call()
   },
 
   componentDidUpdate: function(prevProps, prevState) {
