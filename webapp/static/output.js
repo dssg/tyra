@@ -62420,11 +62420,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component11 = __webpack_require__(781);
+	var _component11 = __webpack_require__(782);
 
 	var _component12 = _interopRequireDefault(_component11);
 
-	var _component13 = __webpack_require__(782);
+	var _component13 = __webpack_require__(783);
 
 	var _component14 = _interopRequireDefault(_component13);
 
@@ -125973,7 +125973,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component = __webpack_require__(783);
+	var _component = __webpack_require__(781);
 
 	var _component2 = _interopRequireDefault(_component);
 
@@ -126128,320 +126128,6 @@
 
 /***/ }),
 /* 781 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _reactVis = __webpack_require__(654);
-
-	var _react = __webpack_require__(315);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _component = __webpack_require__(783);
-
-	var _component2 = _interopRequireDefault(_component);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
-	var style = { "verticalAlign": "middle" };
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'component',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: [],
-	      loading: true,
-	      lastDrawLocation: null,
-	      crosshairValues: []
-	    };
-	  },
-
-	  handleOnNearestX: function handleOnNearestX(value, _ref) {
-	    var index = _ref.index;
-
-	    this.setState({ crosshairValues: this.state.data.map(function (s) {
-	        return s.data[index];
-	      }) });
-	  },
-
-	  handleOnMouseLeave: function handleOnMouseLeave() {
-	    this.setState({ crosshairValues: [] });
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    this.ajax_call();
-	  },
-
-	  componentDidUpdate: function componentDidUpdate(prevProps) {
-	    if (prevProps.asOfDate !== this.props.asOfDate) {
-	      this.ajax_call();
-	    }
-	  },
-
-	  ajax_call: function ajax_call() {
-	    var self = this;
-	    if (this.props.asOfDate !== null) {
-	      $.ajax({
-	        type: "GET",
-	        url: "/evaluations/" + this.props.modelId + "/simple_precision_recall/" + this.props.asOfDate,
-	        success: function success(result) {
-	          self.setState({
-	            data: result.results,
-	            loading: false
-	          });
-	        }
-	      });
-	    }
-	  },
-
-	  render: function render() {
-	    var _this = this;
-
-	    if (this.state.loading) {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h4',
-	          null,
-	          'Precision Recall Curve'
-	        ),
-	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
-	      );
-	    } else {
-	      var _state = this.state,
-	          data = _state.data,
-	          lastDrawLocation = _state.lastDrawLocation;
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h4',
-	          null,
-	          'Precision Recall Curve'
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'legend' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-lg-6' },
-	              _react2.default.createElement(
-	                'button',
-	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
-	                    _this.setState({ lastDrawLocation: null });
-	                  } },
-	                'Reset Zoom'
-	              )
-	            ),
-	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
-	              orientation: 'horizontal',
-	              width: 120,
-	              items: data })
-	          )
-	        ),
-	        _react2.default.createElement(
-	          FlexibleXYPlot,
-	          {
-	            animation: true,
-	            onMouseLeave: this.handleOnMouseLeave,
-	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
-	            height: 300 },
-	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
-	          _react2.default.createElement(_reactVis.YAxis, {
-	            title: "Precision" }),
-	          _react2.default.createElement(_reactVis.XAxis, {
-	            title: "Recall" }),
-	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
-	              _this.setState({
-	                lastDrawLocation: area
-	              });
-	            } }),
-	          data.map(function (entry) {
-	            return _react2.default.createElement(_reactVis.LineSeries, {
-	              key: entry.title,
-	              data: entry.data,
-	              color: entry.color,
-	              onNearestX: _this.handleOnNearestX });
-	          }),
-	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
-	        )
-	      );
-	    }
-	  }
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 782 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _reactVis = __webpack_require__(654);
-
-	var _react = __webpack_require__(315);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _component = __webpack_require__(783);
-
-	var _component2 = _interopRequireDefault(_component);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
-	var style = { "verticalAlign": "middle" };
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'component',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: [],
-	      lastDrawLocation: null,
-	      loading: true,
-	      crosshairValues: []
-	    };
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    this.ajax_call();
-	  },
-
-	  componentDidUpdate: function componentDidUpdate(prevProps) {
-	    if (prevProps.asOfDate !== this.props.asOfDate) {
-	      this.ajax_call();
-	    }
-	  },
-
-	  handleOnNearestX: function handleOnNearestX(value, _ref) {
-	    var index = _ref.index;
-
-	    this.setState({ crosshairValues: this.state.data.map(function (s) {
-	        return s.data[index];
-	      }) });
-	  },
-
-	  handleOnMouseLeave: function handleOnMouseLeave() {
-	    this.setState({ crosshairValues: [] });
-	  },
-
-	  ajax_call: function ajax_call() {
-	    var self = this;
-	    if (this.props.asOfDate !== null) {
-	      $.ajax({
-	        type: "GET",
-	        url: "/evaluations/" + this.props.modelId + "/threshold_precision_recall/" + this.props.asOfDate,
-	        success: function success(result) {
-	          self.setState({
-	            data: result.results,
-	            loading: false
-	          });
-	        }
-	      });
-	    }
-	  },
-
-	  render: function render() {
-	    var _this = this;
-
-	    if (this.state.loading) {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h4',
-	          null,
-	          'Top-K Percent Precision and Recall by Threshold'
-	        ),
-	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
-	      );
-	    } else {
-	      var _state = this.state,
-	          data = _state.data,
-	          lastDrawLocation = _state.lastDrawLocation;
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h4',
-	          null,
-	          'Top-K Percent Precision and Recall by Threshold'
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'legend' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-lg-6' },
-	              _react2.default.createElement(
-	                'button',
-	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
-	                    _this.setState({ lastDrawLocation: null });
-	                  } },
-	                'Reset Zoom'
-	              )
-	            ),
-	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
-	              orientation: 'horizontal',
-	              width: 120,
-	              items: data })
-	          )
-	        ),
-	        _react2.default.createElement(
-	          FlexibleXYPlot,
-	          {
-	            animation: true,
-	            onMouseLeave: this.handleOnMouseLeave,
-	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
-	            height: 300 },
-	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
-	          _react2.default.createElement(_reactVis.YAxis, {
-	            title: "Metric" }),
-	          _react2.default.createElement(_reactVis.XAxis, {
-	            title: "Top K(%)" }),
-	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
-	              _this.setState({
-	                lastDrawLocation: area
-	              });
-	            } }),
-	          data.map(function (entry) {
-	            return _react2.default.createElement(_reactVis.LineSeries, {
-	              key: entry.title,
-	              data: entry.data,
-	              color: entry.color,
-	              onNearestX: _this.handleOnNearestX });
-	          }),
-	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
-	        )
-	      );
-	    }
-	  }
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 783 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126659,6 +126345,320 @@
 	exports.default = Highlight;
 
 /***/ }),
+/* 782 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _reactVis = __webpack_require__(654);
+
+	var _react = __webpack_require__(315);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _component = __webpack_require__(781);
+
+	var _component2 = _interopRequireDefault(_component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
+	var style = { "verticalAlign": "middle" };
+
+	exports.default = _react2.default.createClass({
+	  displayName: 'component',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      data: [],
+	      loading: true,
+	      lastDrawLocation: null,
+	      crosshairValues: []
+	    };
+	  },
+
+	  handleOnNearestX: function handleOnNearestX(value, _ref) {
+	    var index = _ref.index;
+
+	    this.setState({ crosshairValues: this.state.data.map(function (s) {
+	        return s.data[index];
+	      }) });
+	  },
+
+	  handleOnMouseLeave: function handleOnMouseLeave() {
+	    this.setState({ crosshairValues: [] });
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.ajax_call();
+	  },
+
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
+	    if (prevProps.asOfDate !== this.props.asOfDate) {
+	      this.ajax_call();
+	    }
+	  },
+
+	  ajax_call: function ajax_call() {
+	    var self = this;
+	    if (this.props.asOfDate !== null) {
+	      $.ajax({
+	        type: "GET",
+	        url: "/evaluations/" + this.props.modelId + "/simple_precision_recall/" + this.props.asOfDate,
+	        success: function success(result) {
+	          self.setState({
+	            data: result.results,
+	            loading: false
+	          });
+	        }
+	      });
+	    }
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    if (this.state.loading) {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          'Precision Recall Curve'
+	        ),
+	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
+	      );
+	    } else {
+	      var _state = this.state,
+	          data = _state.data,
+	          lastDrawLocation = _state.lastDrawLocation;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          'Precision Recall Curve'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'legend' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-6' },
+	              _react2.default.createElement(
+	                'button',
+	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
+	                    _this.setState({ lastDrawLocation: null });
+	                  } },
+	                'Reset Zoom'
+	              )
+	            ),
+	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
+	              orientation: 'horizontal',
+	              width: 120,
+	              items: data })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          FlexibleXYPlot,
+	          {
+	            animation: true,
+	            onMouseLeave: this.handleOnMouseLeave,
+	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
+	            height: 300 },
+	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
+	          _react2.default.createElement(_reactVis.YAxis, {
+	            title: "Precision" }),
+	          _react2.default.createElement(_reactVis.XAxis, {
+	            title: "Recall" }),
+	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
+	              _this.setState({
+	                lastDrawLocation: area
+	              });
+	            } }),
+	          data.map(function (entry) {
+	            return _react2.default.createElement(_reactVis.LineSeries, {
+	              key: entry.title,
+	              data: entry.data,
+	              color: entry.color,
+	              onNearestX: _this.handleOnNearestX });
+	          }),
+	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
+	        )
+	      );
+	    }
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 783 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _reactVis = __webpack_require__(654);
+
+	var _react = __webpack_require__(315);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _component = __webpack_require__(781);
+
+	var _component2 = _interopRequireDefault(_component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
+	var style = { "verticalAlign": "middle" };
+
+	exports.default = _react2.default.createClass({
+	  displayName: 'component',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      data: [],
+	      lastDrawLocation: null,
+	      loading: true,
+	      crosshairValues: []
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.ajax_call();
+	  },
+
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
+	    if (prevProps.asOfDate !== this.props.asOfDate) {
+	      this.ajax_call();
+	    }
+	  },
+
+	  handleOnNearestX: function handleOnNearestX(value, _ref) {
+	    var index = _ref.index;
+
+	    this.setState({ crosshairValues: this.state.data.map(function (s) {
+	        return s.data[index];
+	      }) });
+	  },
+
+	  handleOnMouseLeave: function handleOnMouseLeave() {
+	    this.setState({ crosshairValues: [] });
+	  },
+
+	  ajax_call: function ajax_call() {
+	    var self = this;
+	    if (this.props.asOfDate !== null) {
+	      $.ajax({
+	        type: "GET",
+	        url: "/evaluations/" + this.props.modelId + "/threshold_precision_recall/" + this.props.asOfDate,
+	        success: function success(result) {
+	          self.setState({
+	            data: result.results,
+	            loading: false
+	          });
+	        }
+	      });
+	    }
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    if (this.state.loading) {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          'Top-K Percent Precision and Recall by Threshold'
+	        ),
+	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
+	      );
+	    } else {
+	      var _state = this.state,
+	          data = _state.data,
+	          lastDrawLocation = _state.lastDrawLocation;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          'Top-K Percent Precision and Recall by Threshold'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'legend' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-6' },
+	              _react2.default.createElement(
+	                'button',
+	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
+	                    _this.setState({ lastDrawLocation: null });
+	                  } },
+	                'Reset Zoom'
+	              )
+	            ),
+	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
+	              orientation: 'horizontal',
+	              width: 120,
+	              items: data })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          FlexibleXYPlot,
+	          {
+	            animation: true,
+	            onMouseLeave: this.handleOnMouseLeave,
+	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
+	            height: 300 },
+	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
+	          _react2.default.createElement(_reactVis.YAxis, {
+	            title: "Metric" }),
+	          _react2.default.createElement(_reactVis.XAxis, {
+	            title: "Top K(%)" }),
+	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
+	              _this.setState({
+	                lastDrawLocation: area
+	              });
+	            } }),
+	          data.map(function (entry) {
+	            return _react2.default.createElement(_reactVis.LineSeries, {
+	              key: entry.title,
+	              data: entry.data,
+	              color: entry.color,
+	              onNearestX: _this.handleOnNearestX });
+	          }),
+	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
+	        )
+	      );
+	    }
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
 /* 784 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -126728,11 +126728,11 @@
 
 	var _component12 = _interopRequireDefault(_component11);
 
-	var _component13 = __webpack_require__(781);
+	var _component13 = __webpack_require__(782);
 
 	var _component14 = _interopRequireDefault(_component13);
 
-	var _component15 = __webpack_require__(782);
+	var _component15 = __webpack_require__(783);
 
 	var _component16 = _interopRequireDefault(_component15);
 
