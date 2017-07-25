@@ -50,7 +50,7 @@
 
 	var _component2 = _interopRequireDefault(_component);
 
-	var _component3 = __webpack_require__(785);
+	var _component3 = __webpack_require__(784);
 
 	var _component4 = _interopRequireDefault(_component3);
 
@@ -63398,10 +63398,6 @@
 	    };
 	  },
 
-	  handleDefaultFeatureSelected: function handleDefaultFeatureSelected(feature) {
-	    this.setState({ featureSelected: feature });
-	  },
-
 	  handleOnValueClick: function handleOnValueClick(datapoint) {
 	    this.setState({ featureSelected: datapoint.y });
 	  },
@@ -63476,8 +63472,7 @@
 	        { className: 'col-md-6' },
 	        _react2.default.createElement(_component4.default, {
 	          modelId: this.props.modelId,
-	          onValueClick: this.handleOnValueClick,
-	          handleDefaultFeatureSelected: this.handleDefaultFeatureSelected })
+	          onValueClick: this.handleOnValueClick })
 	      )
 	    );
 	  }
@@ -96541,8 +96536,8 @@
 	    this.setState({ value: null, style: null });
 	  },
 
-	  componentDidMount: function componentDidMount() {
-	    this.ajax_call();
+	  handleChangeNumOfFeatures: function handleChangeNumOfFeatures(event) {
+	    this.setState({ numOfFeatures: event.target.value });
 	  },
 
 	  ajax_call: function ajax_call() {
@@ -96560,13 +96555,13 @@
 	          }),
 	          loading: false
 	        });
-	        self.props.handleDefaultFeatureSelected(self.state.data.slice(-1)[0].y);
+	        self.props.onValueClick(self.state.data.slice(-1)[0]);
 	      }
 	    });
 	  },
 
-	  handleChangeNumOfFeatures: function handleChangeNumOfFeatures(event) {
-	    this.setState({ numOfFeatures: event.target.value });
+	  componentDidMount: function componentDidMount() {
+	    this.ajax_call();
 	  },
 
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
@@ -126259,8 +126254,7 @@
 
 /***/ }),
 /* 783 */,
-/* 784 */,
-/* 785 */
+/* 784 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126273,7 +126267,7 @@
 
 	var _component2 = _interopRequireDefault(_component);
 
-	var _component3 = __webpack_require__(786);
+	var _component3 = __webpack_require__(785);
 
 	var _component4 = _interopRequireDefault(_component3);
 
@@ -126294,7 +126288,7 @@
 	});
 
 /***/ }),
-/* 786 */
+/* 785 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126337,7 +126331,7 @@
 
 	var _component16 = _interopRequireDefault(_component15);
 
-	var _component17 = __webpack_require__(787);
+	var _component17 = __webpack_require__(786);
 
 	var _component18 = _interopRequireDefault(_component17);
 
@@ -126345,11 +126339,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component19 = __webpack_require__(804);
+	var _component19 = __webpack_require__(803);
 
 	var _component20 = _interopRequireDefault(_component19);
 
-	var _component21 = __webpack_require__(805);
+	var _component21 = __webpack_require__(804);
 
 	var _component22 = _interopRequireDefault(_component21);
 
@@ -126507,7 +126501,7 @@
 	});
 
 /***/ }),
-/* 787 */
+/* 786 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126524,7 +126518,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactFauxDom = __webpack_require__(788);
+	var _reactFauxDom = __webpack_require__(787);
 
 	var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
 
@@ -126625,13 +126619,13 @@
 	}
 
 /***/ }),
-/* 788 */
+/* 787 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Element = __webpack_require__(789)
-	var Window = __webpack_require__(801)
-	var core = __webpack_require__(802)
-	var anim = __webpack_require__(803)
+	var Element = __webpack_require__(788)
+	var Window = __webpack_require__(800)
+	var core = __webpack_require__(801)
+	var anim = __webpack_require__(802)
 
 	var ReactFauxDOM = {
 	  Element: Element,
@@ -126659,18 +126653,18 @@
 
 
 /***/ }),
-/* 789 */
+/* 788 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(315)
-	var styleAttr = __webpack_require__(790)
-	var querySelectorAll = __webpack_require__(791)
-	var camelCase = __webpack_require__(795)
-	var isString = __webpack_require__(796)
-	var isUndefined = __webpack_require__(797)
-	var assign = __webpack_require__(798)
-	var mapValues = __webpack_require__(799)
-	var styleCamelCase = __webpack_require__(800)
+	var styleAttr = __webpack_require__(789)
+	var querySelectorAll = __webpack_require__(790)
+	var camelCase = __webpack_require__(794)
+	var isString = __webpack_require__(795)
+	var isUndefined = __webpack_require__(796)
+	var assign = __webpack_require__(797)
+	var mapValues = __webpack_require__(798)
+	var styleCamelCase = __webpack_require__(799)
 
 	function Element (nodeName, parentNode) {
 	  this.nodeName = nodeName
@@ -127022,7 +127016,7 @@
 
 
 /***/ }),
-/* 790 */
+/* 789 */
 /***/ (function(module, exports) {
 
 	
@@ -127134,13 +127128,13 @@
 	module.exports.normalize = normalize;
 
 /***/ }),
-/* 791 */
+/* 790 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(792);
+	module.exports = __webpack_require__(791);
 
 /***/ }),
-/* 792 */
+/* 791 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -127149,8 +127143,8 @@
 	 * @author yiminghe@gmail.com
 	 */
 
-	var util = __webpack_require__(793);
-	var parser = __webpack_require__(794);
+	var util = __webpack_require__(792);
+	var parser = __webpack_require__(793);
 
 	var EXPANDO_SELECTOR_KEY = '_ks_data_selector_id_',
 	  caches = {},
@@ -127843,7 +127837,7 @@
 	 */
 
 /***/ }),
-/* 793 */
+/* 792 */
 /***/ (function(module, exports) {
 
 	/**
@@ -128194,7 +128188,7 @@
 	};
 
 /***/ }),
-/* 794 */
+/* 793 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*
@@ -129403,7 +129397,7 @@
 	}
 
 /***/ }),
-/* 795 */
+/* 794 */
 /***/ (function(module, exports) {
 
 	var hyphenExpression = /\-+([a-z])/gi
@@ -129426,7 +129420,7 @@
 
 
 /***/ }),
-/* 796 */
+/* 795 */
 /***/ (function(module, exports) {
 
 	function isString (value) {
@@ -129437,7 +129431,7 @@
 
 
 /***/ }),
-/* 797 */
+/* 796 */
 /***/ (function(module, exports) {
 
 	function isUndefined (value) {
@@ -129448,7 +129442,7 @@
 
 
 /***/ }),
-/* 798 */
+/* 797 */
 /***/ (function(module, exports) {
 
 	function assign (dest) {
@@ -129470,7 +129464,7 @@
 
 
 /***/ }),
-/* 799 */
+/* 798 */
 /***/ (function(module, exports) {
 
 	function mapValues (source, fn) {
@@ -129489,10 +129483,10 @@
 
 
 /***/ }),
-/* 800 */
+/* 799 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var camelCase = __webpack_require__(795)
+	var camelCase = __webpack_require__(794)
 
 	function styleCamelCase (name) {
 	  var camel = camelCase(name)
@@ -129515,7 +129509,7 @@
 
 
 /***/ }),
-/* 801 */
+/* 800 */
 /***/ (function(module, exports) {
 
 	var Window = {
@@ -129530,11 +129524,11 @@
 
 
 /***/ }),
-/* 802 */
+/* 801 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Element = __webpack_require__(789)
-	var mapValues = __webpack_require__(799)
+	var Element = __webpack_require__(788)
+	var mapValues = __webpack_require__(798)
 
 	var mixin = {
 	  componentWillMount: function () {
@@ -129558,7 +129552,7 @@
 
 
 /***/ }),
-/* 803 */
+/* 802 */
 /***/ (function(module, exports) {
 
 	var anim = {
@@ -129590,7 +129584,7 @@
 
 
 /***/ }),
-/* 804 */
+/* 803 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -129665,7 +129659,7 @@
 	}
 
 /***/ }),
-/* 805 */
+/* 804 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

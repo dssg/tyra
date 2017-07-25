@@ -38,7 +38,7 @@ export default React.createClass({
                               .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
-        self.props.handleDefaultFeatureSelected(self.state.data.slice(-1)[0].y)
+        self.props.onValueClick(self.state.data.slice(-1)[0])
       }
     })
   },

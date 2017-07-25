@@ -10,10 +10,6 @@ export default React.createClass({
     }
   },
 
-  handleDefaultFeatureSelected: function(feature) {
-    this.setState({ featureSelected: feature })
-  },
-
   handleOnValueClick: function(datapoint) {
     this.setState({ featureSelected: datapoint.y })
   },
@@ -72,8 +68,7 @@ export default React.createClass({
         <div className="col-md-6">
           <FeatureImportanceChart
             modelId={this.props.modelId}
-            onValueClick={this.handleOnValueClick}
-            handleDefaultFeatureSelected={this.handleDefaultFeatureSelected}>
+            onValueClick={this.handleOnValueClick}>
           </FeatureImportanceChart>
         </div>
       </div>
