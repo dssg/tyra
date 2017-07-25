@@ -13,14 +13,14 @@ import React from 'react'
 import Highlight from 'components/highlight-area/component'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const style = {"vertical-align": "middle"}
+const style = {"verticalAlign": "middle"}
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
       lastDrawLocation: null,
-      loading: false,
+      loading: true,
       crosshairValues: []
     }
   },
@@ -45,7 +45,6 @@ export default React.createClass({
 
   ajax_call: function() {
     const self = this
-    self.setState({ loading: true })
     if(this.props.asOfDate !== null) {
       $.ajax({
         type: "GET",
@@ -61,7 +60,6 @@ export default React.createClass({
   },
 
   render: function() {
-    const {data, lastDrawLocation} = this.state
     if(this.state.loading) {
       return (
         <div>
@@ -70,6 +68,7 @@ export default React.createClass({
         </div>
       )
     } else {
+      const {data, lastDrawLocation} = this.state
       return (
         <div>
           <h4>Top-K Percent Precision and Recall by Threshold</h4>

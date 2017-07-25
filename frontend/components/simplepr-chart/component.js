@@ -13,13 +13,13 @@ import React from 'react'
 import Highlight from 'components/highlight-area/component'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const style = {"vertical-align": "middle"}
+const style = {"verticalAlign": "middle"}
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      loading: false,
+      loading: true,
       lastDrawLocation: null,
       crosshairValues: []
     }
@@ -36,14 +36,15 @@ export default React.createClass({
   componentDidMount: function() {
     this.ajax_call()
   },
+
   componentDidUpdate: function(prevProps) {
     if(prevProps.asOfDate !== this.props.asOfDate) {
       this.ajax_call()
     }
   },
+
   ajax_call: function() {
     const self = this
-    self.setState({ loading: true })
     if (this.props.asOfDate !== null) {
       $.ajax({
         type: "GET",
@@ -57,6 +58,7 @@ export default React.createClass({
       })
     }
   },
+
   render: function() {
     const {data, lastDrawLocation} = this.state
     if(this.state.loading) {
@@ -67,6 +69,7 @@ export default React.createClass({
         </div>
       )
     } else {
+      const {data, lastDrawLocation} = this.state
       return (
         <div>
           <h4>Precision Recall Curve</h4>
