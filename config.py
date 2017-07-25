@@ -16,6 +16,10 @@ if os.path.exists(profile_file):
             'port': config['PGPORT'],
         }
         dburl = URL('postgres', **dbconfig)
+        dbschema = {
+            'feature_schema': config['feature_schema'],
+            'entity_id': config['entity_id'],
+        }
 else:
     logging.warning('No config file found, using empty config')
     config = {}

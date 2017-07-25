@@ -1,5 +1,6 @@
 import pandas as pd
 from webapp import db
+from config import dbschema
 import logging
 import json
 import os
@@ -241,13 +242,14 @@ def get_test_feature_distribution(query_arg):
 
     try:
         query = """
-        SELECT "{0}", officer_id, label_value
-        FROM "{1}"."{2}" f
-        JOIN results.predictions p on f.officer_id=p.entity_id and p.as_of_date=f.as_of_date
-        where model_id={3} and p.as_of_date='{4}';
+        SELECT "{0}", {1}, label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id and p.as_of_date=f.as_of_date
+        where model_id={4} and p.as_of_date='{5}';
         """.format(
             lookup['column_name'].tolist()[0],
-            "historical_features_daily_month",
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
             lookup['table_name'].tolist()[0],
             query_arg['model_id'],
             as_of_date)
@@ -257,13 +259,14 @@ def get_test_feature_distribution(query_arg):
             con=db.engine)
     except:
         query = """
-        SELECT "{0}", officer_id, label_value
+        SELECT "{0}", "{1}", label_value
         FROM "{1}"."{2}" f
-        JOIN results.predictions p on f.officer_id=p.entity_id
+        JOIN results.predictions p on f.{1}=p.entity_id
         where model_id={3} and p.as_of_date='{4}';
         """.format(
             lookup['column_name'].tolist()[0],
-            "historical_features_daily_month",
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
             lookup['table_name'].tolist()[0],
             query_arg['model_id'],
             as_of_date)
@@ -307,15 +310,16 @@ def get_train_feature_distribution(query_arg):
 
     try:
         query = """
-        SELECT "{0}", officer_id, label_value
-        FROM "{1}"."{2}" f
-        JOIN results.predictions p on f.officer_id=p.entity_id
-        WHERE model_id={3}
-        AND p.as_of_date='{4}'
-        AND f.as_of_date in {5}
+        SELECT "{0}", {1}, label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id
+        WHERE model_id={4}
+        AND p.as_of_date='{5}'
+        AND f.as_of_date in {6}
         """.format(
             lookup['column_name'].tolist()[0],
-            "historical_features_daily_month",
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
             lookup['table_name'].tolist()[0],
             query_arg['model_id'],
             as_of_date,
@@ -326,14 +330,15 @@ def get_train_feature_distribution(query_arg):
             con=db.engine)
     except:
         query = """
-        SELECT "{0}", officer_id, label_value
-        FROM "{1}"."{2}" f
-        JOIN results.predictions p on f.officer_id=p.entity_id
-        WHERE model_id={3}
-        AND p.as_of_date='{4}'
+        SELECT "{0}", "{1}", label_value
+        FROM "{2}"."{3}" f
+        JOIN results.predictions p on f.{1}=p.entity_id
+        WHERE model_id={4}
+        AND p.as_of_date='{5}'
         """.format(
             lookup['column_name'].tolist()[0],
-            "historical_features_daily_month",
+            dbschema['entity_id'],
+            dbschema['feature_schema'],
             lookup['table_name'].tolist()[0],
             query_arg['model_id'],
             as_of_date,
