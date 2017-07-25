@@ -22,8 +22,8 @@ export default React.createClass({
     this.setState({ value: null, style: null })
   },
 
-  componentDidMount: function() {
-    this.ajax_call()
+  handleChangeNumOfFeatures: function(event) {
+    this.setState({ numOfFeatures: event.target.value })
   },
 
   ajax_call: function() {
@@ -38,13 +38,13 @@ export default React.createClass({
                               .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
           loading: false
         })
-        self.props.handleDefaultFeatureSelected(self.state.data.slice(-1)[0].y)
+        self.props.onValueClick(self.state.data.slice(-1)[0])
       }
     })
   },
 
-  handleChangeNumOfFeatures: function(event) {
-    this.setState({ numOfFeatures: event.target.value })
+  componentDidMount: function() {
+    this.ajax_call()
   },
 
   componentDidUpdate: function(prevProps, prevState) {
