@@ -50,7 +50,7 @@
 
 	var _component2 = _interopRequireDefault(_component);
 
-	var _component3 = __webpack_require__(785);
+	var _component3 = __webpack_require__(784);
 
 	var _component4 = _interopRequireDefault(_component3);
 
@@ -62457,23 +62457,13 @@
 	        _react2.default.createElement(_component6.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate }),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-5' },
+	          { className: 'col-md-6' },
 	          _react2.default.createElement(_component14.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate })
 	        ),
-	        _react2.default.createElement('div', { className: 'col-md-2' }),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-5' },
+	          { className: 'col-md-6' },
 	          _react2.default.createElement(_component12.default, { modelId: this.props.modelId, asOfDate: this.props.asOfDate })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-12' },
-	          _react2.default.createElement(
-	            'h3',
-	            null,
-	            '\xA0'
-	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -125977,19 +125967,20 @@
 	  value: true
 	});
 
-	var _d = __webpack_require__(649);
-
-	var _d2 = _interopRequireDefault(_d);
-
-	var _reactNvd = __webpack_require__(650);
-
-	var _reactNvd2 = _interopRequireDefault(_reactNvd);
+	var _reactVis = __webpack_require__(654);
 
 	var _react = __webpack_require__(315);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _component = __webpack_require__(783);
+
+	var _component2 = _interopRequireDefault(_component);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
+	var style = { "verticalAlign": "middle" };
 
 	exports.default = _react2.default.createClass({
 	  displayName: 'component',
@@ -125997,20 +125988,36 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: [],
-	      loading: false
+	      loading: true,
+	      lastDrawLocation: null,
+	      crosshairValues: []
 	    };
 	  },
+
+	  handleOnNearestX: function handleOnNearestX(value, _ref) {
+	    var index = _ref.index;
+
+	    this.setState({ crosshairValues: this.state.data.map(function (s) {
+	        return s.data[index];
+	      }) });
+	  },
+
+	  handleOnMouseLeave: function handleOnMouseLeave() {
+	    this.setState({ crosshairValues: [] });
+	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    if (prevProps.asOfDate !== this.props.asOfDate) {
 	      this.ajax_call();
 	    }
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
-	    self.setState({ loading: true });
 	    if (this.props.asOfDate !== null) {
 	      $.ajax({
 	        type: "GET",
@@ -126024,7 +126031,10 @@
 	      });
 	    }
 	  },
+
 	  render: function render() {
+	    var _this = this;
+
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
 	        'div',
@@ -126042,6 +126052,10 @@
 	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
 	      );
 	    } else {
+	      var _state = this.state,
+	          data = _state.data,
+	          lastDrawLocation = _state.lastDrawLocation;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -126055,28 +126069,57 @@
 	          null,
 	          'Receiver Operating Characteristic Curve'
 	        ),
-	        _react2.default.createElement(_reactNvd2.default, {
-	          type: "lineChart",
-	          datum: this.state.data,
-	          x: function x(d) {
-	            return d[0];
-	          },
-	          y: function y(d) {
-	            return d[1];
-	          },
-	          containerStyle: { height: "400px", width: "500px" },
-	          options: {
-	            showValues: true,
-	            showControls: true,
-	            showLegend: true,
-	            yDomain: [0, 1.05],
-	            xDomain: [0, 1.05],
-	            duration: 500,
-	            xAxis: { axisLabel: 'False Positive Rate' },
-	            yAxis: { axisLabel: 'True Positive Rate' },
-	            color: _d2.default.scale.category10().range()
-	          }
-	        })
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'legend' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-6' },
+	              _react2.default.createElement(
+	                'button',
+	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
+	                    _this.setState({ lastDrawLocation: null });
+	                  } },
+	                'Reset Zoom'
+	              )
+	            ),
+	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
+	              orientation: 'horizontal',
+	              width: 120,
+	              items: data })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          FlexibleXYPlot,
+	          {
+	            animation: true,
+	            onMouseLeave: this.handleOnMouseLeave,
+	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
+	            height: 300 },
+	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
+	          _react2.default.createElement(_reactVis.YAxis, {
+	            title: "True Positive Rate" }),
+	          _react2.default.createElement(_reactVis.XAxis, {
+	            title: "False Positive Rate" }),
+	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
+	              _this.setState({
+	                lastDrawLocation: area
+	              });
+	            } }),
+	          _react2.default.createElement(_reactVis.LineSeries, {
+	            key: data[0].title,
+	            data: data[0].data,
+	            color: data[0].color,
+	            onNearestX: this.handleOnNearestX }),
+	          _react2.default.createElement(_reactVis.LineSeries, {
+	            key: data[1].title,
+	            data: data[1].data,
+	            color: data[1].color }),
+	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
+	        )
 	      );
 	    }
 	  }
@@ -126093,19 +126136,20 @@
 	  value: true
 	});
 
-	var _d = __webpack_require__(649);
-
-	var _d2 = _interopRequireDefault(_d);
-
-	var _reactNvd = __webpack_require__(650);
-
-	var _reactNvd2 = _interopRequireDefault(_reactNvd);
+	var _reactVis = __webpack_require__(654);
 
 	var _react = __webpack_require__(315);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _component = __webpack_require__(783);
+
+	var _component2 = _interopRequireDefault(_component);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
+	var style = { "verticalAlign": "middle" };
 
 	exports.default = _react2.default.createClass({
 	  displayName: 'component',
@@ -126113,20 +126157,36 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: [],
-	      loading: false
+	      loading: true,
+	      lastDrawLocation: null,
+	      crosshairValues: []
 	    };
 	  },
+
+	  handleOnNearestX: function handleOnNearestX(value, _ref) {
+	    var index = _ref.index;
+
+	    this.setState({ crosshairValues: this.state.data.map(function (s) {
+	        return s.data[index];
+	      }) });
+	  },
+
+	  handleOnMouseLeave: function handleOnMouseLeave() {
+	    this.setState({ crosshairValues: [] });
+	  },
+
 	  componentDidMount: function componentDidMount() {
 	    this.ajax_call();
 	  },
+
 	  componentDidUpdate: function componentDidUpdate(prevProps) {
 	    if (prevProps.asOfDate !== this.props.asOfDate) {
 	      this.ajax_call();
 	    }
 	  },
+
 	  ajax_call: function ajax_call() {
 	    var self = this;
-	    self.setState({ loading: true });
 	    if (this.props.asOfDate !== null) {
 	      $.ajax({
 	        type: "GET",
@@ -126140,7 +126200,10 @@
 	      });
 	    }
 	  },
+
 	  render: function render() {
+	    var _this = this;
+
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
 	        'div',
@@ -126153,6 +126216,10 @@
 	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
 	      );
 	    } else {
+	      var _state = this.state,
+	          data = _state.data,
+	          lastDrawLocation = _state.lastDrawLocation;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -126161,28 +126228,55 @@
 	          null,
 	          'Precision Recall Curve'
 	        ),
-	        _react2.default.createElement(_reactNvd2.default, {
-	          type: "lineChart",
-	          datum: this.state.data,
-	          x: function x(d) {
-	            return d[1];
-	          },
-	          y: function y(d) {
-	            return d[0];
-	          },
-	          containerStyle: { height: "400px", width: "500px" },
-	          options: {
-	            showValues: true,
-	            showControls: true,
-	            showLegend: false,
-	            yDomain: [0, 1.05],
-	            xDomain: [0, 1.05],
-	            duration: 500,
-	            xAxis: { axisLabel: 'Recall' },
-	            yAxis: { axisLabel: 'Precision' },
-	            color: _d2.default.scale.category10().range()
-	          }
-	        })
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'legend' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-6' },
+	              _react2.default.createElement(
+	                'button',
+	                { style: style, className: 'btn btn-xs', onClick: function onClick() {
+	                    _this.setState({ lastDrawLocation: null });
+	                  } },
+	                'Reset Zoom'
+	              )
+	            ),
+	            _react2.default.createElement(_reactVis.DiscreteColorLegend, {
+	              orientation: 'horizontal',
+	              width: 120,
+	              items: data })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          FlexibleXYPlot,
+	          {
+	            animation: true,
+	            onMouseLeave: this.handleOnMouseLeave,
+	            xDomain: lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right],
+	            height: 300 },
+	          _react2.default.createElement(_reactVis.HorizontalGridLines, null),
+	          _react2.default.createElement(_reactVis.YAxis, {
+	            title: "Precision" }),
+	          _react2.default.createElement(_reactVis.XAxis, {
+	            title: "Recall" }),
+	          _react2.default.createElement(_component2.default, { onBrushEnd: function onBrushEnd(area) {
+	              _this.setState({
+	                lastDrawLocation: area
+	              });
+	            } }),
+	          data.map(function (entry) {
+	            return _react2.default.createElement(_reactVis.LineSeries, {
+	              key: entry.title,
+	              data: entry.data,
+	              color: entry.color,
+	              onNearestX: _this.handleOnNearestX });
+	          }),
+	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
+	        )
 	      );
 	    }
 	  }
@@ -126199,24 +126293,20 @@
 	  value: true
 	});
 
-	var _d = __webpack_require__(649);
-
-	var _d2 = _interopRequireDefault(_d);
-
 	var _reactVis = __webpack_require__(654);
 
 	var _react = __webpack_require__(315);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component = __webpack_require__(806);
+	var _component = __webpack_require__(783);
 
 	var _component2 = _interopRequireDefault(_component);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var FlexibleXYPlot = (0, _reactVis.makeWidthFlexible)(_reactVis.XYPlot);
-	var style = { "vertical-align": "middle" };
+	var style = { "verticalAlign": "middle" };
 
 	exports.default = _react2.default.createClass({
 	  displayName: 'component',
@@ -126225,7 +126315,7 @@
 	    return {
 	      data: [],
 	      lastDrawLocation: null,
-	      loading: false,
+	      loading: true,
 	      crosshairValues: []
 	    };
 	  },
@@ -126254,7 +126344,6 @@
 
 	  ajax_call: function ajax_call() {
 	    var self = this;
-	    self.setState({ loading: true });
 	    if (this.props.asOfDate !== null) {
 	      $.ajax({
 	        type: "GET",
@@ -126272,10 +126361,6 @@
 	  render: function render() {
 	    var _this = this;
 
-	    var _state = this.state,
-	        data = _state.data,
-	        lastDrawLocation = _state.lastDrawLocation;
-
 	    if (this.state.loading) {
 	      return _react2.default.createElement(
 	        'div',
@@ -126288,6 +126373,10 @@
 	        _react2.default.createElement('div', { id: 'loader', style: { margin: "0 auto" }, className: 'loader' })
 	      );
 	    } else {
+	      var _state = this.state,
+	          data = _state.data,
+	          lastDrawLocation = _state.lastDrawLocation;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -126343,7 +126432,6 @@
 	              color: entry.color,
 	              onNearestX: _this.handleOnNearestX });
 	          }),
-	          console.log(),
 	          _react2.default.createElement(_reactVis.Crosshair, { values: this.state.crosshairValues })
 	        )
 	      );
@@ -126353,9 +126441,225 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 783 */,
-/* 784 */,
-/* 785 */
+/* 783 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(315);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactVis = __webpack_require__(654);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Highlight = function (_AbstractSeries) {
+	  _inherits(Highlight, _AbstractSeries);
+
+	  function Highlight() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Highlight);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Highlight.__proto__ || Object.getPrototypeOf(Highlight)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	      drawing: false,
+	      drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
+	      startLoc: 0
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Highlight, [{
+	    key: '_getDrawArea',
+	    value: function _getDrawArea(loc) {
+	      var innerWidth = this.props.innerWidth;
+	      var _state = this.state,
+	          drawArea = _state.drawArea,
+	          startLoc = _state.startLoc;
+
+
+	      if (loc < startLoc) {
+	        return _extends({}, drawArea, {
+	          left: Math.max(loc, 0),
+	          right: startLoc
+	        });
+	      } else {
+	        return _extends({}, drawArea, {
+	          right: Math.min(loc, innerWidth),
+	          left: startLoc
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onParentMouseDown',
+	    value: function onParentMouseDown(e) {
+	      var _props = this.props,
+	          marginLeft = _props.marginLeft,
+	          innerHeight = _props.innerHeight,
+	          onBrushStart = _props.onBrushStart;
+
+	      var location = e.nativeEvent.offsetX - marginLeft;
+
+	      // TODO: Eventually support drawing as a full rectangle, if desired. Currently the code supports 'x' only
+	      this.setState({
+	        drawing: true,
+	        drawArea: {
+	          top: 0,
+	          right: location,
+	          bottom: innerHeight,
+	          left: location
+	        },
+	        startLoc: location
+	      });
+
+	      if (onBrushStart) {
+	        onBrushStart(e);
+	      }
+	    }
+	  }, {
+	    key: 'stopDrawing',
+	    value: function stopDrawing() {
+	      // Quickly short-circuit if the user isn't drawing in our component
+	      if (!this.state.drawing) {
+	        return;
+	      }
+
+	      var onBrushEnd = this.props.onBrushEnd;
+	      var drawArea = this.state.drawArea;
+
+	      var xScale = _reactVis.ScaleUtils.getAttributeScale(this.props, 'x');
+	      var yScale = _reactVis.ScaleUtils.getAttributeScale(this.props, 'y');
+
+	      // Clear the draw area
+	      this.setState({
+	        drawing: false,
+	        drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
+	        startLoc: 0
+	      });
+
+	      // Invoke the callback with null if the selected area was < 5px
+	      if (Math.abs(drawArea.right - drawArea.left) < 5) {
+	        onBrushEnd(null);
+	        return;
+	      }
+
+	      // Compute the corresponding domain drawn
+	      var domainArea = {
+	        top: yScale.invert(drawArea.top),
+	        right: xScale.invert(drawArea.right),
+	        bottom: yScale.invert(drawArea.bottom),
+	        left: xScale.invert(drawArea.left)
+	      };
+
+	      if (onBrushEnd) {
+	        onBrushEnd(domainArea);
+	      }
+	    }
+	  }, {
+	    key: 'onParentMouseMove',
+	    value: function onParentMouseMove(e) {
+	      var _props2 = this.props,
+	          marginLeft = _props2.marginLeft,
+	          onBrush = _props2.onBrush;
+	      var drawing = this.state.drawing;
+
+	      var loc = e.nativeEvent.offsetX - marginLeft;
+
+	      if (drawing) {
+	        var newDrawArea = this._getDrawArea(loc);
+	        this.setState({ drawArea: newDrawArea });
+
+	        if (onBrush) {
+	          onBrush(e);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var _props3 = this.props,
+	          marginLeft = _props3.marginLeft,
+	          marginTop = _props3.marginTop,
+	          innerWidth = _props3.innerWidth,
+	          innerHeight = _props3.innerHeight,
+	          color = _props3.color,
+	          opacity = _props3.opacity;
+	      var _state$drawArea = this.state.drawArea,
+	          left = _state$drawArea.left,
+	          right = _state$drawArea.right,
+	          top = _state$drawArea.top,
+	          bottom = _state$drawArea.bottom;
+
+
+	      return _react2.default.createElement(
+	        'g',
+	        { transform: 'translate(' + marginLeft + ', ' + marginTop + ')',
+	          className: 'highlight-container',
+	          onMouseUp: function onMouseUp(e) {
+	            return _this2.stopDrawing();
+	          },
+	          onMouseLeave: function onMouseLeave(e) {
+	            return _this2.stopDrawing();
+	          }
+	        },
+	        _react2.default.createElement('rect', {
+	          className: 'mouse-target',
+	          fill: 'black',
+	          opacity: '0',
+	          x: 0,
+	          y: 0,
+	          width: innerWidth,
+	          height: innerHeight
+	        }),
+	        _react2.default.createElement('rect', {
+	          className: 'highlight',
+	          pointerEvents: 'none',
+	          opacity: opacity,
+	          fill: color,
+	          x: left,
+	          y: top,
+	          width: right - left,
+	          height: bottom
+	        })
+	      );
+	    }
+	  }]);
+
+	  return Highlight;
+	}(_reactVis.AbstractSeries);
+
+	Highlight.displayName = 'HighlightOverlay';
+	Highlight.defaultProps = {
+	  allow: 'x',
+	  color: 'rgb(77, 182, 172)',
+	  opacity: 0.3
+	};
+	exports.default = Highlight;
+
+/***/ }),
+/* 784 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126368,7 +126672,7 @@
 
 	var _component2 = _interopRequireDefault(_component);
 
-	var _component3 = __webpack_require__(786);
+	var _component3 = __webpack_require__(785);
 
 	var _component4 = _interopRequireDefault(_component3);
 
@@ -126389,7 +126693,7 @@
 	});
 
 /***/ }),
-/* 786 */
+/* 785 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126432,7 +126736,7 @@
 
 	var _component16 = _interopRequireDefault(_component15);
 
-	var _component17 = __webpack_require__(787);
+	var _component17 = __webpack_require__(786);
 
 	var _component18 = _interopRequireDefault(_component17);
 
@@ -126440,11 +126744,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _component19 = __webpack_require__(804);
+	var _component19 = __webpack_require__(803);
 
 	var _component20 = _interopRequireDefault(_component19);
 
-	var _component21 = __webpack_require__(805);
+	var _component21 = __webpack_require__(804);
 
 	var _component22 = _interopRequireDefault(_component21);
 
@@ -126602,7 +126906,7 @@
 	});
 
 /***/ }),
-/* 787 */
+/* 786 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -126619,7 +126923,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactFauxDom = __webpack_require__(788);
+	var _reactFauxDom = __webpack_require__(787);
 
 	var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
 
@@ -126720,13 +127024,13 @@
 	}
 
 /***/ }),
-/* 788 */
+/* 787 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Element = __webpack_require__(789)
-	var Window = __webpack_require__(801)
-	var core = __webpack_require__(802)
-	var anim = __webpack_require__(803)
+	var Element = __webpack_require__(788)
+	var Window = __webpack_require__(800)
+	var core = __webpack_require__(801)
+	var anim = __webpack_require__(802)
 
 	var ReactFauxDOM = {
 	  Element: Element,
@@ -126754,18 +127058,18 @@
 
 
 /***/ }),
-/* 789 */
+/* 788 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(315)
-	var styleAttr = __webpack_require__(790)
-	var querySelectorAll = __webpack_require__(791)
-	var camelCase = __webpack_require__(795)
-	var isString = __webpack_require__(796)
-	var isUndefined = __webpack_require__(797)
-	var assign = __webpack_require__(798)
-	var mapValues = __webpack_require__(799)
-	var styleCamelCase = __webpack_require__(800)
+	var styleAttr = __webpack_require__(789)
+	var querySelectorAll = __webpack_require__(790)
+	var camelCase = __webpack_require__(794)
+	var isString = __webpack_require__(795)
+	var isUndefined = __webpack_require__(796)
+	var assign = __webpack_require__(797)
+	var mapValues = __webpack_require__(798)
+	var styleCamelCase = __webpack_require__(799)
 
 	function Element (nodeName, parentNode) {
 	  this.nodeName = nodeName
@@ -127117,7 +127421,7 @@
 
 
 /***/ }),
-/* 790 */
+/* 789 */
 /***/ (function(module, exports) {
 
 	
@@ -127229,13 +127533,13 @@
 	module.exports.normalize = normalize;
 
 /***/ }),
-/* 791 */
+/* 790 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(792);
+	module.exports = __webpack_require__(791);
 
 /***/ }),
-/* 792 */
+/* 791 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -127244,8 +127548,8 @@
 	 * @author yiminghe@gmail.com
 	 */
 
-	var util = __webpack_require__(793);
-	var parser = __webpack_require__(794);
+	var util = __webpack_require__(792);
+	var parser = __webpack_require__(793);
 
 	var EXPANDO_SELECTOR_KEY = '_ks_data_selector_id_',
 	  caches = {},
@@ -127938,7 +128242,7 @@
 	 */
 
 /***/ }),
-/* 793 */
+/* 792 */
 /***/ (function(module, exports) {
 
 	/**
@@ -128289,7 +128593,7 @@
 	};
 
 /***/ }),
-/* 794 */
+/* 793 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*
@@ -129498,7 +129802,7 @@
 	}
 
 /***/ }),
-/* 795 */
+/* 794 */
 /***/ (function(module, exports) {
 
 	var hyphenExpression = /\-+([a-z])/gi
@@ -129521,7 +129825,7 @@
 
 
 /***/ }),
-/* 796 */
+/* 795 */
 /***/ (function(module, exports) {
 
 	function isString (value) {
@@ -129532,7 +129836,7 @@
 
 
 /***/ }),
-/* 797 */
+/* 796 */
 /***/ (function(module, exports) {
 
 	function isUndefined (value) {
@@ -129543,7 +129847,7 @@
 
 
 /***/ }),
-/* 798 */
+/* 797 */
 /***/ (function(module, exports) {
 
 	function assign (dest) {
@@ -129565,7 +129869,7 @@
 
 
 /***/ }),
-/* 799 */
+/* 798 */
 /***/ (function(module, exports) {
 
 	function mapValues (source, fn) {
@@ -129584,10 +129888,10 @@
 
 
 /***/ }),
-/* 800 */
+/* 799 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var camelCase = __webpack_require__(795)
+	var camelCase = __webpack_require__(794)
 
 	function styleCamelCase (name) {
 	  var camel = camelCase(name)
@@ -129610,7 +129914,7 @@
 
 
 /***/ }),
-/* 801 */
+/* 800 */
 /***/ (function(module, exports) {
 
 	var Window = {
@@ -129625,11 +129929,11 @@
 
 
 /***/ }),
-/* 802 */
+/* 801 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Element = __webpack_require__(789)
-	var mapValues = __webpack_require__(799)
+	var Element = __webpack_require__(788)
+	var mapValues = __webpack_require__(798)
 
 	var mixin = {
 	  componentWillMount: function () {
@@ -129653,7 +129957,7 @@
 
 
 /***/ }),
-/* 803 */
+/* 802 */
 /***/ (function(module, exports) {
 
 	var anim = {
@@ -129685,7 +129989,7 @@
 
 
 /***/ }),
-/* 804 */
+/* 803 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -129760,7 +130064,7 @@
 	}
 
 /***/ }),
-/* 805 */
+/* 804 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -129897,224 +130201,6 @@
 	    );
 	  }
 	});
-
-/***/ }),
-/* 806 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(315);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactVis = __webpack_require__(654);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Highlight = function (_AbstractSeries) {
-	  _inherits(Highlight, _AbstractSeries);
-
-	  function Highlight() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    _classCallCheck(this, Highlight);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Highlight.__proto__ || Object.getPrototypeOf(Highlight)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-	      drawing: false,
-	      drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
-	      startLoc: 0
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
-	  }
-
-	  _createClass(Highlight, [{
-	    key: '_getDrawArea',
-	    value: function _getDrawArea(loc) {
-	      var innerWidth = this.props.innerWidth;
-	      var _state = this.state,
-	          drawArea = _state.drawArea,
-	          startLoc = _state.startLoc;
-
-
-	      if (loc < startLoc) {
-	        return _extends({}, drawArea, {
-	          left: Math.max(loc, 0),
-	          right: startLoc
-	        });
-	      } else {
-	        return _extends({}, drawArea, {
-	          right: Math.min(loc, innerWidth),
-	          left: startLoc
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'onParentMouseDown',
-	    value: function onParentMouseDown(e) {
-	      var _props = this.props,
-	          marginLeft = _props.marginLeft,
-	          innerHeight = _props.innerHeight,
-	          onBrushStart = _props.onBrushStart;
-
-	      var location = e.nativeEvent.offsetX - marginLeft;
-
-	      // TODO: Eventually support drawing as a full rectangle, if desired. Currently the code supports 'x' only
-	      this.setState({
-	        drawing: true,
-	        drawArea: {
-	          top: 0,
-	          right: location,
-	          bottom: innerHeight,
-	          left: location
-	        },
-	        startLoc: location
-	      });
-
-	      if (onBrushStart) {
-	        onBrushStart(e);
-	      }
-	    }
-	  }, {
-	    key: 'stopDrawing',
-	    value: function stopDrawing() {
-	      // Quickly short-circuit if the user isn't drawing in our component
-	      if (!this.state.drawing) {
-	        return;
-	      }
-
-	      var onBrushEnd = this.props.onBrushEnd;
-	      var drawArea = this.state.drawArea;
-
-	      var xScale = _reactVis.ScaleUtils.getAttributeScale(this.props, 'x');
-	      var yScale = _reactVis.ScaleUtils.getAttributeScale(this.props, 'y');
-
-	      // Clear the draw area
-	      this.setState({
-	        drawing: false,
-	        drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
-	        startLoc: 0
-	      });
-
-	      // Invoke the callback with null if the selected area was < 5px
-	      if (Math.abs(drawArea.right - drawArea.left) < 5) {
-	        onBrushEnd(null);
-	        return;
-	      }
-
-	      // Compute the corresponding domain drawn
-	      var domainArea = {
-	        top: yScale.invert(drawArea.top),
-	        right: xScale.invert(drawArea.right),
-	        bottom: yScale.invert(drawArea.bottom),
-	        left: xScale.invert(drawArea.left)
-	      };
-
-	      if (onBrushEnd) {
-	        onBrushEnd(domainArea);
-	      }
-	    }
-	  }, {
-	    key: 'onParentMouseMove',
-	    value: function onParentMouseMove(e) {
-	      var _props2 = this.props,
-	          marginLeft = _props2.marginLeft,
-	          onBrush = _props2.onBrush;
-	      var drawing = this.state.drawing;
-
-	      var loc = e.nativeEvent.offsetX - marginLeft;
-
-	      if (drawing) {
-	        var newDrawArea = this._getDrawArea(loc);
-	        this.setState({ drawArea: newDrawArea });
-
-	        if (onBrush) {
-	          onBrush(e);
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      var _props3 = this.props,
-	          marginLeft = _props3.marginLeft,
-	          marginTop = _props3.marginTop,
-	          innerWidth = _props3.innerWidth,
-	          innerHeight = _props3.innerHeight,
-	          color = _props3.color,
-	          opacity = _props3.opacity;
-	      var _state$drawArea = this.state.drawArea,
-	          left = _state$drawArea.left,
-	          right = _state$drawArea.right,
-	          top = _state$drawArea.top,
-	          bottom = _state$drawArea.bottom;
-
-
-	      return _react2.default.createElement(
-	        'g',
-	        { transform: 'translate(' + marginLeft + ', ' + marginTop + ')',
-	          className: 'highlight-container',
-	          onMouseUp: function onMouseUp(e) {
-	            return _this2.stopDrawing();
-	          },
-	          onMouseLeave: function onMouseLeave(e) {
-	            return _this2.stopDrawing();
-	          }
-	        },
-	        _react2.default.createElement('rect', {
-	          className: 'mouse-target',
-	          fill: 'black',
-	          opacity: '0',
-	          x: 0,
-	          y: 0,
-	          width: innerWidth,
-	          height: innerHeight
-	        }),
-	        _react2.default.createElement('rect', {
-	          className: 'highlight',
-	          pointerEvents: 'none',
-	          opacity: opacity,
-	          fill: color,
-	          x: left,
-	          y: top,
-	          width: right - left,
-	          height: bottom
-	        })
-	      );
-	    }
-	  }]);
-
-	  return Highlight;
-	}(_reactVis.AbstractSeries);
-
-	Highlight.displayName = 'HighlightOverlay';
-	Highlight.defaultProps = {
-	  allow: 'x',
-	  color: 'rgb(77, 182, 172)',
-	  opacity: 0.3
-	};
-	exports.default = Highlight;
 
 /***/ })
 /******/ ]);
