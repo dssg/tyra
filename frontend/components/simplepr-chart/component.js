@@ -1,14 +1,38 @@
-import d3 from 'd3'
-import NVD3Chart from 'react-nvd3'
+import {
+  Crosshair,
+  XYPlot,
+  XAxis,
+  YAxis,
+  HorizontalGridLines,
+  makeWidthFlexible,
+  LineSeries,
+  DiscreteColorLegend
+} from 'react-vis'
 import React from 'react'
+
+import Highlight from 'components/highlight-area/component'
+
+const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+const style = {"vertical-align": "middle"}
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      loading: false
+      loading: false,
+      lastDrawLocation: null,
+      crosshairValues: []
     }
   },
+
+  handleOnNearestX: function(value, {index}) {
+    this.setState({crosshairValues: this.state.data.map((s) => s.data[index])})
+  },
+
+  handleOnMouseLeave: function() {
+    this.setState({crosshairValues: []})
+  },
+
   componentDidMount: function() {
     this.ajax_call()
   },
@@ -34,6 +58,7 @@ export default React.createClass({
     }
   },
   render: function() {
+    const {data, lastDrawLocation} = this.state
     if(this.state.loading) {
       return (
         <div>
@@ -45,28 +70,51 @@ export default React.createClass({
       return (
         <div>
           <h4>Precision Recall Curve</h4>
-          {
-            React.createElement(NVD3Chart, {
-              type:"lineChart",
-              datum: this.state.data,
-              x: function(d) { return d[1] },
-              y: function(d) { return d[0] },
-              containerStyle:{ height: "400px", width: "500px" },
-              options:{
-                showValues: true,
-                showControls: true,
-                showLegend: false,
-                yDomain: [0, 1.05],
-                xDomain: [0, 1.05],
-                duration: 500,
-                xAxis: { axisLabel: 'Recall' },
-                yAxis: { axisLabel: 'Precision' },
-                color: d3.scale.category10().range()
-              }
-            })
-          }
+          <div className="row">
+          <div className="legend">
+          <div className="col-lg-6">
+            <button style={style} className="btn btn-xs" onClick={() => {
+              this.setState({lastDrawLocation: null});
+            }}>
+              Reset Zoom
+            </button>
+          </div>
+
+            <DiscreteColorLegend
+              orientation="horizontal"
+              width={120}
+              items={data}/>
+          </div>
+          </div>
+          <FlexibleXYPlot
+            animation
+            onMouseLeave={this.handleOnMouseLeave}
+            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+            height={300}>
+          <HorizontalGridLines />
+          <YAxis
+            title={"Precision"} />
+          <XAxis
+            title={"Recall"} />
+
+          <Highlight onBrushEnd={(area) => {
+            this.setState({
+              lastDrawLocation: area
+              });
+            }} />
+
+          {data.map(entry => (
+              <LineSeries
+                key={entry.title}
+                data={entry.data}
+                color={entry.color}
+                onNearestX={this.handleOnNearestX} />
+            ))}
+          <Crosshair values={this.state.crosshairValues} />
+          </FlexibleXYPlot>
         </div>
       )
     }
   }
 })
+

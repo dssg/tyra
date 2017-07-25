@@ -18,12 +18,11 @@ export default React.createClass({
         </TabList>
         <TabPanel>
           <ModelInfo modelId={this.props.modelId} asOfDate={this.props.asOfDate}></ModelInfo>
-          <div className="col-md-5">
+          <div className="col-md-6">
             <ThresholdPrecisionRecallCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
             </ThresholdPrecisionRecallCurve>
           </div>
-          <div className="col-md-2"></div>
-          <div className="col-md-5">
+          <div className="col-md-6">
             <SimplePrecisionRecallCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
             </SimplePrecisionRecallCurve>
           </div>

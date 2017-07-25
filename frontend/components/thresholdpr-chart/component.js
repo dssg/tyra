@@ -1,4 +1,3 @@
-import d3 from 'd3'
 import {
   Crosshair,
   XYPlot,
@@ -114,7 +113,6 @@ export default React.createClass({
                 color={entry.color}
                 onNearestX={this.handleOnNearestX} />
             ))}
-          {console.log()}
           <Crosshair values={this.state.crosshairValues} />
           </FlexibleXYPlot>
         </div>
