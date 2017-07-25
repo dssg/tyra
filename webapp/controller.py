@@ -255,8 +255,8 @@ def get_roc(model_id, evaluation_start_time):
     query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     pred = query.get_model_prediction(query_arg)
     fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
-    output = [{'key': 'roc', 'values': list(zip(fpr, tpr))},
-              {'key': 'random', 'values': [[0, 0], [1, 1]]}]
+    output = [{'title': 'roc', 'color': '#1f77b4', 'data': [{'x': f, 'y': t} for f, t in zip(fpr, tpr)]},
+              {'title': 'random', 'color': '#ff7f0e', 'data': [{'x':0, 'y':0}, {'x':1, 'y': 1}]}]
     try:
         return jsonify(results=output)
     except:

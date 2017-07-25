@@ -26,9 +26,6 @@ export default React.createClass({
             <SimplePrecisionRecallCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
             </SimplePrecisionRecallCurve>
           </div>
-          <div className="col-md-12">
-            <h3>&nbsp;</h3>
-          </div>
           <div className="col-md-6">
             <RocCurve modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
               <svg></svg>
