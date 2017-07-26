@@ -1,5 +1,5 @@
+import { AbstractSeries, ScaleUtils } from 'react-vis'
 import React from 'react'
-import {ScaleUtils, AbstractSeries} from 'react-vis'
 
 export default class Highlight extends AbstractSeries {
 
@@ -11,7 +11,7 @@ export default class Highlight extends AbstractSeries {
   }
   state = {
     drawing: false,
-    drawArea: {top: 0, right: 0, bottom: 0, left: 0},
+    drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
     startLoc: 0
   }
 
