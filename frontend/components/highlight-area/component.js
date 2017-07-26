@@ -38,7 +38,6 @@ export default class Highlight extends AbstractSeries {
     const { marginLeft, innerHeight, onBrushStart } = this.props
     const location = e.nativeEvent.offsetX - marginLeft
 
-    // TODO: Eventually support drawing as a full rectangle, if desired. Currently the code supports 'x' only
     this.setState({
       drawing: true,
       drawArea: {
