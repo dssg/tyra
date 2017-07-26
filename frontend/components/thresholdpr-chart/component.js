@@ -1,19 +1,19 @@
+import Highlight from 'components/highlight-area/component'
 import {
   Crosshair,
-  XYPlot,
-  XAxis,
-  YAxis,
+  DiscreteColorLegend,
   HorizontalGridLines,
-  makeWidthFlexible,
   LineSeries,
-  DiscreteColorLegend
+  XAxis,
+  XYPlot,
+  YAxis,
+  makeWidthFlexible
 } from 'react-vis'
 import React from 'react'
 
-import Highlight from 'components/highlight-area/component'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const style = {"verticalAlign": "middle"}
+const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
   getInitialState: function() {
@@ -35,7 +35,7 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, {index}) {
+  handleOnNearestX: function(value, { index }) {
     this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
@@ -103,7 +103,7 @@ export default React.createClass({
               this.setState({
                 lastDrawLocation: area
                 });
-              }} />
+            }} />
 
             {data.map(entry => (
               <LineSeries

@@ -1,3 +1,5 @@
+import Highlight from 'components/highlight-area/component'
+import React from 'react'
 import {
   Crosshair,
   XYPlot,
@@ -8,12 +10,11 @@ import {
   LineSeries,
   DiscreteColorLegend
 } from 'react-vis'
-import React from 'react'
 
-import Highlight from 'components/highlight-area/component'
+
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const style = {"verticalAlign": "middle"}
+const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
   getInitialState: function() {
@@ -25,12 +26,12 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, {index}) {
-    this.setState({crosshairValues: this.state.data.map((s) => s.data[index])})
+  handleOnNearestX: function(value, { index} ) {
+    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
   handleOnMouseLeave: function() {
-    this.setState({crosshairValues: []})
+    this.setState({ crosshairValues: []} )
   },
 
   componentDidMount: function() {
@@ -68,7 +69,7 @@ export default React.createClass({
         </div>
       )
     } else {
-      const {data, lastDrawLocation} = this.state
+      const { data, lastDrawLocation } = this.state
       return (
         <div>
           <h4>Precision Recall Curve</h4>
@@ -76,7 +77,7 @@ export default React.createClass({
             <div className="legend">
               <div className="col-lg-6">
                 <button style={style} className="btn btn-xs" onClick={() => {
-                  this.setState({lastDrawLocation: null});
+                  this.setState({ lastDrawLocation: null} );
                 }}>
                   Reset Zoom
                 </button>
@@ -85,34 +86,34 @@ export default React.createClass({
               <DiscreteColorLegend
                 orientation="horizontal"
                 width={120}
-                items={data}/>
+                items={data} />
             </div>
           </div>
           <FlexibleXYPlot
             animation
-            onMouseLeave={this.handleOnMouseLeave}
+            onMouseLeave={ this.handleOnMouseLeave }
             xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
             height={300}>
-          <HorizontalGridLines />
-          <YAxis
-            title={"Precision"} />
-          <XAxis
-            title={"Recall"} />
+            <HorizontalGridLines />
+            <YAxis
+              title={"Precision"} />
+            <XAxis
+              title={"Recall"} />
 
-          <Highlight onBrushEnd={(area) => {
-            this.setState({
-              lastDrawLocation: area
-              });
+            <Highlight onBrushEnd={(area) => {
+              this.setState({
+                lastDrawLocation: area
+                });
             }} />
 
-          {data.map(entry => (
-              <LineSeries
-                key={entry.title}
-                data={entry.data}
-                color={entry.color}
-                onNearestX={this.handleOnNearestX} />
-            ))}
-          <Crosshair values={this.state.crosshairValues} />
+            {data.map(entry => (
+                <LineSeries
+                  key={entry.title}
+                  data={entry.data}
+                  color={entry.color}
+                  onNearestX={ this.handleOnNearestX } />
+              ))}
+            <Crosshair values={ this.state.crosshairValues } />
           </FlexibleXYPlot>
         </div>
       )
