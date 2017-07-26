@@ -1,16 +1,15 @@
+import {
+  makeWidthFlexible,
+  Crosshair,
+  DiscreteColorLegend,
+  HorizontalGridLines,
+  LineSeries,
+  XAxis,
+  XYPlot,
+  YAxis,
+} from 'react-vis'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
-import {
-  Crosshair,
-  XYPlot,
-  XAxis,
-  YAxis,
-  HorizontalGridLines,
-  makeWidthFlexible,
-  LineSeries,
-  DiscreteColorLegend
-} from 'react-vis'
-
 
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
@@ -26,12 +25,12 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, { index} ) {
+  handleOnNearestX: function(value, { index } ) {
     this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
   handleOnMouseLeave: function() {
-    this.setState({ crosshairValues: []} )
+    this.setState({ crosshairValues: [] })
   },
 
   componentDidMount: function() {
@@ -77,7 +76,7 @@ export default React.createClass({
             <div className="legend">
               <div className="col-lg-6">
                 <button style={style} className="btn btn-xs" onClick={() => {
-                  this.setState({ lastDrawLocation: null} );
+                  this.setState({ lastDrawLocation: null });
                 }}>
                   Reset Zoom
                 </button>
@@ -92,7 +91,7 @@ export default React.createClass({
           <FlexibleXYPlot
             animation
             onMouseLeave={ this.handleOnMouseLeave }
-            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+            xDomain={ lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right] }
             height={300}>
             <HorizontalGridLines />
             <YAxis
@@ -103,17 +102,17 @@ export default React.createClass({
             <Highlight onBrushEnd={(area) => {
               this.setState({
                 lastDrawLocation: area
-                });
+              })
             }} />
 
-            {data.map(entry => (
-                <LineSeries
-                  key={entry.title}
-                  data={entry.data}
-                  color={entry.color}
-                  onNearestX={ this.handleOnNearestX } />
-              ))}
-            <Crosshair values={ this.state.crosshairValues } />
+            {data.map((entry) => (
+              <LineSeries
+                key={entry.title}
+                data={entry.data}
+                color={entry.color}
+                onNearestX={this.handleOnNearestX} />
+            ))}
+            <Crosshair values={this.state.crosshairValues} />
           </FlexibleXYPlot>
         </div>
       )

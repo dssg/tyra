@@ -1,5 +1,5 @@
-import Highlight from 'components/highlight-area/component'
 import {
+  makeWidthFlexible
   Crosshair,
   DiscreteColorLegend,
   HorizontalGridLines,
@@ -7,8 +7,8 @@ import {
   XAxis,
   XYPlot,
   YAxis,
-  makeWidthFlexible
 } from 'react-vis'
+import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
 
@@ -102,10 +102,10 @@ export default React.createClass({
             <Highlight onBrushEnd={(area) => {
               this.setState({
                 lastDrawLocation: area
-                });
+              })
             }} />
 
-            {data.map(entry => (
+            {data.map((entry) => (
               <LineSeries
                 key={entry.title}
                 data={entry.data}
