@@ -136,17 +136,15 @@ def get_model_result(model_id, evaluation_start_time):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route(
-    '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>',
+    '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>/<int:bins>',
     methods=['GET', 'POST']
 )
-def get_response_dist(model_id, evaluation_start_time):
+def get_response_dist(model_id, evaluation_start_time, bins=50):
     query_arg = {'model_id': model_id,
                  'evaluation_start_time': evaluation_start_time}
     prediction_df = query.get_model_prediction(query_arg)
     score = prediction_df['score']
-    hist, bin = np.histogram(score, bins=50)
-    print(hist)
-    print(bin)
+    hist, bin = np.histogram(score, bins=bins)
     try:
         output = [
             {
