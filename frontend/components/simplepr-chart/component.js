@@ -1,9 +1,9 @@
 import {
-  makeWidthFlexible,
   Crosshair,
   DiscreteColorLegend,
   HorizontalGridLines,
   LineSeries,
+  makeWidthFlexible,
   XAxis,
   XYPlot,
   YAxis,
@@ -25,7 +25,7 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, { index } ) {
+  handleOnNearestX: function(value, {index} ) {
     this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
@@ -76,7 +76,7 @@ export default React.createClass({
             <div className="legend">
               <div className="col-lg-6">
                 <button style={style} className="btn btn-xs" onClick={() => {
-                  this.setState({ lastDrawLocation: null });
+                  this.setState({ lastDrawLocation: null })
                 }}>
                   Reset Zoom
                 </button>
@@ -91,7 +91,7 @@ export default React.createClass({
           <FlexibleXYPlot
             animation
             onMouseLeave={ this.handleOnMouseLeave }
-            xDomain={ lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right] }
+            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
             height={300}>
             <HorizontalGridLines />
             <YAxis

@@ -114,9 +114,8 @@ export default class Highlight extends AbstractSeries {
     return (
       <g transform={`translate(${marginLeft}, ${marginTop})`}
          className="highlight-container"
-         onMouseUp={(e) => this.stopDrawing()}
-         onMouseLeave={(e) => this.stopDrawing()}
-      >
+         onMouseUp={() => this.stopDrawing()}
+         onMouseLeave={() => this.stopDrawing()}>
         <rect
           className="mouse-target"
           fill="black"
@@ -124,8 +123,7 @@ export default class Highlight extends AbstractSeries {
           x={0}
           y={0}
           width={innerWidth}
-          height={innerHeight}
-        ></rect>
+          height={innerHeight}></rect>
         <rect
           className="highlight"
           pointerEvents="none"
@@ -137,6 +135,6 @@ export default class Highlight extends AbstractSeries {
           height={bottom}
         ></rect>
       </g>
-    );
+    )
   }
 }

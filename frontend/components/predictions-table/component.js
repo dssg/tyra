@@ -34,7 +34,7 @@ export default React.createClass({
     return (
       <Reactable.Table
         className="table"
-        sortable={true}
+        sortable
         data={this.state.data}
         pageButtonLimit={5}
         itemsPerPage={15} />
