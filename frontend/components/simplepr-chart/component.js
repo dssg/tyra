@@ -105,13 +105,13 @@ export default React.createClass({
               })
             }} />
 
-            {data.map((entry) => (
-              <LineSeries
-                key={entry.title}
-                data={entry.data}
-                color={entry.color}
-                onNearestX={this.handleOnNearestX} />
-            ))}
+
+            <LineSeries
+              key={data[0].title}
+              data={data[0].data}
+              color={"#1f77b4"}
+              onNearestX={this.handleOnNearestX} />
+
             <Crosshair values={this.state.crosshairValues} />
           </FlexibleXYPlot>
         </div>

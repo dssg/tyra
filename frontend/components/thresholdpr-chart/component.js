@@ -8,12 +8,14 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
+import { zip } from 'ramda'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
 const style = { "verticalAlign": "middle" }
+const colors = ['#1f77b4', '#ff7f0e']
 
 export default React.createClass({
   getInitialState: function() {
@@ -50,6 +52,7 @@ export default React.createClass({
         type: "GET",
         url: "/evaluations/" + this.props.modelId + "/threshold_precision_recall/" + this.props.asOfDate,
         success: function(result) {
+          zip(colors, result.results).map(function(x) {x[1].color=x[0]})
           self.setState({
             data: result.results,
             loading: false

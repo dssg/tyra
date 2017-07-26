@@ -219,8 +219,8 @@ def get_threshold_precision_recall(model_id, evaluation_start_time):
         recall = recall.to_dict('records')
         precision = [{'x': p['parameter'], 'y': p['value']} for p in precision]
         recall = [{'x': r['parameter'], 'y': r['value']} for r in recall]
-        output = [{'title': 'Precision', 'color': '#1f77b4', 'data': precision},
-                  {'title': 'Recall', 'color': '#ff7f0e', 'data': recall}]
+        output = [{'title': 'Precision', 'data': precision},
+                  {'title': 'Recall', 'data': recall}]
         return jsonify(results=output)
     except:
         print('there are some problems')
@@ -237,7 +237,6 @@ def get_simple_precision_recall(model_id, evaluation_start_time):
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
     output = [{'title': 'precision_recall',
-               'color': '#1f77b4',
                'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]
              }]
     try:
@@ -255,8 +254,8 @@ def get_roc(model_id, evaluation_start_time):
     query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
     pred = query.get_model_prediction(query_arg)
     fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
-    output = [{'title': 'roc', 'color': '#1f77b4', 'data': [{'x': f, 'y': t} for f, t in zip(fpr, tpr)]},
-              {'title': 'random', 'color': '#ff7f0e', 'data': [{'x': 0, 'y': 0}, {'x': 1, 'y': 1}]}]
+    output = [{'title': 'roc', 'data': [{'x': f, 'y': t} for f, t in zip(fpr, tpr)]},
+              {'title': 'random', 'data': [{'x': 0, 'y': 0}, {'x': 1, 'y': 1}]}]
     try:
         return jsonify(results=output)
     except:
