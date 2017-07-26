@@ -35,7 +35,7 @@ export default React.createClass({
       success: function(result) {
         self.setState({
           data: result.results.map((d) => ({ x: d.value, y: d.label }))
-                              .sort(function(x, y) {return d3.ascending(x.x, y.x)}),
+                              .sort(function(x, y) { return d3.ascending(x.x, y.x) }),
           loading: false
         })
         self.props.onValueClick(self.state.data.slice(-1)[0])

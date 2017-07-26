@@ -10,6 +10,7 @@ export default React.createClass({
       loading: false }
   },
 
+
   ajax_call: function() {
     const self = this
     self.setState({ loading: true })

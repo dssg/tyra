@@ -1,25 +1,50 @@
-import d3 from 'd3'
-import NVD3Chart from 'react-nvd3'
+import {
+  Crosshair,
+  DiscreteColorLegend,
+  HorizontalGridLines,
+  LineSeries,
+  makeWidthFlexible,
+  XAxis,
+  XYPlot,
+  YAxis,
+} from 'react-vis'
+import Highlight from 'components/highlight-area/component'
 import React from 'react'
+
+
+const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      loading: false
+      loading: true,
+      lastDrawLocation: null,
+      crosshairValues: []
     }
   },
+
+  handleOnNearestX: function(value, { index }) {
+    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
+  },
+
+  handleOnMouseLeave: function() {
+    this.setState({ crosshairValues: [] })
+  },
+
   componentDidMount: function() {
     this.ajax_call()
   },
+
   componentDidUpdate: function(prevProps) {
     if(prevProps.asOfDate !== this.props.asOfDate) {
       this.ajax_call()
     }
   },
+
   ajax_call: function() {
     const self = this
-    self.setState({ loading: true })
     if (this.props.asOfDate !== null) {
       $.ajax({
         type: "GET",
@@ -33,6 +58,7 @@ export default React.createClass({
       })
     }
   },
+
   render: function() {
     if(this.state.loading) {
       return (
@@ -42,31 +68,55 @@ export default React.createClass({
         </div>
       )
     } else {
+      const { data, lastDrawLocation } = this.state
       return (
         <div>
           <h4>Precision Recall Curve</h4>
-          {
-            React.createElement(NVD3Chart, {
-              type:"lineChart",
-              datum: this.state.data,
-              x: function(d) { return d[1] },
-              y: function(d) { return d[0] },
-              containerStyle:{ height: "400px", width: "500px" },
-              options:{
-                showValues: true,
-                showControls: true,
-                showLegend: false,
-                yDomain: [0, 1.05],
-                xDomain: [0, 1.05],
-                duration: 500,
-                xAxis: { axisLabel: 'Recall' },
-                yAxis: { axisLabel: 'Precision' },
-                color: d3.scale.category10().range()
-              }
-            })
-          }
+          <div className="row">
+            <div className="legend">
+              <div className="col-lg-6">
+                <button style={style} className="btn btn-xs" onClick={() => {
+                  this.setState({ lastDrawLocation: null })
+                }}>
+                  Reset Zoom
+                </button>
+              </div>
+
+              <DiscreteColorLegend
+                orientation="horizontal"
+                width={120}
+                items={data} />
+            </div>
+          </div>
+          <FlexibleXYPlot
+            animation
+            onMouseLeave={this.handleOnMouseLeave}
+            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+            height={300}>
+            <HorizontalGridLines />
+            <YAxis
+              title={"Precision"} />
+            <XAxis
+              title={"Recall"} />
+
+            <Highlight onBrushEnd={(area) => {
+              this.setState({
+                lastDrawLocation: area
+              })
+            }} />
+
+
+            <LineSeries
+              key={data[0].title}
+              data={data[0].data}
+              color={"#1f77b4"}
+              onNearestX={this.handleOnNearestX} />
+
+            <Crosshair values={this.state.crosshairValues} />
+          </FlexibleXYPlot>
         </div>
       )
     }
   }
 })
+

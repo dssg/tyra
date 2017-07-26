@@ -26,5 +26,6 @@ def test_precision_recall_threshold():
         response = test_app.get(url)
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
+        print(response_data)
         expected = load_json_example('/evaluations/1/precision_recall_result')
         assert expected == response_data
