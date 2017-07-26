@@ -1,6 +1,5 @@
 import {
   Crosshair,
-  DiscreteColorLegend,
   HorizontalGridLines,
   LineSeries,
   makeWidthFlexible,
@@ -72,7 +71,7 @@ export default React.createClass({
         <div>
           <h4>Response Distribution</h4>
           <button className="btn btn-xs" onClick={() => {
-                  this.setState({ lastDrawLocation: null })
+            this.setState({ lastDrawLocation: null })
           }}>
             Reset Zoom
           </button>
