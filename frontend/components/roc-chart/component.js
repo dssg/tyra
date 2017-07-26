@@ -68,7 +68,7 @@ export default React.createClass({
         </div>
       )
     } else {
-      const { data,lastDrawLocation } = this.state
+      const { data, lastDrawLocation } = this.state
       return (
         <div>
           <h3>&nbsp;</h3>
@@ -110,14 +110,14 @@ export default React.createClass({
               key={data[0].title}
               data={data[0].data}
               color={data[0].color}
-              onNearestX={ this.handleOnNearestX } />
+              onNearestX={this.handleOnNearestX} />
 
             <LineSeries
               key={data[1].title}
               data={data[1].data}
               color={data[1].color} />
 
-            <Crosshair values={ this.state.crosshairValues } />
+            <Crosshair values={this.state.crosshairValues} />
           </FlexibleXYPlot>
         </div>
       )

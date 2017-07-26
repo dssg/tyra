@@ -102,14 +102,14 @@ export default class Highlight extends AbstractSeries {
       this.setState({drawArea: newDrawArea});
 
       if (onBrush) {
-        onBrush(e);
+        onBrush(e)
       }
     }
   }
 
   render() {
-    const {marginLeft, marginTop, innerWidth, innerHeight, color, opacity} = this.props;
-    const {drawArea: {left, right, top, bottom}} = this.state;
+    const { marginLeft, marginTop, innerWidth, innerHeight, color, opacity } = this.props
+    const { drawArea: {left, right, top, bottom} } = this.state
 
     return (
       <g transform={`translate(${marginLeft}, ${marginTop})`}
@@ -132,8 +132,7 @@ export default class Highlight extends AbstractSeries {
           x={left}
           y={top}
           width={right - left}
-          height={bottom}
-        ></rect>
+          height={bottom}></rect>
       </g>
     )
   }

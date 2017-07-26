@@ -25,7 +25,7 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, {index} ) {
+  handleOnNearestX: function(value, { index }) {
     this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
@@ -90,7 +90,7 @@ export default React.createClass({
           </div>
           <FlexibleXYPlot
             animation
-            onMouseLeave={ this.handleOnMouseLeave }
+            onMouseLeave={this.handleOnMouseLeave}
             xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
             height={300}>
             <HorizontalGridLines />
