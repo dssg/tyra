@@ -1,3 +1,4 @@
+import { zip } from 'ramda'
 import {
   Crosshair,
   DiscreteColorLegend,
@@ -8,7 +9,6 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
-import { zip } from 'ramda'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
 

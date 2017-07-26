@@ -236,9 +236,7 @@ def get_simple_precision_recall(model_id, evaluation_start_time):
     pred = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
-    output = [{'title': 'precision_recall',
-               'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]
-             }]
+    output = [{'title': 'precision_recall', 'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]}]
     try:
         return jsonify(results=output)
     except:
