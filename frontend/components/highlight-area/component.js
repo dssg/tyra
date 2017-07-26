@@ -75,8 +75,8 @@ export default class Highlight extends AbstractSeries {
 
     // Invoke the callback with null if the selected area was < 5px
     if (Math.abs(drawArea.right - drawArea.left) < 5) {
-      onBrushEnd(null);
-      return;
+      onBrushEnd(null)
+      return
     }
 
     // Compute the corresponding domain drawn
@@ -85,7 +85,7 @@ export default class Highlight extends AbstractSeries {
       right: xScale.invert(drawArea.right),
       bottom: yScale.invert(drawArea.bottom),
       left: xScale.invert(drawArea.left)
-    };
+    }
 
     if (onBrushEnd) {
       onBrushEnd(domainArea);
@@ -93,13 +93,13 @@ export default class Highlight extends AbstractSeries {
   }
 
   onParentMouseMove(e) {
-    const {marginLeft, onBrush} = this.props;
-    const {drawing} = this.state;
-    const loc = e.nativeEvent.offsetX - marginLeft;
+    const { marginLeft, onBrush } = this.props
+    const { drawing } = this.state
+    const loc = e.nativeEvent.offsetX - marginLeft
 
     if (drawing) {
-      const newDrawArea = this._getDrawArea(loc);
-      this.setState({drawArea: newDrawArea});
+      const newDrawArea = this._getDrawArea(loc)
+      this.setState({ drawArea: newDrawArea })
 
       if (onBrush) {
         onBrush(e)
@@ -113,9 +113,9 @@ export default class Highlight extends AbstractSeries {
 
     return (
       <g transform={`translate(${marginLeft}, ${marginTop})`}
-         className="highlight-container"
-         onMouseUp={() => this.stopDrawing()}
-         onMouseLeave={() => this.stopDrawing()}>
+        className="highlight-container"
+        onMouseUp={() => this.stopDrawing()}
+        onMouseLeave={() => this.stopDrawing()}>
         <rect
           className="mouse-target"
           fill="black"
