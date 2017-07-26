@@ -1,7 +1,6 @@
 {
     "results":[
         {
-            "color":"#1f77b4",
             "title":"Precision",
             "data":[
                 {
@@ -23,7 +22,6 @@
             ]
         },
         {
-            "color":"#ff7f0e",
             "title":"Recall",
             "data":[
                 {

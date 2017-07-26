@@ -23,7 +23,6 @@
                     "y":1.0
                 }
             ],
-            "color":"#1f77b4",
             "title":"roc"
         },
         {
@@ -37,7 +36,6 @@
                     "y":1
                 }
             ],
-            "color":"#ff7f0e",
             "title":"random"
         }
     ]

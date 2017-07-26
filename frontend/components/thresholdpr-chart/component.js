@@ -1,4 +1,3 @@
-import { zip } from 'ramda'
 import {
   Crosshair,
   DiscreteColorLegend,
@@ -11,6 +10,7 @@ import {
 } from 'react-vis'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
+import { zip } from 'ramda'
 
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
