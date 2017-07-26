@@ -1,42 +1,42 @@
-import React from 'react';
-import {ScaleUtils, AbstractSeries} from 'react-vis';
+import React from 'react'
+import {ScaleUtils, AbstractSeries} from 'react-vis'
 
 export default class Highlight extends AbstractSeries {
 
-  static displayName = 'HighlightOverlay';
+  static displayName = 'HighlightOverlay'
   static defaultProps = {
     allow: 'x',
     color: 'rgb(77, 182, 172)',
     opacity: 0.3
-  };
+  }
   state = {
     drawing: false,
     drawArea: {top: 0, right: 0, bottom: 0, left: 0},
     startLoc: 0
-  };
+  }
 
   _getDrawArea(loc) {
-    const {innerWidth} = this.props;
-    const {drawArea, startLoc} = this.state;
+    const { innerWidth } = this.props
+    const { drawArea, startLoc } = this.state
 
     if (loc < startLoc) {
       return {
         ...drawArea,
         left: Math.max(loc, 0),
         right: startLoc
-      };
+      }
     } else {
       return {
         ...drawArea,
         right: Math.min(loc, innerWidth),
         left: startLoc
-      };
+      }
     }
   }
 
   onParentMouseDown(e) {
-    const {marginLeft, innerHeight, onBrushStart} = this.props;
-    const location = e.nativeEvent.offsetX - marginLeft;
+    const { marginLeft, innerHeight, onBrushStart } = this.props
+    const location = e.nativeEvent.offsetX - marginLeft
 
     // TODO: Eventually support drawing as a full rectangle, if desired. Currently the code supports 'x' only
     this.setState({
@@ -48,30 +48,30 @@ export default class Highlight extends AbstractSeries {
         left: location
       },
       startLoc: location
-    });
+    })
 
     if (onBrushStart) {
-      onBrushStart(e);
+      onBrushStart(e)
     }
   }
 
   stopDrawing() {
     // Quickly short-circuit if the user isn't drawing in our component
     if (!this.state.drawing) {
-      return;
+      return
     }
 
-    const {onBrushEnd} = this.props;
-    const {drawArea} = this.state;
-    const xScale = ScaleUtils.getAttributeScale(this.props, 'x');
-    const yScale = ScaleUtils.getAttributeScale(this.props, 'y');
+    const { onBrushEnd } = this.props
+    const { drawArea } = this.state
+    const xScale = ScaleUtils.getAttributeScale(this.props, 'x')
+    const yScale = ScaleUtils.getAttributeScale(this.props, 'y')
 
     // Clear the draw area
     this.setState({
       drawing: false,
-      drawArea: {top: 0, right: 0, bottom: 0, left: 0},
+      drawArea: { top: 0, right: 0, bottom: 0, left: 0 },
       startLoc: 0
-    });
+    })
 
     // Invoke the callback with null if the selected area was < 5px
     if (Math.abs(drawArea.right - drawArea.left) < 5) {
@@ -88,7 +88,7 @@ export default class Highlight extends AbstractSeries {
     }
 
     if (onBrushEnd) {
-      onBrushEnd(domainArea);
+      onBrushEnd(domainArea)
     }
   }
 
