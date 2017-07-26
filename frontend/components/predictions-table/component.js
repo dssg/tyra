@@ -33,7 +33,7 @@ export default React.createClass({
     }
   },
   render: function() {
-      if(this.state.loading) {
+    if(this.state.loading) {
       return (
         <div>
           <h4>Prediction Table</h4>
@@ -51,7 +51,7 @@ export default React.createClass({
             pageButtonLimit={5}
             itemsPerPage={10} />
         </div>
-        )
-      }
+      )
+    }
   }
 })

@@ -3,11 +3,11 @@ import FeatureBlock from 'components/feature-block/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import ModelInfo from 'components/model-info/component'
 import PredictionsTable from 'components/predictions-table/component'
+import ResponseDist from 'components/response-chart/component'
 import RocCurve from 'components/roc-chart/component'
 import React from 'react'
 import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
 import ThresholdPrecisionRecallCurve from 'components/thresholdpr-chart/component'
-import ResponseDist from 'components/response-chart/component'
 
 export default React.createClass({
   render: function() {
