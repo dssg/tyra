@@ -75,7 +75,6 @@ export default React.createClass({
       const { data, lastDrawLocation } = this.state
       return (
         <div>
-          <h3>&nbsp;</h3>
           <h4>Receiver Operating Characteristic Curve</h4>
           <div className="row">
             <div className="legend">
