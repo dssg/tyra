@@ -8,10 +8,10 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
+import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-
 
 export default React.createClass({
   getInitialState: function() {
@@ -19,6 +19,7 @@ export default React.createClass({
       data: [],
       bins: 20,
       loading: true,
+      lastDrawLocation: null,
       crosshairValues: []
     }
   },
@@ -66,21 +67,32 @@ export default React.createClass({
         </div>
       )
     } else {
-      const { data } = this.state
+      const { data, lastDrawLocation } = this.state
       return (
         <div>
           <h4>Response Distribution</h4>
+          <button className="btn btn-xs" onClick={() => {
+                  this.setState({ lastDrawLocation: null })
+          }}>
+            Reset Zoom
+          </button>
           <FlexibleXYPlot
             animation
-            margin={{ left: 30, top: 30, bottom: 5 }}
-            xDomain={[0, 1]}
+            margin={{ left: 30, top: 30 }}
+            xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right] || [0, 1]}
             onMouseLeave={this.handleOnMouseLeave}
-            height={320}>
+            height={330}>
             <HorizontalGridLines />
             <YAxis
               title={"Proportion (%)"} />
             <XAxis
               title={"Predicted Score"} />
+
+            <Highlight onBrushEnd={(area) => {
+              this.setState({
+                lastDrawLocation: area
+              })
+            }} />
 
             <LineSeries
               key={data[0].title}

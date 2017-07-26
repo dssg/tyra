@@ -49,7 +49,7 @@ export default React.createClass({
             sortable
             data={this.state.data}
             pageButtonLimit={5}
-            itemsPerPage={8} />
+            itemsPerPage={10} />
         </div>
         )
       }
