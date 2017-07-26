@@ -1,19 +1,18 @@
+import Highlight from 'components/highlight-area/component'
 import {
   Crosshair,
-  XYPlot,
-  XAxis,
-  YAxis,
+  DiscreteColorLegend,
   HorizontalGridLines,
-  makeWidthFlexible,
   LineSeries,
-  DiscreteColorLegend
+  XAxis,
+  XYPlot,
+  YAxis,
+  makeWidthFlexible
 } from 'react-vis'
 import React from 'react'
 
-import Highlight from 'components/highlight-area/component'
-
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const style = {"verticalAlign": "middle"}
+const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
   getInitialState: function() {
@@ -25,12 +24,12 @@ export default React.createClass({
     }
   },
 
-  handleOnNearestX: function(value, {index}) {
-    this.setState({crosshairValues: this.state.data.map((s) => s.data[index])})
+  handleOnNearestX: function(value, { index }) {
+    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
   handleOnMouseLeave: function() {
-    this.setState({crosshairValues: []})
+    this.setState({ crosshairValues: [] })
   },
 
   componentDidMount: function() {
@@ -69,7 +68,7 @@ export default React.createClass({
         </div>
       )
     } else {
-      const {data,lastDrawLocation} = this.state
+      const { data,lastDrawLocation } = this.state
       return (
         <div>
           <h3>&nbsp;</h3>
@@ -78,7 +77,7 @@ export default React.createClass({
             <div className="legend">
               <div className="col-lg-6">
                 <button style={style} className="btn btn-xs" onClick={() => {
-                  this.setState({lastDrawLocation: null});
+                  this.setState({ lastDrawLocation: null });
                 }}>
                   Reset Zoom
                 </button>
@@ -87,7 +86,7 @@ export default React.createClass({
               <DiscreteColorLegend
                 orientation="horizontal"
                 width={120}
-                items={data}/>
+                items={data} />
             </div>
           </div>
           <FlexibleXYPlot
@@ -95,30 +94,30 @@ export default React.createClass({
             onMouseLeave={this.handleOnMouseLeave}
             xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
             height={300}>
-          <HorizontalGridLines />
-          <YAxis
-            title={"True Positive Rate"} />
-          <XAxis
-            title={"False Positive Rate"} />
+            <HorizontalGridLines />
+            <YAxis
+              title={"True Positive Rate"} />
+            <XAxis
+              title={"False Positive Rate"} />
 
-          <Highlight onBrushEnd={(area) => {
-            this.setState({
-              lastDrawLocation: area
-              });
-            }} />
+            <Highlight onBrushEnd={(area) => {
+              this.setState({
+                lastDrawLocation: area
+                });
+              }} />
 
             <LineSeries
               key={data[0].title}
               data={data[0].data}
               color={data[0].color}
-              onNearestX={this.handleOnNearestX} />
+              onNearestX={ this.handleOnNearestX } />
 
             <LineSeries
               key={data[1].title}
               data={data[1].data}
               color={data[1].color} />
 
-          <Crosshair values={this.state.crosshairValues} />
+            <Crosshair values={ this.state.crosshairValues } />
           </FlexibleXYPlot>
         </div>
       )
