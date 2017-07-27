@@ -135,6 +135,7 @@ def get_model_result(model_id, evaluation_start_time):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+
 @app.route(
     '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>',
     methods=['GET', 'POST']
