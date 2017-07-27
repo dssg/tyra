@@ -5,6 +5,7 @@ export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
+      loading: true,
     }
   },
   componentDidMount: function() {
@@ -25,19 +26,32 @@ export default React.createClass({
         success: function(result) {
           self.setState({
             data: result.results,
+            loading: false
           })
         }
       })
     }
   },
   render: function() {
-    return (
-      <Reactable.Table
-        className="table"
-        sortable
-        data={this.state.data}
-        pageButtonLimit={5}
-        itemsPerPage={15} />
-    )
+    if(this.state.loading) {
+      return (
+        <div>
+          <h4>Prediction Table</h4>
+          <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <h4>Prediction Table</h4>
+          <Reactable.Table
+            className="table"
+            sortable
+            data={this.state.data}
+            pageButtonLimit={5}
+            itemsPerPage={10} />
+        </div>
+      )
+    }
   }
 })

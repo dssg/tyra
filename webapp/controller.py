@@ -135,6 +135,23 @@ def get_model_result(model_id, evaluation_start_time):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+@app.route(
+    '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>/<int:bins>',
+    methods=['GET', 'POST']
+)
+def get_response_dist(model_id, evaluation_start_time, bins=50):
+    query_arg = {'model_id': model_id,
+                 'evaluation_start_time': evaluation_start_time}
+    prediction_df = query.get_model_prediction(query_arg)
+    score = prediction_df['score']
+    hist, bin = np.histogram(score, bins=bins)
+    try:
+        output = {"title": "response",
+                  "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]}
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route(
     '/evaluations/<int:model_id>/feature_importance/<int:num>',
@@ -236,7 +253,8 @@ def get_simple_precision_recall(model_id, evaluation_start_time):
     pred = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
-    output = [{'title': 'precision_recall', 'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]}]
+    output = {'title': 'precision_recall',
+              'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]}
     try:
         return jsonify(results=output)
     except:

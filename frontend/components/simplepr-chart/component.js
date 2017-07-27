@@ -82,10 +82,6 @@ export default React.createClass({
                 </button>
               </div>
 
-              <DiscreteColorLegend
-                orientation="horizontal"
-                width={120}
-                items={data} />
             </div>
           </div>
           <FlexibleXYPlot
@@ -107,8 +103,8 @@ export default React.createClass({
 
 
             <LineSeries
-              key={data[0].title}
-              data={data[0].data}
+              key={data.title}
+              data={data.data}
               color={"#1f77b4"}
               onNearestX={this.handleOnNearestX} />
 
