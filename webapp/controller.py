@@ -146,12 +146,9 @@ def get_response_dist(model_id, evaluation_start_time, bins=50):
     score = prediction_df['score']
     hist, bin = np.histogram(score, bins=bins)
     try:
-        output = [
-            {
-                "title": "response",
-                "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]
-            }
-        ]
+        output = { "title": "response",
+                   "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]
+                 }
         return jsonify(results=output)
     except:
         print('there are some problems')
@@ -257,7 +254,8 @@ def get_simple_precision_recall(model_id, evaluation_start_time):
     pred = query.get_model_prediction(query_arg)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
-    output = [{'title': 'precision_recall', 'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]}]
+    output = {'title': 'precision_recall',
+              'data': [{'x': r, 'y': p} for r, p in zip(recall, precision)]}
     try:
         return jsonify(results=output)
     except:
