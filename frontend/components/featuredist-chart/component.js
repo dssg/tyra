@@ -16,7 +16,7 @@ export default React.createClass({
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + this.props.testOrTrain + this.props.featureSelected + "/" + this.state.bins,
+      url: "/evaluations/" + this.props.modelId + this.props.testOrTrain + this.props.featureSelected,
       success: function(result) {
         self.setState({
           data: result.results.series,
