@@ -1,5 +1,5 @@
 {
-    "results":[
+    "results":
         {
             "title":"response",
             "data":[
@@ -25,5 +25,4 @@
                 }
             ]
         }
-    ]
 }

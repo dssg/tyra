@@ -1,5 +1,5 @@
 {
-    "results":[
+    "results":
         {
             "data":[
                 {
@@ -33,5 +33,4 @@
             ],
             "title":"precision_recall"
         }
-    ]
 }
