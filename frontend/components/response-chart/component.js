@@ -93,8 +93,8 @@ export default React.createClass({
             }} />
 
             <LineSeries
-              key={data[0].title}
-              data={data[0].data}
+              key={data.title}
+              data={data.data}
               onNearestX={this.handleOnNearestX} />
 
             <Crosshair values={this.state.crosshairValues} />
