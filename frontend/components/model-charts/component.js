@@ -1,9 +1,8 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import FeatureBlock from 'components/feature-block/component'
+import IndividualTab from 'components/individual-tab/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import ModelInfo from 'components/model-info/component'
-import PredictionsTable from 'components/predictions-table/component'
-import ResponseDist from 'components/response-chart/component'
 import RocCurve from 'components/roc-chart/component'
 import React from 'react'
 import SimplePrecisionRecallCurve from 'components/simplepr-chart/component'
@@ -41,15 +40,8 @@ export default React.createClass({
         </TabPanel>
         <TabPanel>
           <ModelInfo modelId={this.props.modelId} asOfDate={this.props.asOfDate}></ModelInfo>
-          <div className="col-md-2">
-            <PredictionsTable modelId={this.props.modelId} asOfDate={this.props.asOfDate} />
-          </div>
-          <div className="col-md-1">
-          </div>
-          <div className="col-md-9">
-            <ResponseDist modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
-            </ResponseDist>
-          </div>
+          <IndividualTab modelId={this.props.modelId} asOfDate={this.props.asOfDate}>
+          </IndividualTab>
         </TabPanel>
       </Tabs>
     )

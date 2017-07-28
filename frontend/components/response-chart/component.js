@@ -24,7 +24,7 @@ export default React.createClass({
   },
 
   handleOnNearestX: function(value, { index }) {
-    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
+    this.setState({ crosshairValues: [this.state.data.data[index]] })
   },
 
   handleOnMouseLeave: function() {
@@ -97,6 +97,11 @@ export default React.createClass({
               key={data.title}
               data={data.data}
               onNearestX={this.handleOnNearestX} />
+
+            <LineSeries
+              key={"selected"}
+              data={[{x: this.props.selectedScore, y: 100}, {x: this.props.selectedScore, y: 0}]}
+              color={"#2E8B57"} />
 
             <Crosshair values={this.state.crosshairValues} />
           </FlexibleXYPlot>
