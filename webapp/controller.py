@@ -147,12 +147,9 @@ def get_response_dist(model_id, evaluation_start_time):
     score = prediction_df['score']
     hist, bin = np.histogram(score, bins='auto')
     try:
-        output = [
-            {
-                "title": "response",
-                "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]
-            }
-        ]
+        output = {
+            "title": "response",
+            "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]}
         return jsonify(results=output)
     except:
         print('there are some problems')
