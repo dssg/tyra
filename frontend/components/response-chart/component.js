@@ -16,7 +16,6 @@ export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      bins: 20,
       loading: true,
       lastDrawLocation: null,
       crosshairValues: []
@@ -46,7 +45,7 @@ export default React.createClass({
     if (this.props.asOfDate !== null) {
       $.ajax({
         type: "GET",
-        url: "/evaluations/" + this.props.modelId + "/response_dist/" + this.props.asOfDate + '/' + this.state.bins,
+        url: "/evaluations/" + this.props.modelId + "/response_dist/" + this.props.asOfDate,
         success: function(result) {
           self.setState({
             data: result.results,
