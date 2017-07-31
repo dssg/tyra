@@ -4,6 +4,7 @@ from webapp import app
 from webapp import query
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
+from scipy import stats
 import yaml
 import datetime
 from webapp import users, login_manager
@@ -140,6 +141,26 @@ def get_model_result(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def get_response_dist(model_id, evaluation_start_time, bins=50):
+    query_arg = {'model_id': model_id,
+                 'evaluation_start_time': evaluation_start_time}
+    prediction_df = query.get_model_prediction(query_arg)
+    score = prediction_df['score']
+    hist, bin = np.histogram(score, bins=bins)
+    hist = hist.astype(float)/sum(hist)
+    try:
+        output = [{"title": "response",
+                   "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin, hist)]}]
+        return jsonify(results=output)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route(
+    '/evaluations/<int:model_id>/response_hist/<string:evaluation_start_time>/<int:bins>',
+    methods=['GET', 'POST']
+)
+def get_response_hist(model_id, evaluation_start_time, bins=50):
     query_arg = {'model_id': model_id,
                  'evaluation_start_time': evaluation_start_time}
     prediction_df = query.get_model_prediction(query_arg)
