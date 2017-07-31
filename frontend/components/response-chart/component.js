@@ -3,10 +3,12 @@ import {
   HorizontalGridLines,
   LineSeries,
   makeWidthFlexible,
+  VerticalBarSeries,
   XAxis,
   XYPlot,
   YAxis,
 } from 'react-vis'
+import {prop, map} from 'ramda'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
@@ -19,12 +21,13 @@ export default React.createClass({
       bins: 20,
       loading: true,
       lastDrawLocation: null,
-      crosshairValues: []
+      crosshairValues: [],
+      ymax: null,
     }
   },
 
   handleOnNearestX: function(value, { index }) {
-    this.setState({ crosshairValues: [this.state.data.data[index]] })
+    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
   },
 
   handleOnMouseLeave: function() {
@@ -50,7 +53,8 @@ export default React.createClass({
         success: function(result) {
           self.setState({
             data: result.results,
-            loading: false
+            loading: false,
+            ymax: Math.max.apply(null, map(prop('y'), result.results[0].data))
           })
         }
       })
@@ -78,6 +82,7 @@ export default React.createClass({
           <FlexibleXYPlot
             animation
             margin={{ left: 30, top: 30 }}
+            yDomain={[0, 1]}
             xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right] || [0, 1]}
             onMouseLeave={this.handleOnMouseLeave}
             height={330}>
@@ -93,14 +98,13 @@ export default React.createClass({
               })
             }} />
 
-            <LineSeries
-              key={data.title}
-              data={data.data}
-              onNearestX={this.handleOnNearestX} />
+            <VerticalBarSeries
+              key={data[0].title}
+              data={data[0].data} />
 
             <LineSeries
               key={"selected"}
-              data={[{x: this.props.selectedScore, y: 100}, {x: this.props.selectedScore, y: 0}]}
+              data={[{x: this.props.selectedScore, y: this.state.ymax}, {x: this.props.selectedScore, y: 0}]}
               color={"#2E8B57"} />
 
             <Crosshair values={this.state.crosshairValues} />
