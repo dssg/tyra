@@ -1,5 +1,6 @@
 import {
   Crosshair,
+  DiscreteColorLegend,
   HorizontalGridLines,
   LineSeries,
   makeWidthFlexible,
@@ -8,19 +9,21 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
-import {prop, map} from 'ramda'
-import Highlight from 'components/highlight-area/component'
+import {prop, map, zip} from 'ramda'
 import React from 'react'
+import Highlight from 'components/highlight-area/component'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+const colors = ['#FFC0CB','#1f77b4', '#ff7f0e']
+const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
       loading: true,
-      lastDrawLocation: null,
       crosshairValues: [],
+      lastDrawLocation: null,
       ymax: null,
     }
   },
@@ -50,6 +53,7 @@ export default React.createClass({
         type: "GET",
         url: "/evaluations/" + this.props.modelId + "/response_dist/" + this.props.asOfDate,
         success: function(result) {
+          zip(colors, result.results).map(function(x) {x[1].color=x[0]})
           self.setState({
             data: result.results,
             loading: false,
@@ -73,23 +77,35 @@ export default React.createClass({
       return (
         <div>
           <h4>Response Distribution</h4>
-          <button className="btn btn-xs" onClick={() => {
-            this.setState({ lastDrawLocation: null })
-          }}>
-            Reset Zoom
-          </button>
+          <div className="row">
+            <div className="legend">
+              <div className="col-lg-2">
+                <button style={style} className="btn btn-xs" onClick={() => {
+                  this.setState({ lastDrawLocation: null })
+                }}>
+                  Reset Zoom
+                </button>
+              </div>
+
+              <DiscreteColorLegend
+                orientation="horizontal"
+                width={250}
+                items={data} />
+            </div>
+          </div>
           <FlexibleXYPlot
             animation
             margin={{ left: 30, top: 30 }}
-            yDomain={[0, 1]}
+            yDomain={[0, this.state.ymax+0.05]}
             xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right] || [0, 1]}
             onMouseLeave={this.handleOnMouseLeave}
             height={330}>
             <HorizontalGridLines />
             <YAxis
-              title={"Proportion (%)"} />
+              title={"Fraction of Test Set"} />
             <XAxis
               title={"Predicted Score"} />
+
 
             <Highlight onBrushEnd={(area) => {
               this.setState({
@@ -97,9 +113,13 @@ export default React.createClass({
               })
             }} />
 
-            <VerticalBarSeries
-              key={data[0].title}
-              data={data[0].data} />
+            {data.map((entry) => (
+              <VerticalBarSeries
+                key={entry.title}
+                data={entry.data}
+                color={entry.color}
+                opacity={0.6} />
+            ))}
 
             <LineSeries
               key={"selected"}
