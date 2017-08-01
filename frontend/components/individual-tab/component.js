@@ -1,4 +1,5 @@
 import FeatureBlock from 'components/feature-block/component'
+import IndividualImportance from 'components/individual_importance-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
 import ResponseDist from 'components/response-chart/component'
 import React from 'react'
@@ -37,7 +38,10 @@ export default React.createClass({
           </ResponseDist>
         </div>
         <div className="col-md-12">
-          <FeatureBlock modelId={this.props.modelId} />
+          <IndividualImportance
+            modelId={this.props.modelId}
+            asOfDate={this.props.asOfDate}
+            entity_id={this.state.selected_entity_id}/>
         </div>
       </div>
     )
