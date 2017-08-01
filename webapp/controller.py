@@ -136,43 +136,37 @@ def get_model_result(model_id, evaluation_start_time):
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
+
 @app.route(
-    '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>/<int:bins>',
+    '/evaluations/<int:model_id>/response_dist/<string:evaluation_start_time>',
     methods=['GET', 'POST']
 )
-def get_response_dist(model_id, evaluation_start_time, bins=50):
+def get_response_dist(model_id, evaluation_start_time):
     query_arg = {'model_id': model_id,
                  'evaluation_start_time': evaluation_start_time}
     prediction_df = query.get_model_prediction(query_arg)
     score = prediction_df['score']
-    hist, bin = np.histogram(score, bins=bins)
-    hist = hist.astype(float)/sum(hist)
+    hist_raw, bin = np.histogram(score, bins='auto')
+    hist = hist_raw.astype(float)/sum(hist_raw)
+
+    score0 = prediction_df[prediction_df['label_value'] == 0]['score']
+    hist0, bin0 = np.histogram(score0, bins=bin)
+    hist0 = hist0.astype(float)/sum(hist_raw)
+
+    score1 = prediction_df[prediction_df['label_value'] == 1]['score']
+    hist1, bin1 = np.histogram(score1, bins=bin)
+    hist1 = hist1.astype(float)/sum(hist_raw)
+
     try:
-        output = [{"title": "response",
-                   "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin, hist)]}]
+        output = [
+            {"title": "Total", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin, hist)]},
+            {"title": "Label 0", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0, hist0)]},
+            {"title": "Label 1", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1, hist1)]}]
         return jsonify(results=output)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-
-@app.route(
-    '/evaluations/<int:model_id>/response_hist/<string:evaluation_start_time>/<int:bins>',
-    methods=['GET', 'POST']
-)
-def get_response_hist(model_id, evaluation_start_time, bins=50):
-    query_arg = {'model_id': model_id,
-                 'evaluation_start_time': evaluation_start_time}
-    prediction_df = query.get_model_prediction(query_arg)
-    score = prediction_df['score']
-    hist, bin = np.histogram(score, bins=bins)
-    try:
-        output = {"title": "response",
-                  "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]}
-        return jsonify(results=output)
-    except:
-        print('there are some problems')
-        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 @app.route(
     '/evaluations/<int:model_id>/feature_importance/<int:num>',
@@ -191,16 +185,16 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>/<int:bins>',
+    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>',
     methods=['GET', 'POST']
 )
-def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
+def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
     query_arg = {'model_id': model_id, 'feature': feature}
     # Not sure should dropna or fillna
     f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
-    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist0, bin0 = np.histogram(dist0, bins='auto')
     hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
         output = {
@@ -217,17 +211,17 @@ def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinit
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>/<int:bins>',
+    '/evaluations/<int:model_id>/feature_dist_train/<string:feature>',
     methods=['GET', 'POST']
 )
-def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum", bins=30):
+def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
     query_arg = {'model_id': model_id, 'feature': feature}
     f_dist = query.get_train_feature_distribution(query_arg)
     # Not sure should dropna or fillna
     f_dist = f_dist.fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
-    hist0, bin0 = np.histogram(dist0, bins=bins)
+    hist0, bin0 = np.histogram(dist0, bins='auto')
     hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
         output = {

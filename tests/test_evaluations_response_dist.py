@@ -23,10 +23,9 @@ data = {
 
 def test_model_prediction():
     with rig_test_client(data) as test_app:
-        url = '/evaluations/1/response_dist/{}/5'.format(EVALUATION_START_TIME)
+        url = '/evaluations/1/response_dist/{}'.format(EVALUATION_START_TIME)
         response = test_app.get(url)
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
-        print(response_data)
         expected = load_json_example('/evaluations/1/response_dist')
         assert expected == response_data
