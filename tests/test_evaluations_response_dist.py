@@ -21,7 +21,7 @@ data = {
     'predictions': predictions_data
 }
 
-def test_model_prediction():
+def test_response_dist():
     with rig_test_client(data) as test_app:
         url = '/evaluations/1/response_dist/{}'.format(EVALUATION_START_TIME)
         response = test_app.get(url)
