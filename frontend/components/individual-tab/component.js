@@ -33,7 +33,8 @@ export default React.createClass({
           <ResponseDist
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
-            selectedScore={this.state.selected_score}>
+            selectedScore={this.state.selected_score}
+            selectedId={this.state.selected_entity_id} >
           </ResponseDist>
         </div>
         <div className="col-md-12">
