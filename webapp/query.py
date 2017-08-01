@@ -260,9 +260,9 @@ def get_test_feature_distribution(query_arg):
     except:
         query = """
         SELECT "{0}", "{1}", label_value
-        FROM "{1}"."{2}" f
+        FROM "{2}"."{3}" f
         JOIN results.predictions p on f.{1}=p.entity_id
-        where model_id={3} and p.as_of_date='{4}';
+        where model_id={4} and p.as_of_date='{5}';
         """.format(
             lookup['column_name'].tolist()[0],
             dbschema['entity_id'],
