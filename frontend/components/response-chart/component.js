@@ -9,7 +9,7 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
-import { prop, map, zip } from 'ramda'
+import { map, prop, zip } from 'ramda'
 import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
