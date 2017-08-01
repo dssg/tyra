@@ -185,11 +185,11 @@ def feature_importance(model_id, num=10):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/individual_feature_importance/<int:entity_id>',
+    '/evaluations/<int:model_id>/individual_feature_importance/<int:entity_id>/<string:as_of_date>',
     methods=['GET', 'POST']
 )
-def individual_feature_importance(model_id, entity_id):
-    query_arg = {'model_id': model_id, 'entity_id': entity_id}
+def individual_feature_importance(model_id, entity_id, as_of_date):
+    query_arg = {'model_id': model_id, 'entity_id': entity_id, 'as_of_date': as_of_date}
     individual_importance = query.get_individual_feature_importance(query_arg)
     try:
         individual_importance = individual_importance.to_dict('records')
