@@ -32,10 +32,6 @@ export default React.createClass({
     })
   },
 
-  componentDidMount: function() {
-    this.ajax_call()
-  },
-
   componentDidUpdate: function(prevProps, prevState) {
     const self = this
     if (self.props.entity_id !== prevProps.entity_id) {
@@ -47,28 +43,31 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h4>Feature Importance</h4>
+          <h4>Individual Feature Importance</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
     } else {
       return (
-        <XYPlot
-          width={340}
-          height={340}>
-          <XAxis hideTicks />
-          <HeatmapSeries
-            className="heatmap-series-example"
-            opacity={0.7}
-            onValueClick={(d) => {console.log(d)}}
-            data={[
-              {x: 1, y: 0, label: "A", color: 12},
-              {x: 1, y: 5, label: "B", color: 10},
-              {x: 1, y: 10, label: "C", color: 8},
-              {x: 1, y: 15, label: "D", color: 5},
-              {x: 1, y: 20, label: "E", color: 1}]} />
-          <YAxis hideLine left={290} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => WORDS[v/5]} />
-        </XYPlot>
+        <div>
+          <h4>Individual Feature Importance</h4>
+          <XYPlot
+            width={340}
+            height={340}>
+            <XAxis hideTicks />
+            <HeatmapSeries
+              className="heatmap-series-example"
+              opacity={0.7}
+              onValueClick={(d) => {console.log(d)}}
+              data={[
+                {x: 1, y: 0, label: "A", color: 12},
+                {x: 1, y: 5, label: "B", color: 10},
+                {x: 1, y: 10, label: "C", color: 8},
+                {x: 1, y: 15, label: "D", color: 5},
+                {x: 1, y: 20, label: "E", color: 1}]} />
+            <YAxis hideLine left={290} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => WORDS[v/5]} />
+          </XYPlot>
+        </div>
       )
     }
   }
