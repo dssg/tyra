@@ -9,12 +9,12 @@ import {
   XYPlot,
   YAxis,
 } from 'react-vis'
-import {prop, map, zip} from 'ramda'
-import React from 'react'
+import { prop, map, zip } from 'ramda'
 import Highlight from 'components/highlight-area/component'
+import React from 'react'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const colors = ['#FFC0CB','#1f77b4', '#ff7f0e']
+const colors = ['#FFC0CB', '#1f77b4', '#ff7f0e']
 const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
