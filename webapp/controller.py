@@ -4,7 +4,6 @@ from webapp import app
 from webapp import query
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
-from scipy import stats
 import yaml
 import datetime
 from webapp import users, login_manager
