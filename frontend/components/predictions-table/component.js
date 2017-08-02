@@ -54,6 +54,7 @@ export default React.createClass({
               <Reactable.Tr
                 data={entry}
                 id={entry.entity_id}
+                label={entry.label_value}
                 value={entry.score}
                 onClick={this.props.onClick} />)}
           </Reactable.Table>

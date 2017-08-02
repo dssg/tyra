@@ -8,20 +8,26 @@ export default React.createClass({
   getInitialState: function() {
     return {
       selected_entity_id: null,
-      selected_score: null
+      selected_score: null,
+      selected_label: null,
     }
   },
 
   handleOnClick: function(event) {
     this.setState({
       selected_entity_id: event.target.parentElement.id,
-      selected_score: event.target.parentNode.getAttribute("value")
+      selected_score: event.target.parentNode.getAttribute("value"),
+      selected_label: event.target.parentNode.getAttribute("label")
     })
   },
 
   render: function() {
     return (
       <div>
+        <h5>Entity ID: <strong>{this.state.selected_entity_id}</strong> &nbsp;
+            Score: <strong>{this.state.selected_score}</strong> &nbsp;
+            Label: <strong>{this.state.selected_label}</strong> &nbsp;
+        </h5>
         <div className="col-md-2">
           <PredictionsTable
             modelId={this.props.modelId}

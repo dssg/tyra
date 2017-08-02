@@ -1,12 +1,7 @@
 import { Hint, HeatmapSeries, HorizontalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
+import { values, reverse } from 'ramda'
 import React from 'react'
 
-const WORDS = ["dispatch_id_p1m_dispatchtype_theft_sum",
-               "dispatch_id_p1y_dispatchtype_intoxicated_sum",
-               "dispatch_id_p1y_dispatchtype_suspicious_sum",
-               "dispatch_id_p1w_dispatchtype_domestic_disturb_sum",
-               "arrests_id_p1y_arrestson_sat_avg",
-               ]
 
 export default React.createClass({
   getInitialState: function() {
@@ -24,10 +19,9 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/individual_feature_importance/" + this.props.entity_id + '/' + this.props.asOfDate,
       success: function(result) {
         self.setState({
-          data: result.results,
+          data: reverse(values(result.results[0])),
           loading: false
         })
-        console.log(result.results)
       }
     })
   },
@@ -47,6 +41,13 @@ export default React.createClass({
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
+    } else if (this.state.data.length == 0) {
+      return (
+        <div>
+          <h4>Individual Feature Importance</h4>
+          <strong>No data. </strong>
+        </div>
+      )
     } else {
       return (
         <div>
@@ -57,16 +58,14 @@ export default React.createClass({
             height={320}>
             <XAxis hideTicks />
             <HeatmapSeries
-              className="heatmap-series-example"
               opacity={0.7}
-              onValueClick={(d) => {console.log(d)}}
               data={[
-                {x: 1, y: 0, label: "A", color: 12},
-                {x: 1, y: 5, label: "B", color: 10},
-                {x: 1, y: 10, label: "C", color: 8},
-                {x: 1, y: 15, label: "D", color: 5},
-                {x: 1, y: 20, label: "E", color: 1}]} />
-            <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => WORDS[v/5]} />
+                {x: 1, y: 0, label: "risk1", color: 20},
+                {x: 1, y: 5, label: "risk2", color: 15},
+                {x: 1, y: 10, label: "risk3", color: 10},
+                {x: 1, y: 15, label: "risk4", color: 5},
+                {x: 1, y: 20, label: "risk5", color: 0}]} />
+            <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => this.state.data[v/5]} />
           </XYPlot>
         </div>
       )
