@@ -52,8 +52,9 @@ export default React.createClass({
         <div>
           <h4>Individual Feature Importance</h4>
           <XYPlot
-            width={340}
-            height={340}>
+            margin={{left: 0}}
+            width={320}
+            height={320}>
             <XAxis hideTicks />
             <HeatmapSeries
               className="heatmap-series-example"
@@ -65,7 +66,7 @@ export default React.createClass({
                 {x: 1, y: 10, label: "C", color: 8},
                 {x: 1, y: 15, label: "D", color: 5},
                 {x: 1, y: 20, label: "E", color: 1}]} />
-            <YAxis hideLine left={290} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => WORDS[v/5]} />
+            <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => WORDS[v/5]} />
           </XYPlot>
         </div>
       )
