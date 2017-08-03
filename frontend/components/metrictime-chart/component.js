@@ -1,8 +1,6 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
-import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, MarkSeries, XAxis, XYPlot, YAxis } from 'react-vis'
+import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
-import { scaleLinear } from 'd3-scale';
-import NVD3Chart from 'react-nvd3'
 import React from 'react'
 
 export default React.createClass({
@@ -11,22 +9,18 @@ export default React.createClass({
       data: [],
       loading: false,
       metric: null,
-      index: 0,
       selectedPoint: null,
     }
   },
 
   transformColor: function(data, selectedPoint) {
     const test = data.map(row => {
-      console.log(row)
-      console.log(selectedPoint)
       if (row.x === selectedPoint.x) {
-        return {...row, color: '#EF5D28'}
+        return { ...row, color: '#EF5D28' }
+      } else {
+        return { ...row, color: '#1f77b4' }
       }
-      else {
-        return {...row, color: '#1f77b4'}
-      }
-      })
+    })
 
     return test
   },
@@ -49,7 +43,6 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/metric_overtime",
       data: $.param(params),
       success: function(result) {
-        console.log(d3.time.format("%Y-%m-%d").parse(result.results[0].values[0][0]))
         self.setState({
           metric: result.results[0].key,
           data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] })),
@@ -74,7 +67,7 @@ export default React.createClass({
       )
     } else {
       const FlexibleWidth = makeWidthFlexible(XYPlot)
-      const { data, index, hoveredPoint, selectedPoints } = this.state
+      const { data, selectedPoint } = this.state
       return (
         <div>
           <h4>Metrics Over Time</h4>
@@ -94,8 +87,8 @@ export default React.createClass({
               colorType="literal"
               size={10}
               style={{ 'cursor': 'pointer' }}
-              onValueClick={(value, e) => {this.setState({selectedPoint: value})}}
-              data={this.transformColor(data, this.state.selectedPoint)} />
+              onValueClick={(value) => {this.setState({ selectedPoint: value })}}
+              data={this.transformColor(data, selectedPoint)} />
           </FlexibleWidth>
         </div>
       )
