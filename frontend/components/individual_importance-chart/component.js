@@ -1,5 +1,5 @@
-import { Hint, HeatmapSeries, HorizontalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
-import { values, reverse } from 'ramda'
+import { HeatmapSeries, XAxis, XYPlot, YAxis } from 'react-vis'
+import { reverse, values } from 'ramda'
 import React from 'react'
 
 
