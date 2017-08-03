@@ -14,7 +14,7 @@ import Highlight from 'components/highlight-area/component'
 import React from 'react'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
-const colors = ['#FFC0CB', '#1f77b4', '#ff7f0e']
+const colors = ['#ffc0cb', '#1f77b4', '#ff7f0e']
 const style = { "verticalAlign": "middle" }
 
 export default React.createClass({
