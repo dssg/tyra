@@ -26,7 +26,7 @@ export default React.createClass({
     })
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     const self = this
     if (self.props.entity_id !== prevProps.entity_id) {
       this.ajax_call()
@@ -41,7 +41,7 @@ export default React.createClass({
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
-    } else if (this.state.data.length == 0) {
+    } else if (this.state.data.length === 0) {
       return (
         <div>
           <h4>Individual Feature Importance</h4>
@@ -53,19 +53,19 @@ export default React.createClass({
         <div>
           <h4>Individual Feature Importance</h4>
           <XYPlot
-            margin={{left: 0}}
+            margin={{ left: 0 }}
             width={320}
             height={320}>
             <XAxis hideTicks />
             <HeatmapSeries
               opacity={0.7}
               data={[
-                {x: 1, y: 0, label: "risk1", color: 20},
-                {x: 1, y: 5, label: "risk2", color: 15},
-                {x: 1, y: 10, label: "risk3", color: 10},
-                {x: 1, y: 15, label: "risk4", color: 5},
-                {x: 1, y: 20, label: "risk5", color: 0}]} />
-            <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={v => this.state.data[v/5]} />
+                { x: 1, y: 0, label: "risk1", color: 20 },
+                { x: 1, y: 5, label: "risk2", color: 15 },
+                { x: 1, y: 10, label: "risk3", color: 10 },
+                { x: 1, y: 15, label: "risk4", color: 5 },
+                { x: 1, y: 20, label: "risk5", color: 0 }]} />
+            <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={(v) => this.state.data[v/5]} />
           </XYPlot>
         </div>
       )
