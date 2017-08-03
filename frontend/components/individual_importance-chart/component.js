@@ -21,7 +21,7 @@ export default React.createClass({
         self.setState({
           data: reverse(values(result.results[0])).map(
             (f, index) => {
-              return { x: 1, y: index*5, label: "risk" + index.toString(), color: 20-5*index,feature: f }
+              return { x: 1, y: index*5, label: "risk" + index.toString(), color: 20-5*index, feature: f }
             }
           ),
           data_array: reverse(values(result.results[0])),

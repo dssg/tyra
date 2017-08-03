@@ -48,17 +48,17 @@ export default React.createClass({
     )
   },
 
- renderFeatureDist: function() {
-  return (
-    <div className="col-md-8">
-      {this.renderTrainTestButton()}
-      <FeatureDist
-        entity_id={this.state.selected_entity_id}
-        modelId={this.props.modelId}
-        testOrTrain={this.state.test_button ? "/feature_dist_test/" : "/feature_dist_train/"}
-        featureSelected={this.state.featureSelected} />
-    </div>
-  )
+  renderFeatureDist: function() {
+    return (
+      <div className="col-md-8">
+        {this.renderTrainTestButton()}
+        <FeatureDist
+          entity_id={this.state.selected_entity_id}
+          modelId={this.props.modelId}
+          testOrTrain={this.state.test_button ? "/feature_dist_test/" : "/feature_dist_train/"}
+          featureSelected={this.state.featureSelected} />
+      </div>
+    )
  },
 
   render: function() {
