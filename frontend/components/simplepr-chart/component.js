@@ -26,7 +26,7 @@ export default React.createClass({
   },
 
   handleOnNearestX: function(value, { index }) {
-    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
+    this.setState({ crosshairValues: [this.state.data.data[index]] })
   },
 
   handleOnMouseLeave: function() {

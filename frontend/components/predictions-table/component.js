@@ -8,6 +8,7 @@ export default React.createClass({
       loading: true,
     }
   },
+
   componentDidMount: function() {
     this.ajax_call()
   },
@@ -47,11 +48,18 @@ export default React.createClass({
           <Reactable.Table
             className="table"
             sortable
-            data={this.state.data}
             pageButtonLimit={5}
-            itemsPerPage={10} />
+            itemsPerPage={10}>
+            {this.state.data.map((entry, i) =>
+              <Reactable.Tr
+                data={entry}
+                id={entry.entity_id}
+                value={entry.score}
+                onClick={this.props.onClick} />)}
+          </Reactable.Table>
         </div>
       )
     }
   }
 })
+

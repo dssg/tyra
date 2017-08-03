@@ -242,34 +242,34 @@ def get_test_feature_distribution(query_arg):
 
     try:
         query = """
-        SELECT "{0}", {1}, label_value
-        FROM "{2}"."{3}" f
-        JOIN results.predictions p on f.{1}=p.entity_id and p.as_of_date=f.as_of_date
-        where model_id={4} and p.as_of_date='{5}';
+        SELECT "{column_name}", {entity_id}, label_value
+        FROM "{feature_schema}"."{table_name}" f
+        JOIN results.predictions p on f.{entity_id}=p.entity_id and p.as_of_date=f.as_of_date
+        where model_id={model_id} and p.as_of_date='{as_of_date}';
         """.format(
-            lookup['column_name'].tolist()[0],
-            dbschema['entity_id'],
-            dbschema['feature_schema'],
-            lookup['table_name'].tolist()[0],
-            query_arg['model_id'],
-            as_of_date)
+            column_name=lookup['column_name'].tolist()[0],
+            entity_id=dbschema['entity_id'],
+            feature_schema=dbschema['feature_schema'],
+            table_name=lookup['table_name'].tolist()[0],
+            model_id=query_arg['model_id'],
+            as_of_date=as_of_date)
 
         df = pd.read_sql(
             query,
             con=db.engine)
     except:
         query = """
-        SELECT "{0}", "{1}", label_value
-        FROM "{1}"."{2}" f
-        JOIN results.predictions p on f.{1}=p.entity_id
-        where model_id={3} and p.as_of_date='{4}';
+        SELECT "{column_name}", "{entity_id}", label_value
+        FROM "{feature_schema}"."{table_name}" f
+        JOIN results.predictions p on f.{entity_id}=p.entity_id
+        where model_id={model_id} and p.as_of_date='{as_of_date}';
         """.format(
-            lookup['column_name'].tolist()[0],
-            dbschema['entity_id'],
-            dbschema['feature_schema'],
-            lookup['table_name'].tolist()[0],
-            query_arg['model_id'],
-            as_of_date)
+            column_name=lookup['column_name'].tolist()[0],
+            entity_id=dbschema['entity_id'],
+            feature_schema=dbschema['feature_schema'],
+            table_name=lookup['table_name'].tolist()[0],
+            model_id=query_arg['model_id'],
+            as_of_date=as_of_date)
 
         df = pd.read_sql(
             query,
@@ -310,38 +310,38 @@ def get_train_feature_distribution(query_arg):
 
     try:
         query = """
-        SELECT "{0}", {1}, label_value
-        FROM "{2}"."{3}" f
-        JOIN results.predictions p on f.{1}=p.entity_id
-        WHERE model_id={4}
-        AND p.as_of_date='{5}'
-        AND f.as_of_date in {6}
+        SELECT "{column_name}", {entity_id}, label_value
+        FROM "{feature_schema}"."{table_name}" f
+        JOIN results.predictions p on f.{entity_id}=p.entity_id
+        WHERE model_id={model_id}
+        AND p.as_of_date='{as_of_date}'
+        AND f.as_of_date in {training_time}
         """.format(
-            lookup['column_name'].tolist()[0],
-            dbschema['entity_id'],
-            dbschema['feature_schema'],
-            lookup['table_name'].tolist()[0],
-            query_arg['model_id'],
-            as_of_date,
-            tuple(training_time)
+            column_name=lookup['column_name'].tolist()[0],
+            entity_id=dbschema['entity_id'],
+            feature_schema=dbschema['feature_schema'],
+            table_name=lookup['table_name'].tolist()[0],
+            model_id=query_arg['model_id'],
+            as_of_date=as_of_date,
+            training_time=tuple(training_time)
             )
         df = pd.read_sql(
             query,
             con=db.engine)
     except:
         query = """
-        SELECT "{0}", "{1}", label_value
-        FROM "{2}"."{3}" f
-        JOIN results.predictions p on f.{1}=p.entity_id
-        WHERE model_id={4}
-        AND p.as_of_date='{5}'
+        SELECT "{column_name}", "{entity_id}", label_value
+        FROM "{feature_schema}"."{table_name}" f
+        JOIN results.predictions p on f.{entity_id}=p.entity_id
+        WHERE model_id={model_id}
+        AND p.as_of_date='{as_of_date}'
         """.format(
-            lookup['column_name'].tolist()[0],
-            dbschema['entity_id'],
-            dbschema['feature_schema'],
-            lookup['table_name'].tolist()[0],
-            query_arg['model_id'],
-            as_of_date,
+            column_name=lookup['column_name'].tolist()[0],
+            entity_id=dbschema['entity_id'],
+            feature_schema=dbschema['feature_schema'],
+            table_name=lookup['table_name'].tolist()[0],
+            model_id=query_arg['model_id'],
+            as_of_date=as_of_date,
             )
         df = pd.read_sql(
             query,

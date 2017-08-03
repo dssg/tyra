@@ -145,15 +145,27 @@ def get_response_dist(model_id, evaluation_start_time):
                  'evaluation_start_time': evaluation_start_time}
     prediction_df = query.get_model_prediction(query_arg)
     score = prediction_df['score']
-    hist, bin = np.histogram(score, bins='auto')
+    hist_raw, bin = np.histogram(score, bins='auto')
+    hist = hist_raw.astype(float)/sum(hist_raw)
+
+    score0 = prediction_df[prediction_df['label_value'] == 0]['score']
+    hist0, bin0 = np.histogram(score0, bins=bin)
+    hist0 = hist0.astype(float)/sum(hist_raw)
+
+    score1 = prediction_df[prediction_df['label_value'] == 1]['score']
+    hist1, bin1 = np.histogram(score1, bins=bin)
+    hist1 = hist1.astype(float)/sum(hist_raw)
+
     try:
-        output = {
-            "title": "response",
-            "data": [{'x': float(x), 'y': float(y)*100} for x, y in zip(bin[1:], hist.astype(float)/sum(hist))]}
+        output = [
+            {"title": "Total", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin, hist)]},
+            {"title": "Label 0", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0, hist0)]},
+            {"title": "Label 1", "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1, hist1)]}]
         return jsonify(results=output)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
 
 @app.route(
     '/evaluations/<int:model_id>/feature_importance/<int:num>',

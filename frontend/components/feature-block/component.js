@@ -26,7 +26,7 @@ export default React.createClass({
     return (
       <div>
         <h4>Feature Distribution - {this.state.test_button ? "Test Set" : "Training Set"}</h4>
-        <p>{this.props.featureSelected}
+        <p>{this.state.featureSelected}
           <button onClick={this.state.test_button ? this.handleTrainingSet : this.handleTestSet} id="SetButton" className="btn btn-xs float-right" >
             Toggle to {this.state.test_button ? "Training Set" : "Test Set"}
           </button>

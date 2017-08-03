@@ -3,6 +3,10 @@
     cursor: pointer;
 }
 
+.table tr {
+    cursor: pointer;
+}
+
 tr:hover { background-color: #cce6ff;}
 
 /* TABLE BACKGROUND color (match the original theme) */
