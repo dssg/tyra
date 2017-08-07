@@ -101,18 +101,23 @@ def setup_data(engine, data):
             row
         )
 
-    # engine.execute("""
-    #     create table information_schema.columns (
-    #         table_schema character varying,
-    #         table_name character varying,
-    #         column_name character varying
-    #     )""")
+    engine.execute("""
+        create table results.individual_importances (
+            model_id int,
+            as_of_date timestamp,
+            entity_id bigint,
+            risk_1 character varying,
+            risk_2 character varying,
+            risk_3 character varying,
+            risk_4 character varying,
+            risk_5 character varying
+        )""")
 
-    # for row in data.get('columns', []):
-    #     engine.execute(
-    #         'insert into information_schema.columns values (%s, %s, %s)',
-    #         row
-    #     )
+    for row in data.get('individual_importances', []):
+        engine.execute(
+            'insert into results.individual_importances values (%s, %s, %s, %s, %s, %s, %s, %s)',
+            row
+        )
 
     engine.execute("""
         create table historical_features_daily_month.arrests_aggregation (

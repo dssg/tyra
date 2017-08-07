@@ -1,26 +1,32 @@
-import FeatureBlock from 'components/feature-block/component'
+import IndividualImportance from 'components/individual_importance-chart/component'
 import PredictionsTable from 'components/predictions-table/component'
-import ResponseDist from 'components/response-chart/component'
 import React from 'react'
+import ResponseDist from 'components/response-chart/component'
 
 export default React.createClass({
   getInitialState: function() {
     return {
-      selected_entity_id: null,
-      selected_score: null
+      selectedEntityId: null,
+      selectedScore: null,
+      selectedLabel: null,
     }
   },
 
   handleOnClick: function(event) {
     this.setState({
-      selected_entity_id: event.target.parentElement.id,
-      selected_score: event.target.parentNode.getAttribute("value")
+      selectedEntityId: event.target.parentElement.id,
+      selectedScore: event.target.parentNode.getAttribute("value"),
+      selectedLabel: event.target.parentNode.getAttribute("label")
     })
   },
 
   render: function() {
     return (
       <div>
+        <h5>Entity ID: <strong>{this.state.selectedEntityId}</strong> &nbsp;
+            Score: <strong>{this.state.selectedScore}</strong> &nbsp;
+            Label: <strong>{this.state.selectedLabel}</strong> &nbsp;
+        </h5>
         <div className="col-md-2">
           <PredictionsTable
             modelId={this.props.modelId}
@@ -33,12 +39,14 @@ export default React.createClass({
           <ResponseDist
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
-            selectedScore={this.state.selected_score}
-            selectedId={this.state.selected_entity_id} >
+            selectedScore={this.state.selectedScore}>
           </ResponseDist>
         </div>
         <div className="col-md-12">
-          <FeatureBlock modelId={this.props.modelId} />
+          <IndividualImportance
+            modelId={this.props.modelId}
+            asOfDate={this.props.asOfDate}
+            entityId={this.state.selectedEntityId} />
         </div>
       </div>
     )

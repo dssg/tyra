@@ -122,6 +122,24 @@ def get_model_groups(query_arg):
     return df_models
 
 
+def get_individual_feature_importance(query_arg):
+    query = """
+    SELECT risk_1, risk_2, risk_3, risk_4, risk_5
+    FROM results.individual_importances
+    WHERE model_id = %(model_id)s
+    AND entity_id = %(entity_id)s
+    AND as_of_date = %(as_of_date)s
+    """
+    df_importance = pd.read_sql(
+        query,
+        params={'model_id': query_arg['model_id'],
+                'entity_id': query_arg['entity_id'],
+                'as_of_date': query_arg['as_of_date']},
+        con=db.engine
+    )
+    output = df_importance
+    return output
+
 def get_feature_importance(query_arg):
     query = """
     select feature as label, feature_importance as value

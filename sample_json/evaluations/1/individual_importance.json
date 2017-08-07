@@ -1,0 +1,11 @@
+{
+    "results":[
+        {
+            "risk_4":"dispatch_id_p1m_dispatchinitiatiationtype_ci_sum",
+            "risk_5":"dispatch_id_p1y_dispatchtype_disorder_sum",
+            "risk_3":"dispatch_id_p1m_dispatchtype_shooting_sum",
+            "risk_1":"dispatch_id_p1m_dispatchtype_domestic_disturb_sum",
+            "risk_2":"dispatch_id_p1m_dispatchtype_domestic_disturb_avg"
+        }
+    ]
+}
