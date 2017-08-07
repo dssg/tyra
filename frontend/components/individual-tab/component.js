@@ -6,26 +6,26 @@ import ResponseDist from 'components/response-chart/component'
 export default React.createClass({
   getInitialState: function() {
     return {
-      selected_entity_id: null,
-      selected_score: null,
-      selected_label: null,
+      selectedEntityId: null,
+      selectedScore: null,
+      selectedLabel: null,
     }
   },
 
   handleOnClick: function(event) {
     this.setState({
-      selected_entity_id: event.target.parentElement.id,
-      selected_score: event.target.parentNode.getAttribute("value"),
-      selected_label: event.target.parentNode.getAttribute("label")
+      selectedEntityId: event.target.parentElement.id,
+      selectedScore: event.target.parentNode.getAttribute("value"),
+      selectedLabel: event.target.parentNode.getAttribute("label")
     })
   },
 
   render: function() {
     return (
       <div>
-        <h5>Entity ID: <strong>{this.state.selected_entity_id}</strong> &nbsp;
-            Score: <strong>{this.state.selected_score}</strong> &nbsp;
-            Label: <strong>{this.state.selected_label}</strong> &nbsp;
+        <h5>Entity ID: <strong>{this.state.selectedEntityId}</strong> &nbsp;
+            Score: <strong>{this.state.selectedScore}</strong> &nbsp;
+            Label: <strong>{this.state.selectedLabel}</strong> &nbsp;
         </h5>
         <div className="col-md-2">
           <PredictionsTable
@@ -39,14 +39,14 @@ export default React.createClass({
           <ResponseDist
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
-            selectedScore={this.state.selected_score}>
+            selectedScore={this.state.selectedScore}>
           </ResponseDist>
         </div>
         <div className="col-md-12">
           <IndividualImportance
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
-            entity_id={this.state.selected_entity_id} />
+            entityId={this.state.selectedEntityId} />
         </div>
       </div>
     )
