@@ -8,10 +8,10 @@ export default React.createClass({
   getInitialState: function() {
     return {
       featureSelected: null,
-      selected_entity_id: null,
-      selected_score: null,
-      selected_label: null,
-      test_button: true
+      testButton: true,
+      selectedEntityId: null,
+      selectedScore: null,
+      selectedLabel: null,
     }
   },
 
@@ -20,28 +20,28 @@ export default React.createClass({
   },
 
   handleTestSet: function() {
-    this.setState({ test_button: true })
+    this.setState({ testButton: true })
   },
 
   handleTrainingSet: function() {
-    this.setState({ test_button: false })
+    this.setState({ testButton: false })
   },
 
   handleOnClick: function(event) {
     this.setState({
-      selected_entity_id: event.target.parentElement.id,
-      selected_score: event.target.parentNode.getAttribute("value"),
-      selected_label: event.target.parentNode.getAttribute("label")
+      selectedEntityId: event.target.parentElement.id,
+      selectedScore: event.target.parentNode.getAttribute("value"),
+      selectedLabel: event.target.parentNode.getAttribute("label")
     })
   },
 
   renderTrainTestButton: function() {
     return (
       <div>
-        <h4>Feature Distribution - {this.state.test_button ? "Test Set" : "Training Set"}</h4>
+        <h4>Feature Distribution - {this.state.testButton ? "Test Set" : "Training Set"}</h4>
         <p>{this.state.featureSelected}
-          <button onClick={this.state.test_button ? this.handleTrainingSet : this.handleTestSet} id="SetButton" className="btn btn-xs float-right" >
-            Toggle to {this.state.test_button ? "Training Set" : "Test Set"}
+          <button onClick={this.state.testButton ? this.handleTrainingSet : this.handleTestSet} id="SetButton" className="btn btn-xs float-right" >
+            Toggle to {this.state.testButton ? "Training Set" : "Test Set"}
           </button>
         </p>
       </div>
@@ -53,9 +53,9 @@ export default React.createClass({
       <div className="col-md-8">
         {this.renderTrainTestButton()}
         <FeatureDist
-          entity_id={this.state.selected_entity_id}
+          entity_id={this.state.selectedEntityId}
           modelId={this.props.modelId}
-          testOrTrain={this.state.test_button ? "/feature_dist_test/" : "/feature_dist_train/"}
+          testOrTrain={this.state.testButton ? "/feature_dist_test/" : "/feature_dist_train/"}
           featureSelected={this.state.featureSelected} />
       </div>
     )
@@ -64,9 +64,9 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <h5>Entity ID: <strong>{this.state.selected_entity_id}</strong> &nbsp;
-            Score: <strong>{this.state.selected_score}</strong> &nbsp;
-            Label: <strong>{this.state.selected_label}</strong> &nbsp;
+        <h5>Entity ID: <strong>{this.state.selectedEntityId}</strong> &nbsp;
+            Score: <strong>{this.state.selectedScore}</strong> &nbsp;
+            Label: <strong>{this.state.selectedLabel}</strong> &nbsp;
         </h5>
         <div className="col-md-2">
           <PredictionsTable
@@ -80,7 +80,7 @@ export default React.createClass({
           <ResponseDist
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
-            selectedScore={this.state.selected_score}>
+            selectedScore={this.state.selectedScore}>
           </ResponseDist>
         </div>
         <div className="row">
@@ -90,7 +90,7 @@ export default React.createClass({
             modelId={this.props.modelId}
             asOfDate={this.props.asOfDate}
             onValueClick={this.handleOnValueClick}
-            entity_id={this.state.selected_entity_id} />
+            entityId={this.state.selectedEntityId} />
         </div>
         <div className="col-md-1">
         </div>
