@@ -59,7 +59,7 @@ export default React.createClass({
           featureSelected={this.state.featureSelected} />
       </div>
     )
- },
+  },
 
   render: function() {
     return (
