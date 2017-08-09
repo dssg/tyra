@@ -9,7 +9,6 @@ export default React.createClass({
       data: [],
       loading: false,
       metric: null,
-      selectedPoint: null,
     }
   },
 
@@ -46,7 +45,7 @@ export default React.createClass({
         self.setState({
           metric: result.results[0].key,
           data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] })),
-          selectedPoint: d3.time.format("%Y-%m-%d").parse(result.results[0].values[0][0]),
+          // selectedPoint: d3.time.format("%Y-%m-%d").parse(result.results[0].values[0][0]),
           loading: false
         })
       }
@@ -67,7 +66,8 @@ export default React.createClass({
       )
     } else {
       const FlexibleWidth = makeWidthFlexible(XYPlot)
-      const { data, selectedPoint } = this.state
+      const { data } = this.state
+      const { selectedPoint } = this.props
       return (
         <div>
           <h4>Metrics Over Time</h4>
@@ -87,7 +87,7 @@ export default React.createClass({
               colorType="literal"
               size={10}
               style={{ 'cursor': 'pointer' }}
-              onValueClick={(value) => {this.setState({ selectedPoint: value })}}
+              onValueClick={this.props.onValueClick}
               data={this.transformColor(data, selectedPoint)} />
           </FlexibleWidth>
         </div>
