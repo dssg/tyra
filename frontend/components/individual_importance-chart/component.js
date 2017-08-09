@@ -61,7 +61,6 @@ export default React.createClass({
       <div>
         <h4>Individual Feature Importance</h4>
         <XYPlot
-          animation={true}
           margin={{ left: 0 }}
           width={320}
           height={320}>
