@@ -150,11 +150,11 @@ def get_response_dist(model_id, evaluation_start_time):
 
     score0 = prediction_df[prediction_df['label_value'] == 0]['score']
     hist0, bin0 = np.histogram(score0, bins=bin)
-    hist0 = hist0.astype(float)/sum(hist_raw)
+    hist0 = hist0.astype(float)/sum(hist0)
 
     score1 = prediction_df[prediction_df['label_value'] == 1]['score']
     hist1, bin1 = np.histogram(score1, bins=bin)
-    hist1 = hist1.astype(float)/sum(hist_raw)
+    hist1 = hist1.astype(float)/sum(hist1)
 
     try:
         output = [

@@ -16,7 +16,7 @@ export default React.createClass({
   transformColor: function(data, selectedPoint) {
     const test = data.map((row) => {
       if (row.x === selectedPoint.x) {
-        return { ...row, color: '#EF5D28' }
+        return { ...row, color: '#ef5d28' }
       } else {
         return { ...row, color: '#1f77b4' }
       }

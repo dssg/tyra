@@ -19,7 +19,12 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/individual_feature_importance/" + this.props.entityId + '/' + this.props.asOfDate,
       success: function(result) {
         self.setState({
-          data: reverse(values(result.results[0])),
+          data: reverse(values(result.results[0])).map(
+            (f, index) => {
+              return { x: 1, y: index*10, label: "risk" + index.toString(), color: 40-10*index, feature: f }
+            }
+          ),
+          data_array: reverse(values(result.results[0])),
           loading: false
         })
       }
@@ -60,15 +65,16 @@ export default React.createClass({
           width={320}
           height={320}>
           <XAxis hideTicks />
+          <YAxis
+            hideLine
+            left={320}
+            tickValues={[0, 10, 20, 30, 40]}
+            tickFormat={(v) => this.state.data_array[v/10]} />
           <HeatmapSeries
-            opacity={0.7}
-            data={[
-              { x: 1, y: 0, label: "risk1", color: 20 },
-              { x: 1, y: 5, label: "risk2", color: 15 },
-              { x: 1, y: 10, label: "risk3", color: 10 },
-              { x: 1, y: 15, label: "risk4", color: 5 },
-              { x: 1, y: 20, label: "risk5", color: 0 }]} />
-          <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={(v) => this.state.data[v/5]} />
+            onValueClick={this.props.onValueClick}
+            opacity={0.45}
+            style={{ 'cursor': 'pointer' }}
+            data={this.state.data} />
         </XYPlot>
       </div>
     )
