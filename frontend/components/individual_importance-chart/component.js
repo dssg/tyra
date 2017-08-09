@@ -66,10 +66,10 @@ export default React.createClass({
           width={320}
           height={320}>
           <XAxis hideTicks />
-          <YAxis 
-            hideLine 
-            left={320} 
-            tickValues={[0, 10, 20, 30, 40]} 
+          <YAxis
+            hideLine
+            left={320}
+            tickValues={[0, 10, 20, 30, 40]}
             tickFormat={(v) => this.state.data_array[v/10]} />
           <HeatmapSeries
             onValueClick={this.props.onValueClick}
