@@ -66,14 +66,11 @@ export default React.createClass({
           height={320}>
           <XAxis hideTicks />
           <HeatmapSeries
+            onValueClick={this.props.onValueClick}
             opacity={0.7}
-            data={[
-              { x: 1, y: 0, label: "risk1", color: 20 },
-              { x: 1, y: 5, label: "risk2", color: 15 },
-              { x: 1, y: 10, label: "risk3", color: 10 },
-              { x: 1, y: 15, label: "risk4", color: 5 },
-              { x: 1, y: 20, label: "risk5", color: 0 }]} />
-          <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={(v) => this.state.data[v/5]} />
+            style={{ 'cursor': 'pointer' }}
+            data={this.state.data} />
+          <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={(v) => this.state.data_array[v/5]} />
         </XYPlot>
       </div>
     )
