@@ -21,7 +21,7 @@ export default React.createClass({
         self.setState({
           data: reverse(values(result.results[0])).map(
             (f, index) => {
-              return { x: 1, y: index*5, label: "risk" + index.toString(), color: 20-5*index, feature: f }
+              return { x: 1, y: index*10, label: "risk" + index.toString(), color: 40-10*index, feature: f }
             }
           ),
           data_array: reverse(values(result.results[0])),
@@ -61,16 +61,21 @@ export default React.createClass({
       <div>
         <h4>Individual Feature Importance</h4>
         <XYPlot
+          animation={true}
           margin={{ left: 0 }}
           width={320}
           height={320}>
           <XAxis hideTicks />
+          <YAxis 
+            hideLine 
+            left={320} 
+            tickValues={[0, 10, 20, 30, 40]} 
+            tickFormat={(v) => this.state.data_array[v/10]} />
           <HeatmapSeries
             onValueClick={this.props.onValueClick}
-            opacity={0.7}
+            opacity={0.45}
             style={{ 'cursor': 'pointer' }}
             data={this.state.data} />
-          <YAxis hideLine left={320} tickValues={[0, 5, 10, 15, 20]} tickFormat={(v) => this.state.data_array[v/5]} />
         </XYPlot>
       </div>
     )
