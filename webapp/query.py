@@ -249,10 +249,6 @@ def get_test_feature_distribution(query_arg):
 
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
 
-    query = """
-    SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
-    """
-
     try:
         query = """
         SELECT "{column_name}", {entity_id}, label_value
@@ -282,7 +278,7 @@ def get_test_feature_distribution(query_arg):
             feature_schema=dbschema['feature_schema'],
             table_name=lookup['table_name'].tolist()[0],
             model_id=query_arg['model_id'],
-            as_of_date=as_of_date)
+            as_of_date=query_arg["as_of_date"])
 
         df = pd.read_sql(
             query,
