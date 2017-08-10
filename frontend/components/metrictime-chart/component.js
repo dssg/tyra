@@ -12,8 +12,8 @@ export default React.createClass({
     }
   },
 
-  transformColor: function(data, selectedPoint) {
-    const test = data.map((row) => {
+  transformColor: function(selectedPoint) {
+    const dataSelected = this.state.data.map((row) => {
       if (row.x === selectedPoint.x) {
         return { ...row, color: '#ef5d28' }
       } else {
@@ -21,7 +21,7 @@ export default React.createClass({
       }
     })
 
-    return test
+    this.setState({ data: dataSelected})
   },
 
   ajax_call: function() {
@@ -42,10 +42,16 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/metric_overtime",
       data: $.param(params),
       success: function(result) {
+        const data = result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] }))
         self.setState({
           metric: result.results[0].key,
-          data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] })),
-          // selectedPoint: d3.time.format("%Y-%m-%d").parse(result.results[0].values[0][0]),
+          data: data.map((row, index) => {
+            if (index===0) {
+              return { ...row, color: '#ef5d28' }
+            } else {
+              return { ...row, color: '#1f77b4' }
+            }
+          }),
           loading: false
         })
       }
@@ -54,6 +60,13 @@ export default React.createClass({
 
   componentDidMount: function() {
     this.ajax_call()
+
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.props.selectedPoint !== prevProps.selectedPoint) {
+      this.transformColor(this.props.selectedPoint)
+      }
   },
 
   render: function() {
@@ -66,8 +79,6 @@ export default React.createClass({
       )
     } else {
       const FlexibleWidth = makeWidthFlexible(XYPlot)
-      const { data } = this.state
-      const { selectedPoint } = this.props
       return (
         <div>
           <h4>Metrics Over Time</h4>
@@ -88,7 +99,7 @@ export default React.createClass({
               size={10}
               style={{ 'cursor': 'pointer' }}
               onValueClick={this.props.onValueClick}
-              data={this.transformColor(data, selectedPoint)} />
+              data={this.state.data} />
           </FlexibleWidth>
         </div>
       )

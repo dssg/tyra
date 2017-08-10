@@ -253,10 +253,10 @@ def get_test_feature_distribution(query_arg):
     SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
     """
     # Showing the first test date for now
-    as_of_date = pd.read_sql(
-        query,
-        params={'model_id': query_arg['model_id']},
-        con=db.engine)['as_of_date'].tolist()[0]
+    # as_of_date = pd.read_sql(
+    #     query,
+    #     params={'model_id': query_arg['model_id']},
+    #     con=db.engine)['as_of_date'].tolist()[0]
 
     try:
         query = """
@@ -270,7 +270,7 @@ def get_test_feature_distribution(query_arg):
             feature_schema=dbschema['feature_schema'],
             table_name=lookup['table_name'].tolist()[0],
             model_id=query_arg['model_id'],
-            as_of_date=as_of_date)
+            as_of_date=query_arg["as_of_date"])
 
         df = pd.read_sql(
             query,
