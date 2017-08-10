@@ -1,4 +1,3 @@
-import d3 from 'd3'
 import FeatureBlock from 'components/feature-block/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
 import moment from 'moment'
