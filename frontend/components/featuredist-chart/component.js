@@ -41,7 +41,7 @@ export default React.createClass({
   componentDidUpdate: function(prevProps) {
     const self = this
     if (self.props.featureSelected !== prevProps.featureSelected ||
-        self.props.isTest !== prevProps.isTest || 
+        self.props.isTest !== prevProps.isTest ||
         self.props.isTest && self.props.asOfDate !== prevProps.asOfDate) {
       this.ajax_call()
     }

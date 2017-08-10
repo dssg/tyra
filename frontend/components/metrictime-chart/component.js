@@ -1,8 +1,8 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
 import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
-import React from 'react'
 import moment from 'moment'
+import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
@@ -22,7 +22,7 @@ export default React.createClass({
       }
     })
 
-    this.setState({ data: dataSelected})
+    this.setState({ data: dataSelected })
   },
 
   ajax_call: function() {
@@ -64,10 +64,10 @@ export default React.createClass({
 
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     if (this.props.selectedAsOfDate !== prevProps.selectedAsOfDate) {
       this.transformColor(this.props.selectedAsOfDate)
-      }
+    }
   },
 
   render: function() {

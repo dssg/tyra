@@ -1,8 +1,8 @@
+import d3 from 'd3'
 import FeatureBlock from 'components/feature-block/component'
 import MetricTimeChart from 'components/metrictime-chart/component'
-import React from 'react'
-import d3 from 'd3'
 import moment from 'moment'
+import React from 'react'
 
 export default React.createClass({
   getInitialState: function() {
@@ -25,13 +25,13 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <MetricTimeChart 
-          modelId={this.props.modelId} 
-          metrics={this.props.metrics} 
-          selectedAsOfDate={this.state.selectedAsOfDate} 
+        <MetricTimeChart
+          modelId={this.props.modelId}
+          metrics={this.props.metrics}
+          selectedAsOfDate={this.state.selectedAsOfDate}
           onValueClick={this.handleOnValueClick}/>
-        <FeatureBlock 
-          modelId={this.props.modelId} 
+        <FeatureBlock
+          modelId={this.props.modelId}
           asOfDate={this.state.selectedAsOfDate} />
       </div>
     )
