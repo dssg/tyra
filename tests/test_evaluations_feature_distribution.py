@@ -66,7 +66,7 @@ data = {
 
 def test_get_feature_dist_test():
     with rig_test_client(data) as test_app:
-        url = '/evaluations/1/feature_dist_test/arrests_id_p1d_arrestscrimetype_assault_avg'
+        url = '/evaluations/1/feature_dist_test/arrests_id_p1d_arrestscrimetype_assault_avg/2014-04-24'
         response = test_app.get(url)
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example('/evaluations/1/feature_dist_test')
