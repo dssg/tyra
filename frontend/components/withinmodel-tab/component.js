@@ -28,7 +28,7 @@ export default React.createClass({
           modelId={this.props.modelId}
           metrics={this.props.metrics}
           selectedAsOfDate={this.state.selectedAsOfDate}
-          onValueClick={this.handleOnValueClick}/>
+          onValueClick={this.handleOnValueClick} />
         <FeatureBlock
           modelId={this.props.modelId}
           asOfDate={this.state.selectedAsOfDate} />
