@@ -252,11 +252,6 @@ def get_test_feature_distribution(query_arg):
     query = """
     SELECT DISTINCT(as_of_date) FROM results.predictions WHERE model_id=%(model_id)s
     """
-    # Showing the first test date for now
-    # as_of_date = pd.read_sql(
-    #     query,
-    #     params={'model_id': query_arg['model_id']},
-    #     con=db.engine)['as_of_date'].tolist()[0]
 
     try:
         query = """

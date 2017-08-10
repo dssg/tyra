@@ -1,7 +1,5 @@
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-// import FeatureBlock from 'components/feature-block/component'
 import IndividualTab from 'components/individual-tab/component'
-// import MetricTimeChart from 'components/metrictime-chart/component'
 import ModelInfo from 'components/model-info/component'
 import RocCurve from 'components/roc-chart/component'
 import React from 'react'
