@@ -1,6 +1,5 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
 import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
-import d3 from 'd3'
 import moment from 'moment'
 import React from 'react'
 
