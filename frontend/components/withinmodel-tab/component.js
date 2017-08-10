@@ -7,13 +7,12 @@ import moment from 'moment'
 export default React.createClass({
   getInitialState: function() {
     return {
-      selectedPoint: this.props.asOfDate,
-      selectAsOfDate: this.props.asOfDate
+      selectedAsOfDate: this.props.asOfDate
     }
   },
 
   handleOnValueClick: function(value) {
-    this.setState({ selectedPoint: value, selectAsOfDate: moment(value.x).format("YYYY-MM-DD") })
+    this.setState({ selectedAsOfDate: moment(value.x).format("YYYY-MM-DD") })
   },
 
   shouldComponentUpdate: function(nextState) {
@@ -29,11 +28,11 @@ export default React.createClass({
         <MetricTimeChart 
           modelId={this.props.modelId} 
           metrics={this.props.metrics} 
-          selectedPoint={this.state.selectedPoint} 
+          selectedAsOfDate={this.state.selectedAsOfDate} 
           onValueClick={this.handleOnValueClick}/>
         <FeatureBlock 
           modelId={this.props.modelId} 
-          asOfDate={this.state.selectAsOfDate} />
+          asOfDate={this.state.selectedAsOfDate} />
       </div>
     )
   }

@@ -2,6 +2,7 @@ import { addIndex, map, mergeAll, values } from 'ramda'
 import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
 import React from 'react'
+import moment from 'moment'
 
 export default React.createClass({
   getInitialState: function() {
@@ -12,9 +13,9 @@ export default React.createClass({
     }
   },
 
-  transformColor: function(selectedPoint) {
+  transformColor: function(selectedAsOfDate) {
     const dataSelected = this.state.data.map((row) => {
-      if (row.x === selectedPoint.x) {
+      if (moment(row.x).format("YYYY-MM-DD") === selectedAsOfDate) {
         return { ...row, color: '#ef5d28' }
       } else {
         return { ...row, color: '#1f77b4' }
@@ -64,8 +65,8 @@ export default React.createClass({
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if (this.props.selectedPoint !== prevProps.selectedPoint) {
-      this.transformColor(this.props.selectedPoint)
+    if (this.props.selectedAsOfDate !== prevProps.selectedAsOfDate) {
+      this.transformColor(this.props.selectedAsOfDate)
       }
   },
 
