@@ -76,7 +76,7 @@ export default React.createClass({
       const { data, lastDrawLocation } = this.state
       return (
         <div>
-          <h4>Response Distribution</h4>
+          <h4>Response Score Distribution</h4>
           <div className="row">
             <div className="legend">
               <div className="col-lg-2">
