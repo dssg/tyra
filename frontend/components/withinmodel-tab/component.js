@@ -14,13 +14,6 @@ export default React.createClass({
     this.setState({ selectedAsOfDate: moment(value.x).format("YYYY-MM-DD") })
   },
 
-  shouldComponentUpdate: function(nextState) {
-    if (this.state !== nextState) {
-      return true
-    }
-    return false
-  },
-
   render: function() {
     return (
       <div>
