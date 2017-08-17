@@ -16,7 +16,7 @@ export default React.createClass({
     self.setState({ loading: true })
     $.ajax({
       type: "GET",
-      url: "/evaluations/" + this.props.modelId + this.props.testOrTrain + this.props.featureSelected,
+      url: this.getUrl(this.props.modelId, this.props.isTest, this.props.featureSelected, this.props.asOfDate),
       success: function(result) {
         self.setState({
           data: result.results.series,
@@ -26,6 +26,14 @@ export default React.createClass({
     })
   },
 
+  getUrl: function(modelId, isTest, featureSelected, asOfDate) {
+    if (isTest) {
+      return "/evaluations/" + modelId + /feature_dist_test/ + featureSelected + "/" + asOfDate
+    } else {
+      return "/evaluations/" + modelId + /feature_dist_train/ + featureSelected
+    }
+  },
+
   componentDidMount: function() {
     this.ajax_call()
   },
@@ -33,7 +41,8 @@ export default React.createClass({
   componentDidUpdate: function(prevProps) {
     const self = this
     if (self.props.featureSelected !== prevProps.featureSelected ||
-        self.props.testOrTrain !== prevProps.testOrTrain) {
+        self.props.isTest !== prevProps.isTest ||
+        self.props.isTest && self.props.asOfDate !== prevProps.asOfDate) {
       this.ajax_call()
     }
   },

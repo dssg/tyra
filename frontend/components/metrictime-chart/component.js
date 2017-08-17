@@ -1,6 +1,7 @@
 import { addIndex, map, mergeAll, values } from 'ramda'
 import { HorizontalGridLines, LineMarkSeries, makeWidthFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import d3 from 'd3'
+import moment from 'moment'
 import React from 'react'
 
 export default React.createClass({
@@ -9,20 +10,19 @@ export default React.createClass({
       data: [],
       loading: false,
       metric: null,
-      selectedPoint: null,
     }
   },
 
-  transformColor: function(data, selectedPoint) {
-    const test = data.map((row) => {
-      if (row.x === selectedPoint.x) {
+  transformColor: function(selectedAsOfDate) {
+    const dataSelected = this.state.data.map((row) => {
+      if (moment(row.x).format("YYYY-MM-DD") === selectedAsOfDate) {
         return { ...row, color: '#ef5d28' }
       } else {
         return { ...row, color: '#1f77b4' }
       }
     })
 
-    return test
+    this.setState({ data: dataSelected })
   },
 
   ajax_call: function() {
@@ -43,10 +43,16 @@ export default React.createClass({
       url: "/evaluations/" + this.props.modelId + "/metric_overtime",
       data: $.param(params),
       success: function(result) {
+        const data = result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] }))
         self.setState({
           metric: result.results[0].key,
-          data: result.results[0].values.map((d) => ({ x: d3.time.format("%Y-%m-%d").parse(d[0]), y: d[1] })),
-          selectedPoint: d3.time.format("%Y-%m-%d").parse(result.results[0].values[0][0]),
+          data: data.map((row, index) => {
+            if (index===0) {
+              return { ...row, color: '#ef5d28' }
+            } else {
+              return { ...row, color: '#1f77b4' }
+            }
+          }),
           loading: false
         })
       }
@@ -55,6 +61,13 @@ export default React.createClass({
 
   componentDidMount: function() {
     this.ajax_call()
+
+  },
+
+  componentDidUpdate: function(prevProps) {
+    if (this.props.selectedAsOfDate !== prevProps.selectedAsOfDate) {
+      this.transformColor(this.props.selectedAsOfDate)
+    }
   },
 
   render: function() {
@@ -67,7 +80,6 @@ export default React.createClass({
       )
     } else {
       const FlexibleWidth = makeWidthFlexible(XYPlot)
-      const { data, selectedPoint } = this.state
       return (
         <div>
           <h4>Metrics Over Time</h4>
@@ -87,8 +99,8 @@ export default React.createClass({
               colorType="literal"
               size={10}
               style={{ 'cursor': 'pointer' }}
-              onValueClick={(value) => {this.setState({ selectedPoint: value })}}
-              data={this.transformColor(data, selectedPoint)} />
+              onValueClick={this.props.onValueClick}
+              data={this.state.data} />
           </FlexibleWidth>
         </div>
       )

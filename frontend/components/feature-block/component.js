@@ -56,7 +56,8 @@ export default React.createClass({
             {this.renderTrainTestButton()}
             <FeatureDist
               modelId={this.props.modelId}
-              testOrTrain={this.state.test_button ? "/feature_dist_test/" : "/feature_dist_train/"}
+              asOfDate={this.props.asOfDate}
+              isTest={this.state.test_button}
               featureSelected={this.state.featureSelected}>
             </FeatureDist>
           </div>

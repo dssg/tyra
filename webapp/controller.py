@@ -200,11 +200,11 @@ def individual_feature_importance(model_id, entity_id, as_of_date):
 
 
 @app.route(
-    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>',
+    '/evaluations/<int:model_id>/feature_dist_test/<string:feature>/<string:as_of_date>',
     methods=['GET', 'POST']
 )
-def get_feature_dist_test(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
-    query_arg = {'model_id': model_id, 'feature': feature}
+def get_feature_dist_test(as_of_date, model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
+    query_arg = {'model_id': model_id, 'feature': feature, 'as_of_date': as_of_date}
     # Not sure should dropna or fillna
     f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
