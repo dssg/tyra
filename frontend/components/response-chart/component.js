@@ -68,7 +68,7 @@ export default React.createClass({
     if(this.state.loading) {
       return (
         <div>
-          <h4>Response Distribution</h4>
+          <h4>Score Response Distribution</h4>
           <div id="loader" style={{ margin: "0 auto" }} className="loader"></div>
         </div>
       )
