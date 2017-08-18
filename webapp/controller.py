@@ -219,12 +219,12 @@ def get_feature_dist_test(as_of_date, model_id, feature):
             {
                 "feature": feature,
                 "title": "Label_0",
-                "data": [{'x':float(x), 'y':float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]
             },
             {
                 "feature": feature,
                 "title": "Label_1",
-                "data": [{'x':float(x), 'y':float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]
             }
         ]
         return jsonify(results=output)
@@ -251,8 +251,16 @@ def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchini
         hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
         output = [
-            {"feature": feature, "title": "Label_0", "data": [{'x':float(x), 'y':float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]},
-            {"feature": feature, "title": "Label_1", "data": [{'x':float(x), 'y':float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]}
+            {
+                "feature": feature,
+                "title": "Label_0",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]
+            },
+            {
+                "feature": feature,
+                "title": "Label_1",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]
+            }
         ]
         return jsonify(results=output)
     except:

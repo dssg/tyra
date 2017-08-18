@@ -44,7 +44,7 @@ export default React.createClass({
       success: function(result) {
         self.setState({
           data: result.results.map((row, index) => {
-            return {...row, color: colors[index]}
+            return { ...row, color: colors[index] }
           }),
           loading: false
         })
@@ -94,31 +94,28 @@ export default React.createClass({
           </div>
           <div className="col-lg-10">
             <FlexibleXYPlot
-                animation
-                onMouseLeave={this.handleOnMouseLeave}
-                xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
-                height={this.props.width}>
-                <HorizontalGridLines />
-                <YAxis
-                  title={"P(X|Y=Label)"} />
-                <XAxis
-                  title={"Feature Value"} />
+              animation
+              onMouseLeave={this.handleOnMouseLeave}
+              xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+              height={this.props.width}>
+              <HorizontalGridLines />
+              <YAxis title={"P(X|Y=Label)"} />
+              <XAxis title={"Feature Value"} />
+              <Highlight onBrushEnd={(area) => {
+                this.setState({
+                  lastDrawLocation: area
+                })
+              }} />
 
-                <Highlight onBrushEnd={(area) => {
-                  this.setState({
-                    lastDrawLocation: area
-                  })
-                }} />
-
-                {data.map((entry) => (
-                  <LineSeries
-                    key={entry.title}
-                    data={entry.data}
-                    curve={'curveMonotoneX'}
-                    color={entry.color}
-                    onNearestX={this.handleOnNearestX} />
-                ))}
-                <Crosshair values={this.state.crosshairValues} />
+              {data.map((entry) => (
+                <LineSeries
+                  key={entry.title}
+                  data={entry.data}
+                  curve={'curveMonotoneX'}
+                  color={entry.color}
+                  onNearestX={this.handleOnNearestX} />
+              ))}
+              <Crosshair values={this.state.crosshairValues} />
             </FlexibleXYPlot>
           </div>
           <div className="col-lg-2">
