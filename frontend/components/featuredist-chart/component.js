@@ -68,10 +68,8 @@ export default React.createClass({
     const self = this
     if (self.props.featureSelected !== prevProps.featureSelected ||
         self.props.isTest !== prevProps.isTest ||
+        self.props.entityId !== prevProps.entityId ||
         self.props.isTest && self.props.asOfDate !== prevProps.asOfDate) {
-      this.ajax_call()
-    }
-    if (self.props.entityId !== prevProps.entityId) {
       this.ajax_call()
     }
   },
