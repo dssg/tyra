@@ -124,8 +124,4 @@ In the `frontend` directory, install the package you want with `npm install --sa
 
 
 ### Screenshots
-
-![alt text](/screenshots/login.png?raw=true)
-![alt text](/screenshots/dashboard.png?raw=true)
-![alt text](/screenshots/dashboard_biggraph.png?raw=true)
-![alt text](/screenshots/model_chart.png?raw=true)
+![alt text](/screenshots/screenrecord_tyra.gif?raw=true)
