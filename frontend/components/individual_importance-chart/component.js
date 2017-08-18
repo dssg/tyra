@@ -8,6 +8,7 @@ export default React.createClass({
     return {
       data: [],
       loading: false,
+      data_array: [],
     }
   },
 
@@ -27,11 +28,12 @@ export default React.createClass({
           data_array: reverse(values(result.results[0])),
           loading: false
         })
+        self.state.data_array.length > 0 ? self.props.onChange(self.state.data_array[4]) : null
       }
     })
   },
 
-  componentDidUpdate: function(prevProps) {
+  componentDidUpdate: function(prevProps, prevState) {
     const self = this
     if (self.props.entityId !== prevProps.entityId) {
       this.ajax_call()

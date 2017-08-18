@@ -14,6 +14,7 @@ import React from 'react'
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
 const style = { "verticalAlign": "middle" }
+const colors = ['#1f77b4', '#ff7f0e']
 
 export default React.createClass({
   getInitialState: function() {
@@ -42,7 +43,9 @@ export default React.createClass({
       url: this.getUrl(this.props.modelId, this.props.isTest, this.props.featureSelected, this.props.asOfDate),
       success: function(result) {
         self.setState({
-          data: result.results,
+          data: result.results.map((row, index) => {
+            return {...row, color: colors[index]}
+          }),
           loading: false
         })
       }
@@ -68,6 +71,9 @@ export default React.createClass({
         self.props.isTest && self.props.asOfDate !== prevProps.asOfDate) {
       this.ajax_call()
     }
+    if (self.props.entityId !== prevProps.entityId) {
+      this.ajax_call()
+    }
   },
 
   render: function() {
@@ -84,45 +90,49 @@ export default React.createClass({
           <div className="row">
             <div className="legend">
               <div className="col-lg-6">
-                <button style={style} className="btn btn-xs" onClick={() => {
+                <strong>{this.props.featureSelected}</strong>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-10">
+            <FlexibleXYPlot
+                animation
+                onMouseLeave={this.handleOnMouseLeave}
+                xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+                height={this.props.width}>
+                <HorizontalGridLines />
+                <YAxis
+                  title={"P(X|Y=Label)"} />
+                <XAxis
+                  title={"Feature Value"} />
+
+                <Highlight onBrushEnd={(area) => {
+                  this.setState({
+                    lastDrawLocation: area
+                  })
+                }} />
+
+                {data.map((entry) => (
+                  <LineSeries
+                    key={entry.title}
+                    data={entry.data}
+                    curve={'curveMonotoneX'}
+                    color={entry.color}
+                    onNearestX={this.handleOnNearestX} />
+                ))}
+                <Crosshair values={this.state.crosshairValues} />
+              </FlexibleXYPlot>
+              </div>
+            <div className="col-lg-2">
+              <button style={style} className="btn btn-xs" onClick={() => {
                   this.setState({ lastDrawLocation: null })
                 }}>
                   Reset Zoom
-                </button>
-              </div>
-
+              </button>
               <DiscreteColorLegend
-                orientation="horizontal"
-                width={120}
+                orientation="vertical"
                 items={data} />
             </div>
-          </div>
-          <FlexibleXYPlot
-              animation
-              onMouseLeave={this.handleOnMouseLeave}
-              xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
-              height={375}>
-              <HorizontalGridLines />
-              <YAxis
-                title={"P(X|Y=Label)"} />
-              <XAxis
-                title={"Feature Value"} />
-
-              <Highlight onBrushEnd={(area) => {
-                this.setState({
-                  lastDrawLocation: area
-                })
-              }} />
-
-              {data.map((entry) => (
-                <LineSeries
-                  key={entry.title}
-                  data={entry.data}
-                  curve={'curveMonotoneX'}
-                  onNearestX={this.handleOnNearestX} />
-              ))}
-              <Crosshair values={this.state.crosshairValues} />
-            </FlexibleXYPlot>
           </div>
       )
     }

@@ -31,16 +31,22 @@ export default React.createClass({
     this.setState({
       selectedEntityId: event.target.parentElement.id,
       selectedScore: event.target.parentNode.getAttribute("value"),
-      selectedLabel: event.target.parentNode.getAttribute("label")
+      selectedLabel: event.target.parentNode.getAttribute("label"),
     })
   },
+
+  handleChange: function(feature) {
+    this.setState({ featureSelected: feature })
+  },
+
+shouldComponentUpdate(nextProps, nextState) {
+  return true
+},
 
   renderTrainTestButton: function() {
     return (
       <div>
         <h4>Feature Distribution - {this.state.testButton ? "Test Set" : "Training Set"}</h4>
-        <p>{this.state.featureSelected}
-        </p>
       </div>
     )
   },
@@ -50,21 +56,41 @@ export default React.createClass({
       <div className="col-md-8">
         {this.renderTrainTestButton()}
         <FeatureDist
-          entity_id={this.state.selectedEntityId}
+          entityId={this.state.selectedEntityId}
           modelId={this.props.modelId}
           isTest={this.state.testButton}
+          width={320}
           featureSelected={this.state.featureSelected} />
       </div>
+    )
+  },
+
+  renderIndividualFeatureImportance: function() {
+    return (
+      <div className="col-md-3">
+        <IndividualImportance
+          modelId={this.props.modelId}
+          asOfDate={this.props.asOfDate}
+          onValueClick={this.handleOnValueClick}
+          onChange={this.handleChange}
+          entityId={this.state.selectedEntityId} />
+      </div>
+    )
+  },
+
+  renderHead: function() {
+    return (
+      <h5>Entity ID: <strong>{this.state.selectedEntityId}</strong> &nbsp;
+        Score: <strong>{this.state.selectedScore}</strong> &nbsp;
+        Label: <strong>{this.state.selectedLabel}</strong> &nbsp;
+      </h5>
     )
   },
 
   render: function() {
     return (
       <div>
-        <h5>Entity ID: <strong>{this.state.selectedEntityId}</strong> &nbsp;
-            Score: <strong>{this.state.selectedScore}</strong> &nbsp;
-            Label: <strong>{this.state.selectedLabel}</strong> &nbsp;
-        </h5>
+        {this.renderHead()}
         <div className="col-md-2">
           <PredictionsTable
             modelId={this.props.modelId}
@@ -82,13 +108,7 @@ export default React.createClass({
         </div>
         <div className="row">
         </div>
-        <div className="col-md-3">
-          <IndividualImportance
-            modelId={this.props.modelId}
-            asOfDate={this.props.asOfDate}
-            onValueClick={this.handleOnValueClick}
-            entityId={this.state.selectedEntityId} />
-        </div>
+        {this.renderIndividualFeatureImportance()}
         <div className="col-md-1">
         </div>
         {this.state.featureSelected ? this.renderFeatureDist() : null}
