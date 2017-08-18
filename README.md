@@ -5,6 +5,9 @@
 [![build status](https://travis-ci.org/dssg/tyra.svg?branch=master)](https://travis-ci.org/dssg/tyra)
 [![codecov](https://codecov.io/gh/dssg/tyra/branch/master/graph/badge.svg)](https://codecov.io/gh/dssg/tyra)
 
+## Screenshots
+![alt text](/screenshots/screenrecord_tyra.gif?raw=true)
+
 ## Quick Start
 
 1. Install requirements: `pip3 install -r requirements.txt`
@@ -121,7 +124,3 @@ New components can be added in the `frontend/components` directory. There is a d
 
 ### Installing new modules
 In the `frontend` directory, install the package you want with `npm install --save <pkg-name>`. The --save option will persist this change to package.json.
-
-
-### Screenshots
-![alt text](/screenshots/screenrecord_tyra.gif?raw=true)
