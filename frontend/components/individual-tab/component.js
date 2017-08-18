@@ -39,10 +39,6 @@ export default React.createClass({
     this.setState({ featureSelected: feature })
   },
 
-shouldComponentUpdate(nextProps, nextState) {
-  return true
-},
-
   renderTrainTestButton: function() {
     return (
       <div>

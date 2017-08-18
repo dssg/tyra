@@ -119,19 +119,19 @@ export default React.createClass({
                     onNearestX={this.handleOnNearestX} />
                 ))}
                 <Crosshair values={this.state.crosshairValues} />
-              </FlexibleXYPlot>
-              </div>
-            <div className="col-lg-2">
-              <button style={style} className="btn btn-xs" onClick={() => {
-                  this.setState({ lastDrawLocation: null })
-                }}>
-                  Reset Zoom
-              </button>
-              <DiscreteColorLegend
-                orientation="vertical"
-                items={data} />
-            </div>
+            </FlexibleXYPlot>
           </div>
+          <div className="col-lg-2">
+            <button style={style} className="btn btn-xs" onClick={() => {
+              this.setState({ lastDrawLocation: null })
+            }}>
+              Reset Zoom
+            </button>
+            <DiscreteColorLegend
+              orientation="vertical"
+              items={data} />
+          </div>
+        </div>
       )
     }
   }

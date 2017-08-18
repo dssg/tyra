@@ -124,13 +124,13 @@ export default React.createClass({
           <div className="col-lg-2">
             <button style={style} className="btn btn-xs" onClick={() => {
               this.setState({ lastDrawLocation: null })
-              }}>
+            }}>
               Reset Zoom
             </button>
             <DiscreteColorLegend
-                orientation="vertical"
-                width={250}
-                items={data} />
+              orientation="vertical"
+              width={250}
+              items={data} />
           </div>
         </div>
       )

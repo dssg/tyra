@@ -336,6 +336,7 @@ def get_train_feature_distribution(query_arg):
             as_of_date=as_of_date,
             training_time=tuple(training_time)
             )
+        print(query)
         df = pd.read_sql(
             query,
             con=db.engine)
@@ -354,6 +355,7 @@ def get_train_feature_distribution(query_arg):
             model_id=query_arg['model_id'],
             as_of_date=as_of_date,
             )
+        print(query)
         df = pd.read_sql(
             query,
             con=db.engine)

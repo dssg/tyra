@@ -33,7 +33,7 @@ export default React.createClass({
     })
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     const self = this
     if (self.props.entityId !== prevProps.entityId) {
       this.ajax_call()
