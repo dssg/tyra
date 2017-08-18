@@ -105,8 +105,6 @@ export default React.createClass({
         <div className="row">
         </div>
         {this.renderIndividualFeatureImportance()}
-        <div className="col-md-1">
-        </div>
         {this.state.featureSelected ? this.renderFeatureDist() : null}
       </div>
     )
