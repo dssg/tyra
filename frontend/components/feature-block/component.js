@@ -25,12 +25,11 @@ export default React.createClass({
   renderTrainTestButton: function() {
     return (
       <div>
-        <h4>Feature Distribution - {this.state.test_button ? "Test Set" : "Training Set"}</h4>
-        <p>{this.state.featureSelected}
+        <h4>Feature Distribution - {this.state.test_button ? "Test Set" : "Training Set"} &nbsp;
           <button onClick={this.state.test_button ? this.handleTrainingSet : this.handleTestSet} id="SetButton" className="btn btn-xs float-right" >
             Toggle to {this.state.test_button ? "Training Set" : "Test Set"}
           </button>
-        </p>
+        </h4>
       </div>
     )
   },
@@ -58,6 +57,7 @@ export default React.createClass({
               modelId={this.props.modelId}
               asOfDate={this.props.asOfDate}
               isTest={this.state.test_button}
+              width={400}
               featureSelected={this.state.featureSelected}>
             </FeatureDist>
           </div>

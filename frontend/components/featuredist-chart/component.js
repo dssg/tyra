@@ -1,15 +1,39 @@
+import {
+  Crosshair,
+  DiscreteColorLegend,
+  HorizontalGridLines,
+  LineSeries,
+  makeWidthFlexible,
+  XAxis,
+  XYPlot,
+  YAxis,
+} from 'react-vis'
 import d3 from 'd3'
-import NVD3Chart from 'react-nvd3'
+import Highlight from 'components/highlight-area/component'
 import React from 'react'
+
+const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+const style = { "verticalAlign": "middle" }
+const colors = ['#1f77b4', '#ff7f0e']
 
 export default React.createClass({
   getInitialState: function() {
     return {
       data: [],
+      lastDrawLocation: null,
       bins: 20,
-      loading: false }
+      loading: false,
+      crosshairValues: []
+    }
   },
 
+  handleOnNearestX: function(value, { index }) {
+    this.setState({ crosshairValues: this.state.data.map((s) => s.data[index]) })
+  },
+
+  handleOnMouseLeave: function() {
+    this.setState({ crosshairValues: [] })
+  },
 
   ajax_call: function() {
     const self = this
@@ -19,7 +43,9 @@ export default React.createClass({
       url: this.getUrl(this.props.modelId, this.props.isTest, this.props.featureSelected, this.props.asOfDate),
       success: function(result) {
         self.setState({
-          data: result.results.series,
+          data: result.results.map((row, index) => {
+            return { ...row, color: colors[index] }
+          }),
           loading: false
         })
       }
@@ -42,6 +68,7 @@ export default React.createClass({
     const self = this
     if (self.props.featureSelected !== prevProps.featureSelected ||
         self.props.isTest !== prevProps.isTest ||
+        self.props.entityId !== prevProps.entityId ||
         self.props.isTest && self.props.asOfDate !== prevProps.asOfDate) {
       this.ajax_call()
     }
@@ -55,28 +82,52 @@ export default React.createClass({
         </div>
       )
     } else {
+      const { data, lastDrawLocation } = this.state
       return (
         <div>
-          {
-          React.createElement(NVD3Chart, {
-            type:"lineChart",
-            datum: this.state.data,
-            containerStyle:{ width: "650px", height: "400px" },
-            x: function(d) { return d[0] },
-            y: function(d) { return d[1] },
-            options:{
-              showValues: true,
-              showControls: true,
-              showDistX: true,
-              showDistY: true,
-              useInteractiveGuideline: true,
-              duration: 500,
-              xAxis: { tickFormat: d3.format('.02f'), axisLabel: 'Feature Value' },
-              yAxis: { tickFormat: d3.format('.02f'), axisLabel: 'P(X|Y=Label)' },
-              color: d3.scale.category10().range()
-            }
-          })
-          }
+          <div className="row">
+            <div className="legend">
+              <div className="col-lg-6">
+                <strong>{this.props.featureSelected}</strong>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-10">
+            <FlexibleXYPlot
+              animation
+              onMouseLeave={this.handleOnMouseLeave}
+              xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+              height={this.props.width}>
+              <HorizontalGridLines />
+              <YAxis title={"P(X|Y=Label)"} />
+              <XAxis title={"Feature Value"} />
+              <Highlight onBrushEnd={(area) => {
+                this.setState({
+                  lastDrawLocation: area
+                })
+              }} />
+
+              {data.map((entry) => (
+                <LineSeries
+                  key={entry.title}
+                  data={entry.data}
+                  curve={'curveMonotoneX'}
+                  color={entry.color}
+                  onNearestX={this.handleOnNearestX} />
+              ))}
+              <Crosshair values={this.state.crosshairValues} />
+            </FlexibleXYPlot>
+          </div>
+          <div className="col-lg-2">
+            <button style={style} className="btn btn-xs" onClick={() => {
+              this.setState({ lastDrawLocation: null })
+            }}>
+              Reset Zoom
+            </button>
+            <DiscreteColorLegend
+              orientation="vertical"
+              items={data} />
+          </div>
         </div>
       )
     }

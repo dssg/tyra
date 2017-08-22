@@ -87,10 +87,8 @@ export default React.createClass({
           <div className="col-lg-1">
             <button onClick={this.removeModelId} id="GoBack" className="btn btn-xs">Back to Search</button>
           </div>
-          <div className="col-lg-10">
+          <div className="col-lg-11">
             { this.renderModelCharts() }
-          </div>
-          <div className="col-lg-1">
           </div>
         </div>
       )

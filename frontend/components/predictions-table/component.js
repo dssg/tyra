@@ -49,7 +49,7 @@ export default React.createClass({
             className="table"
             sortable
             pageButtonLimit={5}
-            itemsPerPage={10}>
+            itemsPerPage={8}>
             {this.state.data.map((entry, i) =>
               <Reactable.Tr
                 data={entry}

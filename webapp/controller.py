@@ -203,7 +203,7 @@ def individual_feature_importance(model_id, entity_id, as_of_date):
     '/evaluations/<int:model_id>/feature_dist_test/<string:feature>/<string:as_of_date>',
     methods=['GET', 'POST']
 )
-def get_feature_dist_test(as_of_date, model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
+def get_feature_dist_test(as_of_date, model_id, feature):
     query_arg = {'model_id': model_id, 'feature': feature, 'as_of_date': as_of_date}
     # Not sure should dropna or fillna
     f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
@@ -211,14 +211,22 @@ def get_feature_dist_test(as_of_date, model_id=180457, feature="dispatch_id_p1m_
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
     hist0, bin0 = np.histogram(dist0, bins='auto')
     hist1, bin1 = np.histogram(dist1, bins=bin0)
+    if len(bin0) < 3:
+        hist0, bin0 = np.histogram(dist0, bins=10)
+        hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
-        output = {
-                    "feature": feature,
-                    "series": [
-                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
-                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
-                        ]
-                  }
+        output = [
+            {
+                "feature": feature,
+                "title": "Label_0",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]
+            },
+            {
+                "feature": feature,
+                "title": "Label_1",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]
+            }
+        ]
         return jsonify(results=output)
     except:
         print('there are some problems')
@@ -236,16 +244,24 @@ def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchini
     f_dist = f_dist.fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
-    hist0, bin0 = np.histogram(dist0, bins='auto')
+    hist0, bin0 = np.histogram(dist0, bins='rice')
     hist1, bin1 = np.histogram(dist1, bins=bin0)
+    if len(bin0) < 3:
+        hist0, bin0 = np.histogram(dist0, bins=10)
+        hist1, bin1 = np.histogram(dist1, bins=bin0)
     try:
-        output = {
-                    "feature": feature,
-                    "series": [
-                        {"key": "Label 0", "values": [[float(y), float(x)] for x, y in zip(hist0.astype(float)/sum(hist0), bin0[1:])]},
-                        {"key": "Label 1", "values": [[float(y), float(x)] for x, y in zip(hist1.astype(float)/sum(hist1), bin1[1:])]}
-                        ]
-                  }
+        output = [
+            {
+                "feature": feature,
+                "title": "Label_0",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin0[1:], hist0.astype(float)/sum(hist0))]
+            },
+            {
+                "feature": feature,
+                "title": "Label_1",
+                "data": [{'x': float(x), 'y': float(y)} for x, y in zip(bin1[1:], hist1.astype(float)/sum(hist1))]
+            }
+        ]
         return jsonify(results=output)
     except:
         print('there are some problems')

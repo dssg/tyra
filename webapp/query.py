@@ -247,6 +247,7 @@ def get_test_feature_distribution(query_arg):
         params={'feature': query_arg['feature']},
         con=db.engine)
 
+    df_lookup = df_lookup[df_lookup['table_schema'] == dbschema['feature_schema']]
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
 
     try:
@@ -307,6 +308,7 @@ def get_train_feature_distribution(query_arg):
         params={'feature': query_arg['feature']},
         con=db.engine)
 
+    df_lookup = df_lookup[df_lookup['table_schema'] == dbschema['feature_schema']]
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
 
     query = """
