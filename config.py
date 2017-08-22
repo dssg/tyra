@@ -19,10 +19,15 @@ if os.path.exists(profile_file):
         dburl = URL('postgres', **dbconfig)
 
 else:
-    logging.warning('No config file found, using empty config')
-    config = {}
-    dburl = ''
-    dbschema = {}
+    logging.info('No config file found, using environment variables')
+    dbconfig = {
+        'host': os.environ.get('PGHOST'),
+        'username': os.environ.get('PGUSER'),
+        'database': os.environ.get('PGDATABASE'),
+        'password': os.environ.get('PGPASSWORD'),
+        'port': os.environ.get('PGPORT'),
+    }
+    dburl = URL('postgres', **dbconfig)
 
 if os.path.exists(schema_config):
     with open(schema_config) as f:
@@ -32,6 +37,8 @@ if os.path.exists(schema_config):
             'entity_id': config['entity_id'],
         }
 else:
-    logging.warning('No config file found, using empty config')
-    config = {}
-    dbschema = {}
+    logging.info('No config file found, using environment variables')
+    dbschema = {
+        'feature_schema': os.environ.get('feature_schema'),
+        'entity_id': os.environ.get('entity_id'),
+    }
