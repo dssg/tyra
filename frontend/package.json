@@ -30,14 +30,15 @@
     "react": "15.6.1",
     "react-datepicker": "~0.39.0",
     "react-dom": "15.6.1",
+    "react-faux-dom": "^4.0.3",
     "react-highcharts": "^11.5.0",
     "react-nvd3": "^0.5.7",
+    "react-redux": "^4.3.0",
     "react-table": "^3.1.4",
     "react-tabs": "~0.8.2",
-    "react-redux": "^4.3.0",
-    "redux":"^3.0.0",
     "react-vis": "^1.6.7",
-    "reactable": "~0.14.1"
+    "reactable": "~0.14.1",
+    "redux": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.2",
