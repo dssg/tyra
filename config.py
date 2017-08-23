@@ -42,7 +42,7 @@ if None in dbconfig.values():
 
 if None in dbschema.values():
     if os.path.exists(profile_file):
-       with open(profile_file) as f:
+        with open(profile_file) as f:
             config = yaml.load(f)
             try:
                 dbschema = {
@@ -57,6 +57,3 @@ if None in dbschema.values():
         raise Exception('no default_profile.yaml or enviroment variables!')
 
 dburl = URL('postgres', **dbconfig)
-
-
-
