@@ -32,12 +32,11 @@ if None in dbconfig.values():
                     'port': config['PGPORT'],
                 }
             except:
-                logging.error('not specified db configuration correctly in default_profile.yaml')
+                logging.warning('not specified db configuration correctly in default_profile.yaml')
                 raise
 
     else:
-        logging.error('no default_profile.yaml or enviroment variables')
-        raise Exception('no default_profile.yaml or enviroment variables!')
+        logging.warning('no default_profile.yaml or enviroment variables')
 
 
 if None in dbschema.values():
@@ -50,10 +49,9 @@ if None in dbschema.values():
                     'entity_id': config['entity_id'],
                     }
             except:
-                logging.error('not specified schema configuration correctly in default_profile.yaml')
+                logging.warning('not specified schema configuration correctly in default_profile.yaml')
                 raise
     else:
-        logging.error('no default_profile.yaml or enviroment variables')
-        raise Exception('no default_profile.yaml or enviroment variables!')
+        logging.warning('no default_profile.yaml or enviroment variables')
 
 dburl = URL('postgres', **dbconfig)
