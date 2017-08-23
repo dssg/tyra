@@ -10,6 +10,8 @@ before_install:
 install:
   - pip install -r requirements.txt
 env:
-  - feature_schema="historical_features_daily_month" entity_id="officer_id"
+  global:
+    - feature_schema="historical_features_daily_month"
+    - entity_id="officer_id"
 script: py.test -vvv -s -x --cov=webapp
 after_success: codecov
