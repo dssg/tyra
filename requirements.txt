@@ -1,9 +1,9 @@
-Flask==0.10.1
-SQLAlchemy==1.0.14
-pandas==0.18.1
-PyYAML==3.11
-psycopg2==2.5
-pytest==2.9.2
+Flask
+SQLAlchemy
+pandas
+PyYAML
+psycopg2
+pytest
 numpy
 scipy
 scikit-learn
