@@ -8,6 +8,7 @@ addons:
 before_install:
 - sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
 install:
-- pip install -r requirements-dev.txt
+- pip install -r requirements-dev.txt 
+- pip install -r requirements.txt
 script: py.test -vvv -s -x --cov=webapp
 after_success: codecov
