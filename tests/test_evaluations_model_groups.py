@@ -116,6 +116,4 @@ def test_model_groups_2():
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example('/evaluations/search_model_groups/all_1')
-        print(response_data)
-        print(expected)
         assert expected == response_data
