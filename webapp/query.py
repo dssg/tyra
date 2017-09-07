@@ -66,6 +66,9 @@ def get_model_groups(query_arg):
         params={'parameter': query_dict['parameter'],
                 'metric': query_dict['metric']+'@'},
         con=db.engine)
+    candidates = tuple(ranked_result['model_group_id'].tolist())
+    if len(candidates) == 1:
+        candidates = "".join(str(candidates).split(','))
     if query_arg['model_comment'] == 'all':
         query = """
         SELECT
@@ -87,7 +90,7 @@ def get_model_groups(query_arg):
         AND run_time >= %(runtime)s
         AND model_group_id in {0}
         GROUP BY model_group_id
-        """.format(tuple(ranked_result['model_group_id'].tolist()))
+        """.format(candidates)
 
     else:
         query = """
@@ -111,7 +114,7 @@ def get_model_groups(query_arg):
         AND model_group_id in {0}
         AND model_comment = '{1}'
         GROUP BY model_group_id
-        """.format(tuple(ranked_result['model_group_id'].tolist()),
+        """.format(candidates,
                    query_arg['model_comment'])
 
     df_models = pd.read_sql(query,
