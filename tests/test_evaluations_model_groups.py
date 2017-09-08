@@ -4,7 +4,7 @@ import json
 
 CUTOFF = datetime(2017, 5, 9)
 
-ranked_table_data = [
+ranked_table_data_1 = [
     # model_group_id, metric_parameter, avg, run_time, model_comment
     (1234, 'precision@100_abs', 0.3221, '2017-05-09', 'two feature block'),
     (2345, 'precision@100_abs', 0.1214, '2017-05-09', 'one feature block'),
@@ -18,9 +18,14 @@ ranked_table_data = [
     (1011, 'precision@100_abs', 0.3099, '2017-05-12', 'sworn officers correct month mix 1m 3y')
 ]
 
+ranked_table_data_2 = [
+    # model_group_id, metric_parameter, avg, run_time, model_comment
+    (1234, 'precision@100_abs', 0.3922, '2017-05-10', 'two feature block'),
+]
+
 config = json.dumps({"train_metadata": {"feature_as_of_dates": ["2014-04-24", "2015-04-24"]}})
 
-models_data = [
+models_data_1 = [
     # model_id, run_time, model_type, model_group_id, test, model_comment, train_end_time, config
     (1, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-05-01', config),
     (2, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 5678, False, 'two feature block', '2015-06-01', config),
@@ -32,6 +37,11 @@ models_data = [
     (8, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-06-01', config),
     (9, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-07-01', config),
     (10, '2017-05-11', 'sklearn.linear_model.LogisticRegression', 8910, False, 'sworn officers correct month mix 1m 3y', '2015-08-01', config)
+]
+
+models_data_2 = [
+    # model_id, run_time, model_type, model_group_id, test, model_comment, train_end_time, config
+    (6, '2017-05-10', 'sklearn.ensemble.RandomForestClassifier', 1234, False, 'two feature block', '2015-10-01', config),
 ]
 
 evaluations_data = [
@@ -48,14 +58,15 @@ evaluations_data = [
     (10, 'precision@', '100_abs', 0.0233, '2015-08-01')
 ]
 
-data = {
-    'ranked_table': ranked_table_data,
-    'models': models_data,
-    'evaluations': evaluations_data
-}
 
 
-def test_model_groups():
+
+def test_model_groups_1():
+    data = {
+        'ranked_table': ranked_table_data_1,
+        'models': models_data_1,
+        'evaluations': evaluations_data
+    }
     with rig_test_client(data) as test_app:
         route = '/evaluations/search_model_groups/all'
         response = test_app.post(
@@ -69,8 +80,6 @@ def test_model_groups():
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example(route)
-        print(expected)
-        print(response_data)
         assert expected == response_data
 
         route = '/evaluations/search_model_groups/{}'.format('two feature block')
@@ -85,6 +94,26 @@ def test_model_groups():
         assert response.status_code == 200
         response_data = json.loads(response.get_data().decode('utf-8'))
         expected = load_json_example(route)
-        print(expected)
-        print(response_data)
+
+        assert expected == response_data
+
+def test_model_groups_2():
+    data = {
+        'ranked_table': ranked_table_data_2,
+        'models': models_data_2,
+        'evaluations': evaluations_data
+    }
+    with rig_test_client(data) as test_app:
+        route = '/evaluations/search_model_groups/all'
+        response = test_app.post(
+            route,
+            data=dict(
+                metric1='precision',
+                parameter1='top 100',
+                timestamp=CUTOFF
+            )
+        )
+        assert response.status_code == 200
+        response_data = json.loads(response.get_data().decode('utf-8'))
+        expected = load_json_example('/evaluations/search_model_groups/all_1')
         assert expected == response_data
