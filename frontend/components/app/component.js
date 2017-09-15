@@ -81,6 +81,7 @@ export default React.createClass({
     } else {
       return (
         <div className="container">
+          <button onClick={this.handleLogout} id="logOutButton" className="btn btn-xs">Log Out</button>
           <div className="col-md-12">
             <h3>Projects</h3>
           </div>
