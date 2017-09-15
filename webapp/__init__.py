@@ -8,7 +8,6 @@ app = Flask(__name__,instance_relative_config=True)
 app.secret_key = "tyra american top models"
 db = SQLAlchemy(app)
 fujs = FlaskUtilJs(app)
-app.config['DB_NAME'] = "cmpd"
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 

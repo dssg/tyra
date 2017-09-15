@@ -6,7 +6,6 @@ from sqlalchemy.engine.url import URL
 profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
 dbname = os.environ.get('dbname')
-
 dbconfig = {
     'host': os.environ.get('PGHOST'),
     'username': os.environ.get('PGUSER'),
@@ -20,7 +19,7 @@ dbschema = {
         'entity_id': os.environ.get('entity_id'),
     }
 
-db_dict = {dbconfig["username"]: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
+db_dict = {dbconfig['username']: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
 
 try:
     if None in dbconfig.values():

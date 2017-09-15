@@ -11,6 +11,8 @@ import numpy as np
 import os
 from config import db_dict
 
+app.config['DB_NAME'] = "cmpd"
+
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
     "precision",
