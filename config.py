@@ -5,6 +5,7 @@ from sqlalchemy.engine.url import URL
 
 profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
+dbname = os.environ.get('dbname')
 
 dbconfig = {
     'host': os.environ.get('PGHOST'),
@@ -41,4 +42,4 @@ try:
             logging.warning('no default_profile.yaml or enviroment variables')
 
 except:
-    db_dict = {dbconfig["username"]: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
+    db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
