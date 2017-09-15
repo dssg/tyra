@@ -281,6 +281,24 @@ table.focus-highlight td:before {
     right:0;
 }
 
+#projectListButton {
+	margin-top: 8px;
+    margin-right: 10px;
+	position: absolute;
+    top:0;
+    right:70px;
+}
+
+#currentProject {
+	color: #ffffff;
+	margin-top: 13px;
+    margin-right: 10px;
+	position: absolute;
+    top:0;
+    font-size: 1.2em;
+    right:180px;
+}
+
 #SetButton {
 	position: relative;
 	margin-right: 5px;
