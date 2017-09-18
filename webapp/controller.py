@@ -52,7 +52,6 @@ def db_choose(project):
 
 @app.route('/db_list', methods=['GET', 'POST'])
 def db_list():
-    print(db_dict)
     try:
         return jsonify(result=list(db_dict.keys()))
     except:
@@ -228,8 +227,6 @@ def individual_feature_importance(model_id, entity_id, as_of_date):
     methods=['GET', 'POST']
 )
 def get_feature_dist_test(as_of_date, model_id, feature):
-    print(db_dict)
-    print(app.config['DB_NAME'])
     query_arg = {
         'model_id': model_id,
         'feature': feature,

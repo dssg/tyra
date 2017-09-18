@@ -13,5 +13,5 @@ install:
 env:
   global:
     - db_name="cmpd" feature_schema="historical_features_daily_month" entity_id="officer_id"
-script: db_name="cmpd" feature_schema="historical_features_daily_month" entity_id="officer_id" py.test -vvv -s -x --cov=webapp
+script: py.test -vvv -s -x --cov=webapp
 after_success: codecov
