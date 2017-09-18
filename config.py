@@ -19,7 +19,12 @@ dbschema = {
         'entity_id': os.environ.get('entity_id'),
     }
 
+print("dbname: ", dbname)
+print("dbconfig: ", dbconfig)
+print("dbschema: ", dbschema)
+
 db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
+print("db_dict: ", db_dict)
 
 try:
     if None in dbconfig.values():
