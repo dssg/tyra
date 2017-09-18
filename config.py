@@ -5,7 +5,7 @@ from sqlalchemy.engine.url import URL
 
 profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
-dbname = os.environ.get('dbname')
+dbname = os.environ.get('db_name')
 dbconfig = {
     'host': os.environ.get('PGHOST'),
     'username': os.environ.get('PGUSER'),
