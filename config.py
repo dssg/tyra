@@ -19,7 +19,7 @@ dbschema = {
         'entity_id': os.environ.get('entity_id'),
     }
 
-db_dict = {dbconfig['username']: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
+db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
 
 try:
     if None in dbconfig.values():
