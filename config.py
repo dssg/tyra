@@ -27,7 +27,7 @@ db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
 print("db_dict: ", db_dict)
 
 try:
-    if None in dbconfig.values():
+    if None in dbconfig.values() and None in dbschema.values():
         db_dict = {}
         if os.path.exists(profile_file):
             with open(profile_file) as f:
