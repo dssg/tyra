@@ -8,6 +8,11 @@ import yaml
 import datetime
 from webapp import users, login_manager
 import numpy as np
+import os
+from config import db_dict
+
+# Default DB
+app.config['DB_NAME'] = "cmpd"
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -23,17 +28,36 @@ METRIC_WHITELIST = set([
 with open('parameters.yaml') as f:
     PARAMETERS = yaml.load(f)
 
-
+profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
 @app.route('/evaluations')
 @flask_login.login_required
 def index():
     return render_template('index.html', parameters=PARAMETERS)
 
-
 @app.route('/testing')
 def testing():
     return render_template('testing.html', parameters=PARAMETERS)
+
+
+@app.route('/db_choose/<string:project>', methods=['GET', 'POST'])
+def db_choose(project):
+    try:
+        app.config['SQLALCHEMY_DATABASE_URI'] = db_dict[project]['url']
+        app.config['DB_NAME'] = project
+        return jsonify(result=project)
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
+
+
+@app.route('/db_list', methods=['GET', 'POST'])
+def db_list():
+    try:
+        return jsonify(result=list(db_dict.keys()))
+    except:
+        print('there are some problems')
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
 def dbify_metric_param(param):
@@ -204,7 +228,12 @@ def individual_feature_importance(model_id, entity_id, as_of_date):
     methods=['GET', 'POST']
 )
 def get_feature_dist_test(as_of_date, model_id, feature):
-    query_arg = {'model_id': model_id, 'feature': feature, 'as_of_date': as_of_date}
+    query_arg = {
+        'model_id': model_id,
+        'feature': feature,
+        'as_of_date': as_of_date,
+        'dbschema': db_dict[app.config['DB_NAME']]['schema']
+    }
     # Not sure should dropna or fillna
     f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
@@ -238,7 +267,11 @@ def get_feature_dist_test(as_of_date, model_id, feature):
     methods=['GET', 'POST']
 )
 def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
-    query_arg = {'model_id': model_id, 'feature': feature}
+    query_arg = {
+        'model_id': model_id,
+        'feature': feature,
+        'dbschema': db_dict[app.config['DB_NAME']]['schema']
+    }
     f_dist = query.get_train_feature_distribution(query_arg)
     # Not sure should dropna or fillna
     f_dist = f_dist.fillna(value=0)

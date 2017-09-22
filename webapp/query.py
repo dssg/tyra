@@ -1,11 +1,11 @@
 import pandas as pd
 from webapp import db
-from config import dbschema
 import logging
 import json
 import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+
 
 def evaluation_cutoff_date():
     return os.getenv(
@@ -239,6 +239,7 @@ def get_all_features(model_group_id=3131):
 
 
 def get_test_feature_distribution(query_arg):
+    dbschema = query_arg['dbschema']
 
     query = """
     SELECT column_name, table_schema, table_name FROM information_schema.columns
@@ -292,6 +293,8 @@ def get_test_feature_distribution(query_arg):
 
 
 def get_train_feature_distribution(query_arg):
+    dbschema = query_arg['dbschema']
+
     query = """
     SELECT config ->> 'train_metadata' as train_metadata FROM results.models WHERE model_id=%(model_id)s
     """

@@ -5,6 +5,7 @@ from sqlalchemy.engine.url import URL
 
 profile_file = os.environ.get('PROFILE', 'default_profile.yaml')
 
+dbname = os.environ.get('db_name')
 dbconfig = {
     'host': os.environ.get('PGHOST'),
     'username': os.environ.get('PGUSER'),
@@ -18,40 +19,26 @@ dbschema = {
         'entity_id': os.environ.get('entity_id'),
     }
 
+db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
 
-if None in dbconfig.values():
-    if os.path.exists(profile_file):
-        with open(profile_file) as f:
-            config = yaml.load(f)
-            try:
-                dbconfig = {
-                    'host': config['PGHOST'],
-                    'username': config['PGUSER'],
-                    'database': config['PGDATABASE'],
-                    'password': config['PGPASSWORD'],
-                    'port': config['PGPORT'],
-                }
-            except:
-                logging.warning('not specified db configuration correctly in default_profile.yaml')
-                raise
+try:
+    if None in dbconfig.values() and None in dbschema.values():
+        db_dict = {}
+        if os.path.exists(profile_file):
+            with open(profile_file) as f:
+                config = yaml.load(f)
+                try:
+                    for key in config.keys():
+                        dbconfig = config[key]['config']
+                        if None in dbschema.values():
+                            db_dict[key] = {"url": URL('postgres', **dbconfig), "schema": config[key]["schema"]}
+                        else:
+                            db_dict[key] = {"url": URL('postgres', **dbconfig), "schema": dbschema}
+                except:
+                    logging.warning('not specified db configuration correctly in default_profile.yaml')
+                    raise
+        else:
+            logging.warning('no default_profile.yaml or enviroment variables')
 
-    else:
-        logging.warning('no default_profile.yaml or enviroment variables')
-
-
-if None in dbschema.values():
-    if os.path.exists(profile_file):
-        with open(profile_file) as f:
-            config = yaml.load(f)
-            try:
-                dbschema = {
-                    'feature_schema': config['feature_schema'],
-                    'entity_id': config['entity_id'],
-                    }
-            except:
-                logging.warning('not specified schema configuration correctly in default_profile.yaml')
-                raise
-    else:
-        logging.warning('no default_profile.yaml or enviroment variables')
-
-dburl = URL('postgres', **dbconfig)
+except:
+    db_dict = {dbname: {"url": URL('postgres', **dbconfig), "schema": dbschema}}
