@@ -1,5 +1,5 @@
 import pandas as pd
-from webapp import db
+from webapp import db, app
 import logging
 import json
 import os
@@ -23,6 +23,7 @@ else:
 
 
 def get_model_prediction(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     SELECT
         entity_id,
@@ -39,22 +40,24 @@ def get_model_prediction(query_arg):
             'model_id': query_arg['model_id'],
             'evaluation_start_time': query_arg['evaluation_start_time']
         },
-        con=db.engine
+        con=engine
     )
     output = df_models
     return output
 
 
 def get_model_comments(run_time):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     SELECT DISTINCT(model_comment) FROM results.ranked_table
     WHERE run_time >= '{}'
     """.format(run_time)
-    model_comments = pd.read_sql(query, con=db.engine)
+    model_comments = pd.read_sql(query, con=engine)
     return model_comments
 
 
 def get_model_groups(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query_dict = list(query_arg['metrics'].items())[0][1]
     lookup_query = """
     SELECT
@@ -65,7 +68,7 @@ def get_model_groups(query_arg):
     ranked_result = pd.read_sql(lookup_query,
         params={'parameter': query_dict['parameter'],
                 'metric': query_dict['metric']+'@'},
-        con=db.engine)
+        con=engine)
     candidates = tuple(ranked_result['model_group_id'].tolist())
     if len(candidates) == 1:
         candidates = "".join(str(candidates).split(','))
@@ -121,11 +124,12 @@ def get_model_groups(query_arg):
                             params={'parameter': query_dict['parameter'],
                                     'metric': query_dict['metric']+'@',
                                     'runtime': query_arg['timestamp']},
-                            con=db.engine)
+                            con=engine)
     return df_models
 
 
 def get_individual_feature_importance(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     SELECT risk_1, risk_2, risk_3, risk_4, risk_5
     FROM results.individual_importances
@@ -138,12 +142,13 @@ def get_individual_feature_importance(query_arg):
         params={'model_id': query_arg['model_id'],
                 'entity_id': query_arg['entity_id'],
                 'as_of_date': query_arg['as_of_date']},
-        con=db.engine
+        con=engine
     )
     output = df_importance
     return output
 
 def get_feature_importance(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     select feature as label, feature_importance as value
     from results.feature_importances
@@ -154,13 +159,14 @@ def get_feature_importance(query_arg):
     df_fimportance = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id'], 'num': query_arg['num']},
-        con=db.engine
+        con=engine
     )
     output = df_fimportance
     return output
 
 
 def get_precision(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
@@ -176,13 +182,14 @@ def get_precision(query_arg):
             'model_id': query_arg['model_id'],
             'evaluation_start_time': query_arg['evaluation_start_time'],
         },
-        con=db.engine
+        con=engine
         )
     output = df_precision
     return output
 
 
 def get_recall(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
@@ -198,13 +205,14 @@ def get_recall(query_arg):
             'model_id': query_arg['model_id'],
             'evaluation_start_time': query_arg['evaluation_start_time'],
         },
-        con=db.engine
+        con=engine
     )
     output = df_precision
     return output
 
 
 def get_metrics_over_time(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query_dict = list(query_arg['metrics'].items())[0][1]
     query = """
     SELECT
@@ -222,23 +230,25 @@ def get_metrics_over_time(query_arg):
             'parameter': query_dict['parameter'],
             'metric': query_dict['metric']+'@'
         },
-        con=db.engine)
+        con=engine)
     return df
 
 
 def get_all_features(model_group_id=3131):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     query = """
     SELECT feature_list FROM results.model_groups WHERE model_group_id={}
     """.format(model_group_id)
     df = pd.read_sql(
         query,
-        con=db.engine)
+        con=engine)
 
     feature_list = df['feature_list'].tolist()[0]
     return feature_list
 
 
 def get_test_feature_distribution(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     dbschema = query_arg['dbschema']
 
     query = """
@@ -249,7 +259,7 @@ def get_test_feature_distribution(query_arg):
     df_lookup = pd.read_sql(
         query,
         params={'feature': query_arg['feature']},
-        con=db.engine)
+        con=engine)
 
     df_lookup = df_lookup[df_lookup['table_schema'] == dbschema['feature_schema']]
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
@@ -270,7 +280,7 @@ def get_test_feature_distribution(query_arg):
 
         df = pd.read_sql(
             query,
-            con=db.engine)
+            con=engine)
     except:
         query = """
         SELECT "{column_name}", "{entity_id}", label_value
@@ -287,12 +297,13 @@ def get_test_feature_distribution(query_arg):
 
         df = pd.read_sql(
             query,
-            con=db.engine)
+            con=engine)
 
     return df
 
 
 def get_train_feature_distribution(query_arg):
+    engine = db.get_engine(app, app.config['DB_NAME'])
     dbschema = query_arg['dbschema']
 
     query = """
@@ -312,7 +323,7 @@ def get_train_feature_distribution(query_arg):
     df_lookup = pd.read_sql(
         query,
         params={'feature': query_arg['feature']},
-        con=db.engine)
+        con=engine)
 
     df_lookup = df_lookup[df_lookup['table_schema'] == dbschema['feature_schema']]
     lookup = df_lookup[["aggregation" in i.split("_") for i in df_lookup['table_name'].tolist()]]
@@ -323,7 +334,7 @@ def get_train_feature_distribution(query_arg):
     as_of_date = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id']},
-        con=db.engine)['as_of_date'].tolist()[0]
+        con=engine)['as_of_date'].tolist()[0]
 
     try:
         query = """
@@ -344,7 +355,7 @@ def get_train_feature_distribution(query_arg):
             )
         df = pd.read_sql(
             query,
-            con=db.engine)
+            con=engine)
     except:
         query = """
         SELECT "{column_name}", "{entity_id}", label_value
@@ -362,6 +373,21 @@ def get_train_feature_distribution(query_arg):
             )
         df = pd.read_sql(
             query,
-            con=db.engine)
+            con=engine)
 
+    return df
+
+def get_model_parameters(model_id):
+    engine = db.get_engine(app, app.config['DB_NAME'])
+    query = """
+    SELECT model_parameters
+    FROM results.models
+    WHERE model_id={model_id};
+    """.format(
+        model_id=model_id)
+
+    df = pd.read_sql(
+        query,
+        con=engine)
+    print(df)
     return df

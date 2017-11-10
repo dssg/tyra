@@ -10,9 +10,11 @@ from webapp import users, login_manager
 import numpy as np
 import os
 from config import db_dict
+from webapp import db
 
 # Default DB
-app.config['DB_NAME'] = "cmpd"
+# app.config['DB_NAME'] = "cmpd"
+# app.config['SQLALCHEMY_DATABASE_URI'] = db_dict['cmpd']['url']
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -43,7 +45,6 @@ def testing():
 @app.route('/db_choose/<string:project>', methods=['GET', 'POST'])
 def db_choose(project):
     try:
-        app.config['SQLALCHEMY_DATABASE_URI'] = db_dict[project]['url']
         app.config['DB_NAME'] = project
         return jsonify(result=project)
     except:
@@ -395,7 +396,16 @@ def get_metric_over_time(model_id):
     except Exception as e:
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
-
+@app.route(
+    '/evaluations/<int:model_id>/model_detail',
+    methods=['GET', 'POST'])
+def get_model_detail(model_id):
+    df = query.get_model_parameters(model_id)
+    output=df
+    try:
+        return jsonify(results=output)
+    except Exception as e:
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 # Login functions
 class User(flask_login.UserMixin):
