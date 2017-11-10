@@ -6,7 +6,6 @@ import os
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
-
 def evaluation_cutoff_date():
     return os.getenv(
         'EVALUATION_CUTOFF_DATE',
@@ -250,7 +249,6 @@ def get_all_features(model_group_id=3131):
 def get_test_feature_distribution(query_arg):
     engine = db.get_engine(app, app.config['DB_NAME'])
     dbschema = query_arg['dbschema']
-
     query = """
     SELECT column_name, table_schema, table_name FROM information_schema.columns
     WHERE LOWER(column_name) = LOWER(%(feature)s)
@@ -305,14 +303,13 @@ def get_test_feature_distribution(query_arg):
 def get_train_feature_distribution(query_arg):
     engine = db.get_engine(app, app.config['DB_NAME'])
     dbschema = query_arg['dbschema']
-
     query = """
     SELECT config ->> 'train_metadata' as train_metadata FROM results.models WHERE model_id=%(model_id)s
     """
     train_metadata = pd.read_sql(
         query,
         params={'model_id': query_arg['model_id']},
-        con=db.engine)
+        con=engine)
     training_time = json.loads(train_metadata['train_metadata'][0])['feature_as_of_dates']
 
     query = """
