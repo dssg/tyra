@@ -12,10 +12,6 @@ import os
 from config import db_dict
 from webapp import db
 
-# Default DB
-# app.config['DB_NAME'] = "cmpd"
-# app.config['SQLALCHEMY_DATABASE_URI'] = db_dict['cmpd']['url']
-
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
     "precision",
