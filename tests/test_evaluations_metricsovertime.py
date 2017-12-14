@@ -46,7 +46,7 @@ data = {
 def test_metric_overtime():
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         route = '/evaluations/1/metric_overtime'
         response = test_app.post(
             route,

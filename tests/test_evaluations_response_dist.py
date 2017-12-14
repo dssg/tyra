@@ -24,7 +24,7 @@ data = {
 def test_response_dist():
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         url = '/evaluations/1/response_dist/{}'.format(EVALUATION_START_TIME)
         response = test_app.get(url)
         assert response.status_code == 200

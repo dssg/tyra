@@ -67,7 +67,7 @@ data = {
 def test_get_feature_dist_test():
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         url = '/evaluations/1/feature_dist_test/arrests_id_p1d_arrestscrimetype_assault_avg/2014-04-24'
         response = test_app.get(url)
         assert response.status_code == 200
@@ -78,7 +78,7 @@ def test_get_feature_dist_test():
 def test_get_feature_dist_train():
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         url = '/evaluations/1/feature_dist_train/arrests_id_p1d_arrestscrimetype_assault_avg'
         response = test_app.get(url)
         assert response.status_code == 200

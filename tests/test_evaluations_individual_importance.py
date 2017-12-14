@@ -22,7 +22,7 @@ data = {
 def test_individual_importances():
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         url = '/evaluations/1/individual_feature_importance/1234/2014-12-01'
         response = test_app.get(url)
         assert response.status_code == 200

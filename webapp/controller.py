@@ -52,9 +52,6 @@ def db_choose(project):
 def db_list():
     try:
         dbs = list(db_dict.keys())
-        if 'test' in dbs:
-            dbs.remove('test')
-
         return jsonify(result=dbs)
     except:
         print('there are some problems')

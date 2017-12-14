@@ -69,7 +69,7 @@ def test_model_groups_1():
     }
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         route = '/evaluations/search_model_groups/all'
         response = test_app.post(
             route,
@@ -107,7 +107,7 @@ def test_model_groups_2():
     }
     with rig_test_client(data) as test_app:
         with test_app.session_transaction() as session:
-            session['engine'] = 'test'
+            session['engine'] = 'cmpd'
         route = '/evaluations/search_model_groups/all'
         response = test_app.post(
             route,

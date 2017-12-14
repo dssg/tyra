@@ -10,7 +10,7 @@ app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "tyra american top models"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_dict['cmpd']['url']
 
-app.config['SQLALCHEMY_BINDS'] = {key: db_dict[key]['url'] for key in db_dict.keys() if key != 'test'}
+app.config['SQLALCHEMY_BINDS'] = {key: db_dict[key]['url'] for key in db_dict.keys()}
 
 
 db = SQLAlchemy(app)

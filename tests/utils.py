@@ -141,6 +141,6 @@ def rig_test_client(data):
         app.config['SQLALCHEMY_DATABASE_URI'] = dburl
         app.config['SECRET_KEY'] = 'testit!'
         app.config['SQLALCHEMY_BINDS'] = {
-            'test': dburl,
+            'cmpd': dburl,
         }
         yield app.test_client()
