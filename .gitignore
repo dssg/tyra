@@ -100,3 +100,6 @@ webapp/static/output.js
 
 # Users info
 users.json
+
+# Flask Session
+flask_session/

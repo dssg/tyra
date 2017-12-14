@@ -1,6 +1,6 @@
-from flask import render_template, request, jsonify, redirect, url_for, flash
+from flask import render_template, request, jsonify, redirect, url_for, flash, session
 import flask_login
-from webapp import app
+from webapp import app, db
 from webapp import query
 from collections import defaultdict
 from sklearn.metrics import precision_recall_curve, roc_curve
@@ -11,8 +11,6 @@ import numpy as np
 import os
 from config import db_dict
 
-# Default DB
-app.config['DB_NAME'] = "cmpd"
 
 # filter user-passed metrics through this list
 METRIC_WHITELIST = set([
@@ -43,8 +41,7 @@ def testing():
 @app.route('/db_choose/<string:project>', methods=['GET', 'POST'])
 def db_choose(project):
     try:
-        app.config['SQLALCHEMY_DATABASE_URI'] = db_dict[project]['url']
-        app.config['DB_NAME'] = project
+        session['engine'] = project
         return jsonify(result=project)
     except:
         print('there are some problems')
@@ -54,7 +51,8 @@ def db_choose(project):
 @app.route('/db_list', methods=['GET', 'POST'])
 def db_list():
     try:
-        return jsonify(result=list(db_dict.keys()))
+        dbs = list(db_dict.keys())
+        return jsonify(result=dbs)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
@@ -115,6 +113,7 @@ def convert(indata):
     methods=['GET', 'POST']
     )
 def get_model_groups(model_comment="all"):
+    engine = db.get_engine(app, session['engine'])
     f = request.form
     query_arg = {}
     flattened_query = defaultdict(dict)
@@ -128,7 +127,7 @@ def get_model_groups(model_comment="all"):
     query_arg['timestamp'] = f['timestamp']
     query_arg['metrics'] = flattened_query
     query_arg['model_comment'] = model_comment
-    output = query.get_model_groups(query_arg)
+    output = query.get_model_groups(query_arg, engine)
     output = output.to_dict('records')
     return jsonify(results=(output))
 
@@ -139,7 +138,7 @@ def get_model_groups(model_comment="all"):
     )
 def get_model_comments():
     f = request.form
-    output = query.get_model_comments(f['timestamp'])
+    output = query.get_model_comments(f['timestamp'], db.get_engine(app, session['engine']))
     output = output['model_comment'].tolist()
     return jsonify(results=(output))
 
@@ -149,9 +148,10 @@ def get_model_comments():
     methods=['GET', 'POST']
 )
 def get_model_result(model_id, evaluation_start_time):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id,
                  'evaluation_start_time': evaluation_start_time}
-    output = query.get_model_prediction(query_arg)
+    output = query.get_model_prediction(query_arg, engine)
     try:
         output = output.to_dict('records')
         return jsonify(results=(output))
@@ -165,9 +165,10 @@ def get_model_result(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def get_response_dist(model_id, evaluation_start_time):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id,
                  'evaluation_start_time': evaluation_start_time}
-    prediction_df = query.get_model_prediction(query_arg)
+    prediction_df = query.get_model_prediction(query_arg, engine)
     score = prediction_df['score']
     hist_raw, bin = np.histogram(score, bins='auto')
     hist = hist_raw.astype(float)/sum(hist_raw)
@@ -196,8 +197,9 @@ def get_response_dist(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def feature_importance(model_id, num=10):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id, 'num': num}
-    f_importance = query.get_feature_importance(query_arg)
+    f_importance = query.get_feature_importance(query_arg, engine)
     try:
         f_importance = f_importance.to_dict('records')
         output = f_importance
@@ -212,8 +214,9 @@ def feature_importance(model_id, num=10):
     methods=['GET', 'POST']
 )
 def individual_feature_importance(model_id, entity_id, as_of_date):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id, 'entity_id': entity_id, 'as_of_date': as_of_date}
-    individual_importance = query.get_individual_feature_importance(query_arg)
+    individual_importance = query.get_individual_feature_importance(query_arg, engine)
     try:
         individual_importance = individual_importance.to_dict('records')
         output = individual_importance
@@ -228,14 +231,15 @@ def individual_feature_importance(model_id, entity_id, as_of_date):
     methods=['GET', 'POST']
 )
 def get_feature_dist_test(as_of_date, model_id, feature):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {
         'model_id': model_id,
         'feature': feature,
         'as_of_date': as_of_date,
-        'dbschema': db_dict[app.config['DB_NAME']]['schema']
+        'dbschema': db_dict[session['engine']]['schema']
     }
     # Not sure should dropna or fillna
-    f_dist = query.get_test_feature_distribution(query_arg).fillna(value=0)
+    f_dist = query.get_test_feature_distribution(query_arg, engine).fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
     dist1 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 1]
     hist0, bin0 = np.histogram(dist0, bins='auto')
@@ -267,12 +271,13 @@ def get_feature_dist_test(as_of_date, model_id, feature):
     methods=['GET', 'POST']
 )
 def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchinitiatiationtype_ci_sum"):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {
         'model_id': model_id,
         'feature': feature,
-        'dbschema': db_dict[app.config['DB_NAME']]['schema']
+        'dbschema': db_dict[session['engine']]['schema']
     }
-    f_dist = query.get_train_feature_distribution(query_arg)
+    f_dist = query.get_train_feature_distribution(query_arg, engine)
     # Not sure should dropna or fillna
     f_dist = f_dist.fillna(value=0)
     dist0 = f_dist[f_dist.columns[0]][f_dist['label_value'] == 0]
@@ -306,10 +311,11 @@ def get_feature_dist_train(model_id=180457, feature="dispatch_id_p1m_dispatchini
     methods=['GET', 'POST']
 )
 def get_threshold_precision_recall(model_id, evaluation_start_time):
+    engine = db.get_engine(app, session['engine'])
     evaluation_start_time = datetime.datetime.strptime(evaluation_start_time, "%Y-%m-%d").date()
     query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
-    precision = query.get_precision(query_arg)
-    recall = query.get_recall(query_arg)
+    precision = query.get_precision(query_arg, engine)
+    recall = query.get_recall(query_arg, engine)
     try:
         precision = precision.to_dict('records')
         recall = recall.to_dict('records')
@@ -328,8 +334,9 @@ def get_threshold_precision_recall(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def get_simple_precision_recall(model_id, evaluation_start_time):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
-    pred = query.get_model_prediction(query_arg)
+    pred = query.get_model_prediction(query_arg, engine)
     precision, recall, threshold = precision_recall_curve(pred['label_value'],
                                                           pred['score'])
     output = {'title': 'precision_recall',
@@ -346,8 +353,9 @@ def get_simple_precision_recall(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def get_roc(model_id, evaluation_start_time):
+    engine = db.get_engine(app, session['engine'])
     query_arg = {'model_id': model_id, 'evaluation_start_time': evaluation_start_time}
-    pred = query.get_model_prediction(query_arg)
+    pred = query.get_model_prediction(query_arg, engine)
     fpr, tpr, threshold = roc_curve(pred['label_value'], pred['score'])
     output = [{'title': 'roc', 'data': [{'x': f, 'y': t} for f, t in zip(fpr, tpr)]},
               {'title': 'random', 'data': [{'x': 0, 'y': 0}, {'x': 1, 'y': 1}]}]
@@ -363,6 +371,7 @@ def get_roc(model_id, evaluation_start_time):
     methods=['GET', 'POST']
 )
 def get_metric_over_time(model_id):
+    engine = db.get_engine(app, session['engine'])
     f = request.form
     query_arg = {}
     flattened_query = defaultdict(dict)
@@ -377,7 +386,7 @@ def get_metric_over_time(model_id):
 
     query_arg['metrics'] = flattened_query
     query_arg['model_id'] = model_id
-    df = query.get_metrics_over_time(query_arg)
+    df = query.get_metrics_over_time(query_arg, engine)
     if len(flattened_query.keys()) == 1:
         metric_params = flattened_query[list(flattened_query.keys())[0]]
         data_key = metric_params['metric'] + '@' + metric_params['parameter']
@@ -396,6 +405,17 @@ def get_metric_over_time(model_id):
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 
+@app.route(
+    '/evaluations/<int:model_id>/model_detail',
+    methods=['GET', 'POST'])
+def get_model_detail(model_id):
+    engine = db.get_engine(app, session['engine'])
+    df = query.get_model_parameters(model_id, engine)
+    output = df
+    try:
+        return jsonify(results=output)
+    except Exception as e:
+        return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
 
 # Login functions
 class User(flask_login.UserMixin):
