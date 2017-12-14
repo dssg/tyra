@@ -78,6 +78,8 @@ data = {
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_search_models():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         route = '/evaluations/search_models'
         response = test_app.post(
             route,

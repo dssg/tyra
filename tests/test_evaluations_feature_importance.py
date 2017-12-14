@@ -21,6 +21,8 @@ data = {
 
 def test_feature_importance():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         url = '/evaluations/1/feature_importance/10'
         response = test_app.get(url)
         assert response.status_code == 200

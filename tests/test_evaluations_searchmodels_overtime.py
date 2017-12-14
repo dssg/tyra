@@ -80,6 +80,8 @@ def test_convert():
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_search_models_over_time():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         route = '/evaluations/search_models_over_time'
         response = test_app.post(
             route,

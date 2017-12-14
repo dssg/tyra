@@ -23,6 +23,8 @@ data = {
 
 def test_roc():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         url = '/evaluations/1/roc/{}'.format(EVALUATION_START_TIME)
         response = test_app.get(url)
         assert response.status_code == 200

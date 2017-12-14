@@ -68,6 +68,8 @@ def test_model_groups_1():
         'evaluations': evaluations_data
     }
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         route = '/evaluations/search_model_groups/all'
         response = test_app.post(
             route,
@@ -104,6 +106,8 @@ def test_model_groups_2():
         'evaluations': evaluations_data
     }
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         route = '/evaluations/search_model_groups/all'
         response = test_app.post(
             route,

@@ -3,7 +3,7 @@ from webapp import app
 import testing.postgresql
 from sqlalchemy import create_engine
 import json
-
+from flask import session
 
 def load_json_example(route):
     filepath = 'sample_json' + route + '.json'
@@ -139,4 +139,8 @@ def rig_test_client(data):
         engine = create_engine(dburl)
         setup_data(engine, data)
         app.config['SQLALCHEMY_DATABASE_URI'] = dburl
+        app.config['SECRET_KEY'] = 'testit!'
+        app.config['SQLALCHEMY_BINDS'] = {
+            'test': dburl,
+        }
         yield app.test_client()

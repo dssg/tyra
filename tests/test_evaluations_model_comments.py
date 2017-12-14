@@ -24,6 +24,8 @@ data = {
 
 def test_model_comments():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         route = '/evaluations/model_comments'
         response = test_app.post(
             route,

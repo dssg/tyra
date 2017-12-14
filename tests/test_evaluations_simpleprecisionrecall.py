@@ -22,6 +22,8 @@ data = {
 
 def test_simple_precision_recall():
     with rig_test_client(data) as test_app:
+        with test_app.session_transaction() as session:
+            session['engine'] = 'test'
         url = '/evaluations/1/simple_precision_recall/{}'.format(EVALUATION_START_TIME)
         response = test_app.get(url)
         assert response.status_code == 200

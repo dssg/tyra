@@ -34,6 +34,12 @@ try:
                             db_dict[key] = {"url": URL('postgres', **dbconfig), "schema": config[key]["schema"]}
                         else:
                             db_dict[key] = {"url": URL('postgres', **dbconfig), "schema": dbschema}
+                    db_dict['test'] = {
+                        "schema": {
+                            "feature_schema": "historical_features_daily_month",
+                            "entity_id": "officer_id"
+                        }
+                    }
                 except:
                     logging.warning('not specified db configuration correctly in default_profile.yaml')
                     raise
