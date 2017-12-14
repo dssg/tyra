@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.session import Session
+from flask_session import Session
 from webapp.flask_util_js import FlaskUtilJs
 from flask_sqlalchemy import SQLAlchemy
 import flask_login
@@ -9,11 +9,9 @@ from config import db_dict
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "tyra american top models"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_dict['cmpd']['url']
-app.config['SQLALCHEMY_BINDS'] = {
-    'sfpd': db_dict['sfpd']['url'],
-    'cmpd': db_dict['cmpd']['url'],
-    'lapd': db_dict['lapd']['url']
-}
+
+app.config['SQLALCHEMY_BINDS'] = {key: db_dict[key]['url'] for key in db_dict.keys() if key != 'test'}
+
 
 db = SQLAlchemy(app)
 

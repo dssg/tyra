@@ -51,7 +51,9 @@ def db_choose(project):
 @app.route('/db_list', methods=['GET', 'POST'])
 def db_list():
     try:
-        return jsonify(result=list(db_dict.keys()))
+        dbs = list(db_dict.keys())
+        dbs.remove('test')
+        return jsonify(result=dbs)
     except:
         print('there are some problems')
         return jsonify({"sorry": "Sorry, no results! Please try again."}), 500
