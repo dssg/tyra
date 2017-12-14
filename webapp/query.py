@@ -379,5 +379,4 @@ def get_model_parameters(model_id, engine):
     df = pd.read_sql(
         query,
         con=engine)
-    print(df)
     return df
