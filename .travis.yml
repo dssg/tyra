@@ -12,6 +12,6 @@ install:
   - pip install -r requirements.txt
 env:
   global:
-    - db_name="cmpd" feature_schema="historical_features_daily_month" entity_id="officer_id"
+    - db_name="test" feature_schema="historical_features_daily_month" entity_id="officer_id"
 script: py.test -vvv -s -x --cov=webapp
 after_success: codecov
