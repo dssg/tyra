@@ -8,5 +8,6 @@ numpy
 scipy
 scikit-learn
 flask_sqlalchemy
+flask-session
 flask-login
 gunicorn
