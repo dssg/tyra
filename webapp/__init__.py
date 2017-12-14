@@ -1,5 +1,5 @@
-from flask import Flask, session
-from flask.ext.session import Session, SqlAlchemySessionInterface
+from flask import Flask
+from flask.ext.session import Session
 from webapp.flask_util_js import FlaskUtilJs
 from flask_sqlalchemy import SQLAlchemy
 import flask_login

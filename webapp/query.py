@@ -1,5 +1,4 @@
 import pandas as pd
-from webapp import app
 import logging
 import json
 import os
@@ -142,6 +141,7 @@ def get_individual_feature_importance(query_arg, engine):
     output = df_importance
     return output
 
+
 def get_feature_importance(query_arg, engine):
     query = """
     select feature as label, feature_importance as value
@@ -229,7 +229,7 @@ def get_metrics_over_time(query_arg, engine):
     return df
 
 
-def get_all_features(model_group_id, db):
+def get_all_features(model_group_id, engine):
     query = """
     SELECT feature_list FROM results.model_groups WHERE model_group_id={}
     """.format(model_group_id)
