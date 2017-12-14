@@ -1,5 +1,5 @@
 import pandas as pd
-from webapp import db, app
+from webapp import app
 import logging
 import json
 import os
@@ -21,8 +21,7 @@ else:
     TEST_CLAUSE = "(test = 'false')"
 
 
-def get_model_prediction(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_model_prediction(query_arg, engine):
     query = """
     SELECT
         entity_id,
@@ -45,8 +44,7 @@ def get_model_prediction(query_arg):
     return output
 
 
-def get_model_comments(run_time):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_model_comments(run_time, engine):
     query = """
     SELECT DISTINCT(model_comment) FROM results.ranked_table
     WHERE run_time >= '{}'
@@ -55,8 +53,7 @@ def get_model_comments(run_time):
     return model_comments
 
 
-def get_model_groups(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_model_groups(query_arg, engine):
     query_dict = list(query_arg['metrics'].items())[0][1]
     lookup_query = """
     SELECT
@@ -127,8 +124,7 @@ def get_model_groups(query_arg):
     return df_models
 
 
-def get_individual_feature_importance(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_individual_feature_importance(query_arg, engine):
     query = """
     SELECT risk_1, risk_2, risk_3, risk_4, risk_5
     FROM results.individual_importances
@@ -146,8 +142,7 @@ def get_individual_feature_importance(query_arg):
     output = df_importance
     return output
 
-def get_feature_importance(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_feature_importance(query_arg, engine):
     query = """
     select feature as label, feature_importance as value
     from results.feature_importances
@@ -164,8 +159,7 @@ def get_feature_importance(query_arg):
     return output
 
 
-def get_precision(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_precision(query_arg, engine):
     query = """
     select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
@@ -187,8 +181,7 @@ def get_precision(query_arg):
     return output
 
 
-def get_recall(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_recall(query_arg, engine):
     query = """
     select replace(parameter, '_pct', '') :: NUMERIC as parameter, value
     from results.evaluations
@@ -210,8 +203,11 @@ def get_recall(query_arg):
     return output
 
 
-def get_metrics_over_time(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_metrics_over_time(query_arg, engine):
+    # try:
+    #     engine = db.get_engine(app, app.config['DB_NAME'])
+    # except:
+    #     engine = db.engine
     query_dict = list(query_arg['metrics'].items())[0][1]
     query = """
     SELECT
@@ -233,8 +229,7 @@ def get_metrics_over_time(query_arg):
     return df
 
 
-def get_all_features(model_group_id=3131):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_all_features(model_group_id, db):
     query = """
     SELECT feature_list FROM results.model_groups WHERE model_group_id={}
     """.format(model_group_id)
@@ -246,8 +241,7 @@ def get_all_features(model_group_id=3131):
     return feature_list
 
 
-def get_test_feature_distribution(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_test_feature_distribution(query_arg, engine):
     dbschema = query_arg['dbschema']
     query = """
     SELECT column_name, table_schema, table_name FROM information_schema.columns
@@ -300,8 +294,7 @@ def get_test_feature_distribution(query_arg):
     return df
 
 
-def get_train_feature_distribution(query_arg):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+def get_train_feature_distribution(query_arg, engine):
     dbschema = query_arg['dbschema']
     query = """
     SELECT config ->> 'train_metadata' as train_metadata FROM results.models WHERE model_id=%(model_id)s
@@ -374,8 +367,8 @@ def get_train_feature_distribution(query_arg):
 
     return df
 
-def get_model_parameters(model_id):
-    engine = db.get_engine(app, app.config['DB_NAME'])
+
+def get_model_parameters(model_id, engine):
     query = """
     SELECT model_parameters
     FROM results.models
