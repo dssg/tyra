@@ -1,11 +1,11 @@
 from tests.utils import rig_test_client
+from webapp import app
 import json
 import flask
 
 def test_db_list():
-    with rig_test_client({}) as test_app:
-        response = test_app.get("/db_list")
-        assert response.status_code == 200
+    response = app.test_client().get("/db_list")
+    assert response.status_code == 200
 
 
 def test_db_choose():
